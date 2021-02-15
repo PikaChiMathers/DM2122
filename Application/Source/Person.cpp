@@ -47,13 +47,13 @@ void Person::Update(double dt)
 	else
 	{
 		if (state == FACE_FRONT)
-			currentPosition.x += 1;
+			currentPosition.x += 0.1;
 		else if (state == FACE_BACK)
-			currentPosition.x -= 1;
+			currentPosition.x -= 0.1;
 		else if (state == FACE_LEFT)
-			currentPosition.z += 1;
+			currentPosition.z += 0.1;
 		else if (state == FACE_RIGHT)
-			currentPosition.z -= 1;
+			currentPosition.z -= 0.1;
 	}
 }
 
