@@ -1,9 +1,8 @@
 #include "Person.h"
 
-Person::Person(Vector3 position = Vector3(0, 0, 0))
+Person::Person()
 {
 	srand((unsigned)time(0));
-	toMovePosition = currentPosition;
 }
 
 Person::~Person()
