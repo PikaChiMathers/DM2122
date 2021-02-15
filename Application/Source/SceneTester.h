@@ -8,6 +8,8 @@
 #include "Vertex.h"
 #include "Light.h"
 
+#include "Person.h"
+
 #include <sstream>
 
 class SceneTester : public Scene
@@ -122,6 +124,7 @@ public:
 private: //added (Step 2)
 	Camera2 camera;
 	Light lights[NUM_LIGHTS];
+	Person person;
 
 	unsigned m_vertexArrayID;
 	/*unsigned m_vertexBuffer[NUM_GEOMETRY];
