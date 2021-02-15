@@ -88,48 +88,6 @@ void SceneUI::Init()
 	meshList[GEO_CUBE]->material.kShininess = 1.f;
 	meshList[GEO_CUBE]->textureID = LoadTGA("Image//muscle_capoo.tga");
 
-	meshList[GEO_CHAIR] = MeshBuilder::GenerateOBJ("chair", "OBJ//chair.obj");
-	meshList[GEO_CHAIR]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
-	meshList[GEO_CHAIR]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	meshList[GEO_CHAIR]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
-	meshList[GEO_CHAIR]->material.kShininess = .5f;
-	meshList[GEO_CHAIR]->textureID = LoadTGA("Image//chair.tga");
-
-	meshList[GEO_DART] = MeshBuilder::GenerateOBJ("dart", "OBJ//dart.obj");
-	meshList[GEO_DART]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
-	meshList[GEO_DART]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	meshList[GEO_DART]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
-	meshList[GEO_DART]->material.kShininess = .5f;
-	meshList[GEO_DART]->textureID = LoadTGA("Image//dart.tga");
-
-	meshList[GEO_DARTBOARD] = MeshBuilder::GenerateOBJ("dartboard", "OBJ//dartboard.obj");
-	meshList[GEO_DARTBOARD]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
-	meshList[GEO_DARTBOARD]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	meshList[GEO_DARTBOARD]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
-	meshList[GEO_DARTBOARD]->material.kShininess = .5f;
-	meshList[GEO_DARTBOARD]->textureID = LoadTGA("Image//dartboard.tga");
-
-	meshList[GEO_BOTTLE] = MeshBuilder::GenerateOBJ("winebottle", "OBJ//winebottle.obj");
-	meshList[GEO_BOTTLE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
-	meshList[GEO_BOTTLE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	meshList[GEO_BOTTLE]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
-	meshList[GEO_BOTTLE]->material.kShininess = .5f;
-	meshList[GEO_BOTTLE]->textureID = LoadTGA("Image//winebottle.tga");
-
-	meshList[GEO_DOORMAN] = MeshBuilder::GenerateOBJ("doorman", "OBJ//doorman.obj");
-	meshList[GEO_DOORMAN]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
-	meshList[GEO_DOORMAN]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	meshList[GEO_DOORMAN]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
-	meshList[GEO_DOORMAN]->material.kShininess = .5f;
-	meshList[GEO_DOORMAN]->textureID = LoadTGA("Image//doorman.tga");
-
-	meshList[GEO_SHOE] = MeshBuilder::GenerateOBJ("shoe", "OBJ//shoe.obj");
-	meshList[GEO_SHOE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
-	meshList[GEO_SHOE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	meshList[GEO_SHOE]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
-	meshList[GEO_SHOE]->material.kShininess = .5f;
-	meshList[GEO_SHOE]->textureID = LoadTGA("Image//shoe.tga");
-
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//sans.tga");
 

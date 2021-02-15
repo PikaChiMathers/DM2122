@@ -90,9 +90,6 @@ void Assignment2::Init()
 
 	//meshList[GEO_BALL] = MeshBuilder::GenerateOBJMTL("Ball", "OBJ//ball.obj", "OBJ//ball.mtl");
 
-	meshList[GEO_MODEL8] = MeshBuilder::GenerateOBJMTL("HOUSE", "OBJ//cottage_obj.obj", "OBJ//cottage_obj.mtl"); //cottage_diffuse
-	meshList[GEO_MODEL8]->textureID = LoadTGA("Image//cottage_diffuse.tga");
-
 	meshList[CAPOO_SPHERE] = MeshBuilder::GenerateSphere("Capoo", Capoo_color, 30, 30, 1);
 	meshList[CAPOO_SPHERE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
 	meshList[CAPOO_SPHERE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);

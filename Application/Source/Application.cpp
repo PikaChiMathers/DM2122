@@ -20,7 +20,6 @@
 #include "SceneLight2.h"
 #include "SceneTexture.h"
 #include "SceneSkybox.h"
-#include "SceneModel.h"
 #include "SceneText.h"
 #include "SceneUI.h"
 #include "Assignment2.h"
@@ -146,10 +145,8 @@ void Application::Run()
 	//Main Loop
 	/*Scene *scene = new Assignment2();*/
 
-	Scene* scene1 = new Assignment2();
-	Scene* scene2 = new SceneModel();
+	Scene* scene1 = new SceneUI();
 	Scene* scene = scene1;
-	scene2->Init();
 	scene1->Init();
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
@@ -158,7 +155,7 @@ void Application::Run()
 		if (IsKeyPressed(VK_F1))
 			scene = scene1;
 		else if (IsKeyPressed(VK_F2))
-			scene = scene2;
+			scene = scene1;
 		scene->Update(m_timer.getElapsedTime());
 		scene->Render();
 		//Swap buffers
@@ -169,9 +166,7 @@ void Application::Run()
 
 	} //Check if the ESC key had been pressed or if the window had been closed
 	scene1->Exit();
-	scene2->Exit();
 	delete scene1;
-	delete scene2;
 }
 
 void Application::Exit()
