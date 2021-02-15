@@ -9,6 +9,7 @@
 #include "Light.h"
 
 #include "Person.h"
+#include "Money.h"
 
 #include <sstream>
 
@@ -125,6 +126,7 @@ private: //added (Step 2)
 	Camera2 camera;
 	Light lights[NUM_LIGHTS];
 	Person person;
+	Money money;
 
 	unsigned m_vertexArrayID;
 	/*unsigned m_vertexBuffer[NUM_GEOMETRY];
