@@ -1,6 +1,6 @@
 #include "Person.h"
 
-Person::Person(Vector3 position = Vector3(0, 0, 0)) : currentPosition(position)
+Person::Person(Vector3 position) : currentPosition(position)
 {
 	srand((unsigned)time(0));
 	toMovePosition = currentPosition;
