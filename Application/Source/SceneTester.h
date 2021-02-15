@@ -1,8 +1,8 @@
-#ifndef SCENE_UI
-#define SCENE_UI
+#ifndef SCENE_TEST
+#define SCENE_TEST
 
 #include "Scene.h"
-#include "Camera3.h"
+#include "Camera2.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Vertex.h"
@@ -10,11 +10,11 @@
 
 #include <sstream>
 
-class SceneUI : public Scene
+class SceneTester : public Scene
 {
 public:
-	SceneUI();
-	~SceneUI();
+	SceneTester();
+	~SceneTester();
 
 	virtual void Init();
 	virtual void Update(double dt);
@@ -120,7 +120,7 @@ public:
 
 
 private: //added (Step 2)
-	Camera3 camera;
+	Camera2 camera;
 	Light lights[NUM_LIGHTS];
 
 	unsigned m_vertexArrayID;

@@ -1,5 +1,5 @@
 #define LSPEED 10.f
-#include "SceneUI.h"
+#include "SceneTester.h"
 #include "GL\glew.h"
 
 #include "shader.hpp"
@@ -12,16 +12,16 @@
 #include "Application.h"
 
 
-SceneUI::SceneUI()
+SceneTester::SceneTester()
 {
 }
 
-SceneUI::~SceneUI()
+SceneTester::~SceneTester()
 {
 }
 
 
-void SceneUI::Init() 
+void SceneTester::Init() 
 {
 	camera.Init(Vector3(40, 30, 30), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
@@ -77,9 +77,11 @@ void SceneUI::Init()
 	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", Color(1, 1, 1), 1.f, 1.f);
 	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//right.tga");
 
-
-	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("coffeecat", Color(.5f, 1, .5f), 1.f, 1.f);
-	meshList[GEO_QUAD]->textureID = LoadTGA("Image//coffeecat.tga");
+	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("ground", Color(.39f, .39f, .39f), 1.f, 1.f);
+	meshList[GEO_QUAD]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	meshList[GEO_QUAD]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
+	meshList[GEO_QUAD]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
+	meshList[GEO_QUAD]->material.kShininess = 1.f;
 
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", blue, 1, 1, 1);
 	meshList[GEO_CUBE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
@@ -202,7 +204,7 @@ void SceneUI::Init()
 
 }
 
-void SceneUI::Update(double dt)
+void SceneTester::Update(double dt)
 {
 	camera.Update(dt);
 
@@ -358,7 +360,7 @@ void SceneUI::Update(double dt)
 
 }
 
-void SceneUI::Render() //My Own Pattern
+void SceneTester::Render() //My Own Pattern
 {
 	// Render VBO here
 
@@ -427,24 +429,20 @@ void SceneUI::Render() //My Own Pattern
 
 	RenderSkybox();
 
-	RenderTextOnScreen(meshList[GEO_TEXT], "Hewwo!", Color(0, 1, 0), 4, 0, 0);
+	modelStack.PushMatrix();
+	modelStack.Translate(0, -.1f, 0);
+	modelStack.Rotate(90, 1, 0, 0);
+	modelStack.Scale(200, 200, 200);
+	RenderMesh(meshList[GEO_QUAD], lights[0].isOn);
+	modelStack.PopMatrix();
 
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, 3);
-
-	RenderMeshOnScreen(meshList[GEO_QUAD], 40, 30, 20, 10);
-
-	modelStack.PushMatrix();
-	modelStack.Scale(20, 20, 20);
-	modelStack.Translate(-.75f, 0, 0);
-	RenderText(meshList[GEO_TEXT], "UwU", Color(.93f, 0.66f, 0.72f));
-	modelStack.PopMatrix();
-
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, 0);
 }
 
-void SceneUI::Exit()
+void SceneTester::Exit()
 {
 	// Cleanup VBO here
 
@@ -455,7 +453,7 @@ void SceneUI::Exit()
 
 }
 
-void SceneUI::RenderMesh(Mesh* mesh, bool enableLight)
+void SceneTester::RenderMesh(Mesh* mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 
@@ -500,91 +498,51 @@ void SceneUI::RenderMesh(Mesh* mesh, bool enableLight)
 	}
 }
 
-
-void SceneUI::RenderSkybox()
+void SceneTester::RenderSkybox()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, -500);
-	modelStack.Rotate(180, 0, 0, 1);
+	modelStack.Translate(499, 0, 0);
+	modelStack.Rotate(-90, 0, 1, 0);
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_FRONT], false);
+	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 1);
-	modelStack.Rotate(180, 0, 1, 0);
-	RenderMesh(meshList[GEO_BACK], false);
-
-	modelStack.PushMatrix();
-	modelStack.Translate(-.5f, 0, .5f);
+	modelStack.Translate(-499, 0, 0);
 	modelStack.Rotate(90, 0, 1, 0);
-	RenderMesh(meshList[GEO_LEFT], false);
+	modelStack.Scale(1000, 1000, 1000);
+	RenderMesh(meshList[GEO_BACK], false);
+	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 1);
+	modelStack.Translate(0, 0, 499);
 	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Scale(1000, 1000, 1000);
+	RenderMesh(meshList[GEO_LEFT], false);
+	modelStack.PopMatrix();
+	
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, -499);
+	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_RIGHT], false);
-
+	modelStack.PopMatrix();
+	
 	modelStack.PushMatrix();
-	modelStack.Translate(0, .5f, .5f);
+	modelStack.Translate(0, -499, 0);
 	modelStack.Rotate(90, 1, 0, 0);
-	modelStack.Rotate(270, 0, 0, 1);
+	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_BOTTOM], false);
-
+	modelStack.PopMatrix();
+	
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 1);
-	modelStack.Rotate(180, 1, 0, 0);
+	modelStack.Translate(0, 499, 0);
+	modelStack.Rotate(-90, 1, 0, 0);
+	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_TOP], false);
-
-	modelStack.PopMatrix();
-	modelStack.PopMatrix();
-	modelStack.PopMatrix();
-	modelStack.PopMatrix();
-	modelStack.PopMatrix();
 	modelStack.PopMatrix();
 }
 
-
-//
-//void SceneUI::RenderSkybox() //FIX TO TRS
-//{
-//	modelStack.PushMatrix();
-//	modelStack.Scale(1000, 1000, 1000);
-//	modelStack.Translate(0, 0, -.5f);
-//	RenderMesh(meshList[GEO_FRONT], false);
-//
-//	modelStack.PushMatrix();
-//	modelStack.Rotate(180, 0, 1, 0);
-//	modelStack.Translate(0, 0, -1);
-//	RenderMesh(meshList[GEO_BACK], false);
-//
-//	modelStack.PushMatrix();
-//	modelStack.Rotate(270, 0, 1, 0);
-//	modelStack.Translate(.5f, 0, -.5f);
-//	RenderMesh(meshList[GEO_LEFT], false);
-//
-//	modelStack.PushMatrix();
-//	modelStack.Rotate(180, 0, 1, 0);
-//	modelStack.Translate(0, 0, -1);
-//	RenderMesh(meshList[GEO_RIGHT], false);
-//
-//	modelStack.PushMatrix();
-//	modelStack.Rotate(90, 1, 0, 0);
-//	modelStack.Translate(0, .5f, .5f);
-//	RenderMesh(meshList[GEO_BOTTOM], false);
-//
-//	modelStack.PushMatrix();
-//	modelStack.Translate(0, 0, -1);
-//	RenderMesh(meshList[GEO_TOP], false);
-//
-//	modelStack.PopMatrix();
-//	modelStack.PopMatrix();
-//	modelStack.PopMatrix();
-//	modelStack.PopMatrix();
-//	modelStack.PopMatrix();
-//	modelStack.PopMatrix();
-//}
-
-void SceneUI::RenderText(Mesh* mesh, std::string text, Color color)
+void SceneTester::RenderText(Mesh* mesh, std::string text, Color color)
 {
 	// Enable blending
 	glEnable(GL_BLEND);
@@ -615,7 +573,7 @@ void SceneUI::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneUI::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+void SceneTester::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
 	// Enable blending
 	glEnable(GL_BLEND);
@@ -660,7 +618,7 @@ void SceneUI::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, floa
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneUI::RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int sizey)
+void SceneTester::RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int sizey)
 {
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
