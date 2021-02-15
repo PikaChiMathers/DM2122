@@ -12,7 +12,7 @@
 #include "Application.h"
 
 
-SceneTester::SceneTester()
+SceneTester::SceneTester() : person(Vector3(0, 0, 0))
 {
 }
 
@@ -207,6 +207,8 @@ void SceneTester::Init()
 void SceneTester::Update(double dt)
 {
 	camera.Update(dt);
+
+	person.Update(dt);
 
 	fps = 1.0f / dt;
 
@@ -434,6 +436,11 @@ void SceneTester::Render() //My Own Pattern
 	modelStack.Rotate(90, 1, 0, 0);
 	modelStack.Scale(200, 200, 200);
 	RenderMesh(meshList[GEO_QUAD], lights[0].isOn);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(person.getPosition().x, person.getPosition().y, person.getPosition().z);
+	RenderMesh(meshList[GEO_CUBE], false);
 	modelStack.PopMatrix();
 
 	std::ostringstream ss;

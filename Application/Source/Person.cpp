@@ -15,28 +15,23 @@ void Person::Update(double dt)
 {
 	if (currentPosition == toMovePosition && waitTime <= 0)
 	{
-		int result = rand() % 5;
+		int result = rand() % 4;
 		if (result == 0)
 		{
-			toMovePosition.x += 5;
+			toMovePosition.x += 10;
 			state = FACE_FRONT;
 		}
 		else if (result == 1)
 		{
-			toMovePosition.x -= 5;
-			state = FACE_BACK;
+			toMovePosition.z += 10;
+			state = FACE_LEFT;
 		}
 		else if (result == 2)
 		{
-			toMovePosition.z += 5;
-			state = FACE_LEFT;
-		}
-		else if (result == 3)
-		{
-			toMovePosition.z -= 5;
+			toMovePosition.z -= 10;
 			state = FACE_RIGHT;
 		}
-		else if (result == 4)
+		else if (result == 3)
 		{
 			waitTime = 3;
 			state = STATIONARY;
@@ -48,8 +43,6 @@ void Person::Update(double dt)
 	{
 		if (state == FACE_FRONT)
 			currentPosition.x += 0.1;
-		else if (state == FACE_BACK)
-			currentPosition.x -= 0.1;
 		else if (state == FACE_LEFT)
 			currentPosition.z += 0.1;
 		else if (state == FACE_RIGHT)

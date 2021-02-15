@@ -6,7 +6,6 @@ class Person
 	enum PERSON_STATE
 	{
 		FACE_FRONT = 0,
-		FACE_BACK,
 		FACE_LEFT,
 		FACE_RIGHT,
 		STATIONARY,
