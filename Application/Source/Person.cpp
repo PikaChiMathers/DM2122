@@ -42,7 +42,7 @@ void Person::Update(double dt)
 		}
 	}
 	else if (waitTime > 0)
-		waitTime - dt;
+		waitTime -= dt;
 	else
 	{
 		if (state == FACE_FRONT)
