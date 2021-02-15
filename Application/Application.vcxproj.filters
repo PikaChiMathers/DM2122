@@ -122,6 +122,9 @@
     <ClInclude Include="Source\SceneTester.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Maps.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Money.h">
       <Filter>Header Files</Filter>
     </ClInclude>
