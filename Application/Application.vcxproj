@@ -157,7 +157,8 @@
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Mesh.cpp" />
     <ClCompile Include="Source\MeshBuilder.cpp" />
-    <ClCompile Include="Source\SceneUI.cpp" />
+    <ClCompile Include="Source\Person.cpp" />
+    <ClCompile Include="Source\SceneTester.cpp" />
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
   </ItemGroup>
@@ -173,6 +174,7 @@
     <ClInclude Include="Source\LoadTGA.h" />
     <ClInclude Include="Source\Material.h" />
     <ClInclude Include="Source\Light.h" />
+    <ClInclude Include="Source\Person.h" />
     <ClInclude Include="Source\SceneUI.h" />
     <ClInclude Include="Source\Transform.h" />
     <ClInclude Include="Source\Utility.h" />
