@@ -13,10 +13,9 @@ class Person
 	};
 
 public:
-	Person();
+	Person(Vector3 position);
 	~Person();
 
-	void Init();
 	void Update(double dt);
 	Vector3 getPosition();
 
