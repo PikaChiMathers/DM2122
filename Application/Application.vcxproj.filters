@@ -113,10 +113,10 @@
     <ClInclude Include="Source\Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SceneUI.h">
+    <ClInclude Include="Source\Person.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Person.h">
+    <ClInclude Include="Source\SceneTester.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
