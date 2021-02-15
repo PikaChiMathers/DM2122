@@ -5,7 +5,8 @@ class Person
 {
 	enum PERSON_STATE
 	{
-		FACE_FRONT = 0,
+		NOSTATE = 0,
+		FACE_FRONT,
 		FACE_LEFT,
 		FACE_RIGHT,
 		STATIONARY,
@@ -19,7 +20,7 @@ public:
 	Vector3 getPosition();
 
 private:
-	Vector3 toMovePosition;		//position person is currently moving to
+	int timesMoved;		//position person is currently moving to
 	Vector3 currentPosition;	//current position of person
 	unsigned state;				//current state of person
 	double waitTime;			//timer for stationary
