@@ -13,6 +13,19 @@ public:
 	virtual void Update(double dt);
 	virtual void Render();
 	virtual void Exit();
+
+	enum GEOMETRY_TYPE //added (Step 1)
+	{
+		GEO_TRIANGLE_1 = 0,
+		GEO_TRIANGLE_2,
+		NUM_GEOMETRY,
+	};
+
+private: //added (Step 2)
+	unsigned m_vertexArrayID;
+	unsigned m_vertexBuffer[NUM_GEOMETRY];
+	unsigned m_colorBuffer[NUM_GEOMETRY];
+	unsigned m_programID;
 };
 
 #endif
