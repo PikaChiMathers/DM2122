@@ -131,9 +131,6 @@
     <ClInclude Include="Source\SceneTester.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ColliderManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Money.h">
     <ClInclude Include="Source\Maps.h">
       <Filter>Header Files</Filter>
@@ -144,6 +141,7 @@
     <ClInclude Include="Source\Money.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Dialogue.h">
     <ClInclude Include="Source\Score.h">
       <Filter>Header Files</Filter>
     </ClInclude>
