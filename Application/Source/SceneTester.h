@@ -3,6 +3,7 @@
 
 #include "Scene.h"
 #include "Camera2.h"
+#include "Camera3.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Vertex.h"
@@ -12,6 +13,7 @@
 #include "Person.h"
 #include "Money.h"
 #include "Maps.h"
+#include "Score.h"
 
 #include <sstream>
 
@@ -39,6 +41,8 @@ public:
 	Color red, blue, green, pink, Lblue, purple, orange, yellow, cyan, magenta, moonshade;
 
 	bool scene_change;
+
+	int UI_height, UI_width;
 
 	enum GEOMETRY_TYPE //added (Step 1)
 	{
@@ -120,11 +124,12 @@ public:
 
 
 private: //added (Step 2)
-	Camera2 camera;
+	Camera3 camera;
 	Light lights[NUM_LIGHTS];
 	Person person;
 	Money money;
 	Maps Map;
+	Score score;
 
 	GameObject gameObject;
 	GameObject box;

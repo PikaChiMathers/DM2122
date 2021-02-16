@@ -25,7 +25,7 @@ void SceneTester::Init()
 {
 	camera.Init(Vector3(40, 30, 30), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
-	Map.Set(Maps::MAP_TYPE::MAP_CITY);
+	Map.Set(Maps::MAP_TYPE::M_DAY);
 
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
@@ -41,6 +41,9 @@ void SceneTester::Init()
 	glBindVertexArray(m_vertexArrayID);
 
 	scene_change = true;
+
+	UI_width = 160;
+	UI_height = 90;
 
 	x_value = y_value = z_value = 0;
 	red.Set(1, 0, 0);
@@ -89,7 +92,7 @@ void SceneTester::Init()
 	meshList[GEO_CUBE]->textureID = LoadTGA("Image//muscle_capoo.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
-	meshList[GEO_TEXT]->textureID = LoadTGA("Image//sans.tga");
+	meshList[GEO_TEXT]->textureID = LoadTGA("Image//trebuchet.tga");
 
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
@@ -244,34 +247,30 @@ void SceneTester::Update(double dt)
 	//if (Application::IsKeyPressed('Y'))
 	//	lights[0].isOn = true;
 
+	//for testing purposes
 	if (Application::IsKeyPressed('V'))
-		scene_change = true;
-
-
-	if (scene_change)
 	{
-		switch (Map.type)
-		{
-		case(Maps::MAP_TYPE::MAP_CITY):
-			meshList[GEO_FRONT]->textureID = LoadTGA("Maps//City//Skybox//front.tga");
-			meshList[GEO_BACK]->textureID = LoadTGA("Maps//City//Skybox//back.tga");
-			meshList[GEO_LEFT]->textureID = LoadTGA("Maps//City//Skybox//left.tga");
-			meshList[GEO_RIGHT]->textureID = LoadTGA("Maps//City//Skybox//right.tga");
-			meshList[GEO_TOP]->textureID = LoadTGA("Maps//City//Skybox//top.tga");
-			meshList[GEO_BOTTOM]->textureID = LoadTGA("Maps//City//Skybox//bottom.tga");
-			break;
-		default:
-			meshList[GEO_FRONT]->textureID = LoadTGA("Maps//City//Skybox//front.tga");
-			meshList[GEO_BACK]->textureID = LoadTGA("Maps//City//Skybox//back.tga");
-			meshList[GEO_LEFT]->textureID = LoadTGA("Maps//City//Skybox//left.tga");
-			meshList[GEO_RIGHT]->textureID = LoadTGA("Maps//City//Skybox//right.tga");
-			meshList[GEO_TOP]->textureID = LoadTGA("Maps//City//Skybox//top.tga");
-			meshList[GEO_BOTTOM]->textureID = LoadTGA("Maps//City//Skybox//bottom.tga");
-			break;
-		}
-		scene_change = false;
+		scene_change = true;
+		Map.Set(Maps::MAP_TYPE::M_DAY);
+	}
+	if (Application::IsKeyPressed('B'))
+	{
+		scene_change = true;
+		Map.Set(Maps::MAP_TYPE::M_NIGHT);
 	}
 
+
+	if (scene_change) //to ensure that the skybox only updates when the scene changes
+	{
+		meshList[GEO_FRONT]->textureID = LoadTGA((Map.skybox_loc[0]).std::string::c_str());
+		meshList[GEO_BACK]->textureID = LoadTGA((Map.skybox_loc[1]).std::string::c_str());
+		meshList[GEO_LEFT]->textureID = LoadTGA((Map.skybox_loc[2]).std::string::c_str());
+		meshList[GEO_RIGHT]->textureID = LoadTGA((Map.skybox_loc[3]).std::string::c_str());
+		meshList[GEO_TOP]->textureID = LoadTGA((Map.skybox_loc[4]).std::string::c_str());
+		meshList[GEO_BOTTOM]->textureID = LoadTGA((Map.skybox_loc[5]).std::string::c_str());
+
+		scene_change = false;
+	}
 		//Mouse Inputs
 	static bool bLButtonState = false;
 	if (!bLButtonState && Application::IsMousePressed(0))
@@ -357,26 +356,21 @@ void SceneTester::Update(double dt)
 		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
 	}
 
-	if (Application::IsKeyPressed('E'))
-	{
-		camera.Reset();
-	}
-
 	if (Application::IsKeyPressed('T'))
-	{
-		gameObject.SetPositionZ(gameObject.GetPositionZ() + 5 * dt);
-	}
-	if (Application::IsKeyPressed('G'))
 	{
 		gameObject.SetPositionZ(gameObject.GetPositionZ() - 5 * dt);
 	}
+	if (Application::IsKeyPressed('G'))
+	{
+		gameObject.SetPositionZ(gameObject.GetPositionZ() + 5 * dt);
+	}
 	if (Application::IsKeyPressed('F'))
 	{
-		gameObject.SetPositionX(gameObject.GetPositionX() + 5 * dt);
+		gameObject.SetPositionX(gameObject.GetPositionX() - 5 * dt);
 	}
 	if (Application::IsKeyPressed('H'))
 	{
-		gameObject.SetPositionX(gameObject.GetPositionX() - 5 * dt);
+		gameObject.SetPositionX(gameObject.GetPositionX() + 5 * dt);
 	}
 }
 
@@ -477,8 +471,13 @@ void SceneTester::Render() //My Own Pattern
 	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetCollider()->GetPosition().x) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().y) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 10);
 
 	std::ostringstream mn;
-	mn << "Money: " << money.getMoney();
-	RenderTextOnScreen(meshList[GEO_TEXT], mn.str(), Color(1, 1, 0), 3, 52, 57);
+	mn << "Money:" << money.getMoney();
+	RenderTextOnScreen(meshList[GEO_TEXT], mn.str(), Color(1, 1, 0), 3, 130, 84);
+
+	std::ostringstream sc;
+	sc << "Score:" << score.getScore(0);
+	RenderTextOnScreen(meshList[GEO_TEXT], sc.str(), Color(1, 0, 0), 3, 130, 87);
+
 }
 
 void SceneTester::Exit()
@@ -623,7 +622,7 @@ void SceneTester::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, 
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, 80, 0, 60, -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, UI_width, 0, UI_height, -10, 10); //size of screen UI
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
@@ -661,7 +660,7 @@ void SceneTester::RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int si
 {
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, 80, 0, 60, -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, UI_width, 0, UI_height, -10, 10); //size of screen UI
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
