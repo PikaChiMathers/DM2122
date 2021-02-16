@@ -10,6 +10,7 @@
 
 #include "Person.h"
 #include "Money.h"
+#include "Maps.h"
 
 #include <sstream>
 
@@ -36,6 +37,8 @@ public:
 
 	Color red, blue, green, pink, Lblue, purple, orange, yellow, cyan, magenta, moonshade;
 
+	bool scene_change;
+
 	enum GEOMETRY_TYPE //added (Step 1)
 	{
 		GEO_AXES = 0,
@@ -54,13 +57,6 @@ public:
 		GEO_BOTTOM,
 		GEO_FRONT,
 		GEO_BACK,
-
-		GEO_CHAIR,
-		GEO_DART,
-		GEO_DARTBOARD,
-		GEO_DOORMAN,
-		GEO_SHOE,
-		GEO_BOTTLE,
 
 		GEO_TEXT,
 
@@ -127,6 +123,7 @@ private: //added (Step 2)
 	Light lights[NUM_LIGHTS];
 	Person person;
 	Money money;
+	Maps Map;
 
 	unsigned m_vertexArrayID;
 	/*unsigned m_vertexBuffer[NUM_GEOMETRY];

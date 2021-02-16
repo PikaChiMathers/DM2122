@@ -66,7 +66,7 @@
     <ClCompile Include="Source\Money.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Dialogue.cpp">
+    <ClCompile Include="Source\ColliderManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -128,7 +128,7 @@
     <ClInclude Include="Source\SceneTester.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Maps.h">
+    <ClInclude Include="Money.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Money.h">
