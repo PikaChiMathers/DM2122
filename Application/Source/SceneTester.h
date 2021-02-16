@@ -9,8 +9,7 @@
 #include "Light.h"
 
 #include "Person.h"
-#include "GameObject.h"
-#include "ColliderManager.h"
+#include "Money.h"
 
 #include <sstream>
 
@@ -126,12 +125,8 @@ public:
 private: //added (Step 2)
 	Camera2 camera;
 	Light lights[NUM_LIGHTS];
-	ColliderManager colliderList;
-	GameObject gameobject;
-	Collider gameObjectCol;
-	GameObject box;
-	Collider boxCol;
-
+	Person person;
+	Money money;
 
 	unsigned m_vertexArrayID;
 	/*unsigned m_vertexBuffer[NUM_GEOMETRY];

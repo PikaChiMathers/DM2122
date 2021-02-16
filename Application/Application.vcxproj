@@ -157,6 +157,7 @@
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Mesh.cpp" />
     <ClCompile Include="Source\MeshBuilder.cpp" />
+    <ClCompile Include="Source\Money.cpp" />
     <ClCompile Include="Source\Person.cpp" />
     <ClCompile Include="Source\SceneTester.cpp" />
     <ClCompile Include="Source\shader.cpp" />
@@ -172,8 +173,10 @@
     <ClInclude Include="Source\GameObject.h" />
     <ClInclude Include="Source\LoadOBJ.h" />
     <ClInclude Include="Source\LoadTGA.h" />
+    <ClInclude Include="Source\Maps.h" />
     <ClInclude Include="Source\Material.h" />
     <ClInclude Include="Source\Light.h" />
+    <ClInclude Include="Source\Money.h" />
     <ClInclude Include="Source\Person.h" />
     <ClInclude Include="Source\SceneTester.h" />
     <ClInclude Include="Source\Transform.h" />

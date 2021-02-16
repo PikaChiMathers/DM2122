@@ -1,9 +1,8 @@
 #include "Person.h"
 
-Person::Person(Vector3 position) : currentPosition(position)
+Person::Person(Vector3 position) : currentPosition(position), timesMoved(100), state(NOSTATE), waitTime(0)
 {
 	srand((unsigned)time(0));
-	toMovePosition = currentPosition;
 }
 
 Person::~Person()
@@ -13,28 +12,28 @@ Person::~Person()
 
 void Person::Update(double dt)
 {
-	if (currentPosition == toMovePosition && waitTime <= 0)
+	if (timesMoved == 100 && waitTime <= 0)
 	{
-		int result = rand() % 4;
-		if (result == 0)
+		switch (rand() % 4)
 		{
-			toMovePosition.x += 10;
+		case 0:
 			state = FACE_FRONT;
-		}
-		else if (result == 1)
-		{
-			toMovePosition.z += 10;
+			timesMoved = 0;
+			break;
+		case 1:
 			state = FACE_LEFT;
-		}
-		else if (result == 2)
-		{
-			toMovePosition.z -= 10;
+			timesMoved = 0;
+			break;
+		case 2:
 			state = FACE_RIGHT;
-		}
-		else if (result == 3)
-		{
-			waitTime = 3;
+			timesMoved = 0;
+			break;
+		case 3:
 			state = STATIONARY;
+			waitTime = 2;
+			break;
+		default:
+			break;
 		}
 	}
 	else if (waitTime > 0)
@@ -47,6 +46,8 @@ void Person::Update(double dt)
 			currentPosition.z += 0.1;
 		else if (state == FACE_RIGHT)
 			currentPosition.z -= 0.1;
+
+		++timesMoved;
 	}
 }
 
