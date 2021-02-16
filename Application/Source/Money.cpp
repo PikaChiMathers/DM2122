@@ -7,7 +7,7 @@ Money::Money()
 
 void Money::IncreaseMoney(int add)
 {
-	add += money;
+	money += add;
 }
 
 void Money::SuccessfulTourist(int num)
@@ -17,7 +17,7 @@ void Money::SuccessfulTourist(int num)
 
 void Money::DecreaseMoney(int minus)
 {
-	minus -= money;
+	money -= minus;
 }
 
 void Money::ResetMoney()
