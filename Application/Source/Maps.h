@@ -23,12 +23,16 @@ struct Maps
     void Set(MAP_TYPE type)
     {
         this->type = type;
+
+        //Initialzes the different sides
         skybox_loc[0] = "front.tga";
         skybox_loc[1] = "back.tga";
         skybox_loc[2] = "left.tga";
         skybox_loc[3] = "right.tga";
         skybox_loc[4] = "top.tga";
         skybox_loc[5] = "bottom.tga";
+
+        //Sets up location
         std::string location;
         switch (type)
         {
@@ -42,7 +46,7 @@ struct Maps
         default:
             break;
         }
-
+        //places the location in every element
         for (int side = 0; side < 6; side++)
             skybox_loc[side] = location + skybox_loc[side];
     }
