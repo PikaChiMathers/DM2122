@@ -1,6 +1,6 @@
-//#include "Sound.h"
-//
-//Sound::Sound()
-//{
-//	engine = createIrrKlangDevice();
-//}
+#include "Sound.h"
+
+Sound::Sound()
+{
+	engine = createIrrKlangDevice();
+}
