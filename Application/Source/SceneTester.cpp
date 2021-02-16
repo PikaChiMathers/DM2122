@@ -25,7 +25,7 @@ void SceneTester::Init()
 {
 	camera.Init(Vector3(40, 30, 30), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
-	Map.Set(Maps::MAP_TYPE::M_CITY);
+	Map.Set(Maps::MAP_TYPE::M_DAY);
 
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
@@ -249,7 +249,15 @@ void SceneTester::Update(double dt)
 
 	//for testing purposes
 	if (Application::IsKeyPressed('V'))
+	{
 		scene_change = true;
+		Map.Set(Maps::MAP_TYPE::M_DAY);
+	}
+	if (Application::IsKeyPressed('B'))
+	{
+		scene_change = true;
+		Map.Set(Maps::MAP_TYPE::M_NIGHT);
+	}
 
 
 	if (scene_change) //to ensure that the skybox only updates when the scene changes
