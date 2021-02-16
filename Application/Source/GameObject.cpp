@@ -2,6 +2,7 @@
 
 GameObject::GameObject()
 {
+	collider = nullptr;
 }
 
 GameObject::~GameObject()
@@ -34,3 +35,20 @@ float GameObject::GetScaleX() { return transform.scale.x; }
 float GameObject::GetScaleY() { return transform.scale.y; }
 float GameObject::GetScaleZ() { return transform.scale.z; }
 Scale GameObject::GetScale() { return transform.scale; }
+
+void GameObject::addCollider()
+{
+	if (collider == nullptr)
+	{
+		collider = new Collider();
+		ColliderManager::PushCollider(collider);
+	}
+}
+
+void GameObject::removeCollider()
+{
+	if (collider != nullptr)
+	{
+
+	}
+}

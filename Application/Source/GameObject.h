@@ -4,10 +4,11 @@
 
 #include<vector>
 #include"Transform.h"
-#include"Collider.h"
+#include"ColliderManager.h"
 class GameObject
 {
 	Transform transform;
+	Collider* collider;
 public:
 	GameObject();
 	~GameObject();
@@ -36,6 +37,8 @@ public:
 	float GetScaleZ();
 	Scale GetScale();
 
+	void addCollider();
+	void removeCollider();
 };
 
 #endif

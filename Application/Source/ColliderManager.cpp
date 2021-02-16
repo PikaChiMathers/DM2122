@@ -9,6 +9,8 @@ ColliderManager::~ColliderManager()
 {
 }
 
+std::vector<Collider*> ColliderManager::ColliderList;
+
 bool ColliderManager::ListContains(Collider* col)
 {
 	for (std::vector<Collider*>::iterator it = ColliderList.begin(); it != ColliderList.end(); it++)

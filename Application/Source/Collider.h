@@ -25,6 +25,7 @@ class Collider
 	Size size;
 public:
 	Collider();
+	Collider(Position position, Size size);
 	~Collider();
 	void SetPosition(Position pos);
 	void SetSize(Size size);

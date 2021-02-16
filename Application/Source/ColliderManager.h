@@ -7,12 +7,12 @@
 
 class ColliderManager
 {
-	std::vector<Collider*>ColliderList;
+	static std::vector<Collider*>ColliderList;
 public:
 	ColliderManager();
 	~ColliderManager();
-	bool ListContains(Collider* col);
-	void PushCollider(Collider* col);
-	Collider* checkCollision(Collider* col);
+	static bool ListContains(Collider* col);
+	static void PushCollider(Collider* col);
+	static Collider* checkCollision(Collider* col);
 };
 #endif
