@@ -8,7 +8,6 @@
 class GameObject
 {
 	Transform transform;
-	Collider* collider;
 public:
 	GameObject();
 	~GameObject();

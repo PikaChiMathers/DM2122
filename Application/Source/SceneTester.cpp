@@ -25,6 +25,8 @@ void SceneTester::Init()
 {
 	camera.Init(Vector3(40, 30, 30), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
+	Map.Set(Maps::MAP_TYPE::MAP_CITY);
+
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
@@ -37,6 +39,8 @@ void SceneTester::Init()
 	//Generate a default VAO (Step 4a)
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
+
+	scene_change = true;
 
 	x_value = y_value = z_value = 0;
 	red.Set(1, 0, 0);
@@ -65,17 +69,11 @@ void SceneTester::Init()
 	meshList[GEO_LIGHTBALL] = MeshBuilder::GenerateSphere("lightball", lights[0].color, 30, 30, 1);
 
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", Color(1, 1, 1), 1.f, 1.f);
-	meshList[GEO_FRONT]->textureID = LoadTGA("Image//front.tga");
 	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom", Color(1, 1, 1), 1.f, 1.f);
-	meshList[GEO_BOTTOM]->textureID = LoadTGA("Image//bottom.tga");
 	meshList[GEO_BACK] = MeshBuilder::GenerateQuad("back", Color(1, 1, 1), 1.f, 1.f);
-	meshList[GEO_BACK]->textureID = LoadTGA("Image//back.tga");
 	meshList[GEO_TOP] = MeshBuilder::GenerateQuad("top", Color(1, 1, 1), 1.f, 1.f);
-	meshList[GEO_TOP]->textureID = LoadTGA("Image//top.tga");
 	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left", Color(1, 1, 1), 1.f, 1.f);
-	meshList[GEO_LEFT]->textureID = LoadTGA("Image//left.tga");
 	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", Color(1, 1, 1), 1.f, 1.f);
-	meshList[GEO_RIGHT]->textureID = LoadTGA("Image//right.tga");
 
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("ground", Color(.39f, .39f, .39f), 1.f, 1.f);
 	meshList[GEO_QUAD]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
@@ -243,6 +241,34 @@ void SceneTester::Update(double dt)
 	if (Application::IsKeyPressed('Y'))
 		lights[0].isOn = true;
 
+	if (Application::IsKeyPressed('V'))
+		scene_change = true;
+
+
+	if (scene_change)
+	{
+		switch (Map.type)
+		{
+		case(Maps::MAP_TYPE::MAP_CITY):
+			meshList[GEO_FRONT]->textureID = LoadTGA("Maps//City//Skybox//front.tga");
+			meshList[GEO_BACK]->textureID = LoadTGA("Maps//City//Skybox//back.tga");
+			meshList[GEO_LEFT]->textureID = LoadTGA("Maps//City//Skybox//left.tga");
+			meshList[GEO_RIGHT]->textureID = LoadTGA("Maps//City//Skybox//right.tga");
+			meshList[GEO_TOP]->textureID = LoadTGA("Maps//City//Skybox//top.tga");
+			meshList[GEO_BOTTOM]->textureID = LoadTGA("Maps//City//Skybox//bottom.tga");
+			break;
+		default:
+			meshList[GEO_FRONT]->textureID = LoadTGA("Maps//City//Skybox//front.tga");
+			meshList[GEO_BACK]->textureID = LoadTGA("Maps//City//Skybox//back.tga");
+			meshList[GEO_LEFT]->textureID = LoadTGA("Maps//City//Skybox//left.tga");
+			meshList[GEO_RIGHT]->textureID = LoadTGA("Maps//City//Skybox//right.tga");
+			meshList[GEO_TOP]->textureID = LoadTGA("Maps//City//Skybox//top.tga");
+			meshList[GEO_BOTTOM]->textureID = LoadTGA("Maps//City//Skybox//bottom.tga");
+			break;
+		}
+		scene_change = false;
+	}
+
 	/*if (Application::IsKeyPressed(VK_DOWN))
 		lights[1].position.z -= (float)(LSPEED * dt);
 	if (Application::IsKeyPressed(VK_UP))
@@ -355,7 +381,7 @@ void SceneTester::Update(double dt)
 		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
 	}
 
-	if (Application::IsKeyPressed('G'))
+	if (Application::IsKeyPressed('E'))
 	{
 		camera.Reset();
 	}
