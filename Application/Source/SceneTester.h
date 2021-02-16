@@ -12,6 +12,7 @@
 #include "Person.h"
 #include "Money.h"
 #include "Maps.h"
+#include "Score.h"
 
 #include <sstream>
 
@@ -127,6 +128,7 @@ private: //added (Step 2)
 	Person person;
 	Money money;
 	Maps Map;
+	Score score;
 
 	GameObject gameObject;
 	GameObject box;

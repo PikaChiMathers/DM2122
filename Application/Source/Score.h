@@ -12,6 +12,9 @@ public:
 
 	Money money;
 	void saveScore();
+	void increaseScore(int, int);
+	void resetScore(int);
+	void decreaseScore(int, int);
 	int getScore(int);
 };
 
