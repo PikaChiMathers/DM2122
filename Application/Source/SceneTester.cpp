@@ -356,26 +356,21 @@ void SceneTester::Update(double dt)
 		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
 	}
 
-	if (Application::IsKeyPressed('E'))
-	{
-		camera.Reset();
-	}
-
 	if (Application::IsKeyPressed('T'))
-	{
-		gameObject.SetPositionZ(gameObject.GetPositionZ() + 5 * dt);
-	}
-	if (Application::IsKeyPressed('G'))
 	{
 		gameObject.SetPositionZ(gameObject.GetPositionZ() - 5 * dt);
 	}
+	if (Application::IsKeyPressed('G'))
+	{
+		gameObject.SetPositionZ(gameObject.GetPositionZ() + 5 * dt);
+	}
 	if (Application::IsKeyPressed('F'))
 	{
-		gameObject.SetPositionX(gameObject.GetPositionX() + 5 * dt);
+		gameObject.SetPositionX(gameObject.GetPositionX() - 5 * dt);
 	}
 	if (Application::IsKeyPressed('H'))
 	{
-		gameObject.SetPositionX(gameObject.GetPositionX() - 5 * dt);
+		gameObject.SetPositionX(gameObject.GetPositionX() + 5 * dt);
 	}
 }
 

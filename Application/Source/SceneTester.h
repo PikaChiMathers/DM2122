@@ -3,6 +3,7 @@
 
 #include "Scene.h"
 #include "Camera2.h"
+#include "Camera3.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Vertex.h"
@@ -123,7 +124,7 @@ public:
 
 
 private: //added (Step 2)
-	Camera2 camera;
+	Camera3 camera;
 	Light lights[NUM_LIGHTS];
 	Person person;
 	Money money;
