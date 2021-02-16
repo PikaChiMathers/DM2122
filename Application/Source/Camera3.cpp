@@ -95,6 +95,10 @@ void Camera3::Update(double dt)
 	}
 	target = position + view;
 
+	if (Application::IsKeyPressed('R'))
+	{
+		Reset();
+	}
 }
 
 void Camera3::Reset()
