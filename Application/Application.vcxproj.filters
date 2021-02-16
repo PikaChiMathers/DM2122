@@ -152,5 +152,8 @@
     <ClInclude Include="Source\Dialogue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Score.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

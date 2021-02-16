@@ -42,6 +42,9 @@ void SceneTester::Init()
 
 	scene_change = true;
 
+	UI_width = 160;
+	UI_height = 90;
+
 	x_value = y_value = z_value = 0;
 	red.Set(1, 0, 0);
 	green.Set(0, 1, 0);
@@ -89,7 +92,7 @@ void SceneTester::Init()
 	meshList[GEO_CUBE]->textureID = LoadTGA("Image//muscle_capoo.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
-	meshList[GEO_TEXT]->textureID = LoadTGA("Image//sans.tga");
+	meshList[GEO_TEXT]->textureID = LoadTGA("Image//trebuchet.tga");
 
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
@@ -475,8 +478,8 @@ void SceneTester::Render() //My Own Pattern
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, 0);
 
 	std::ostringstream mn;
-	mn << "Money: " << money.getMoney();
-	RenderTextOnScreen(meshList[GEO_TEXT], mn.str(), Color(1, 1, 0), 3, 52, 57);
+	mn << "Money:" << money.getMoney();
+	RenderTextOnScreen(meshList[GEO_TEXT], mn.str(), Color(1, 1, 0), 3, 135, 87);
 }
 
 void SceneTester::Exit()
@@ -621,7 +624,7 @@ void SceneTester::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, 
 
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, 80, 0, 60, -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, UI_width, 0, UI_height, -10, 10); //size of screen UI
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();
@@ -659,7 +662,7 @@ void SceneTester::RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int si
 {
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
-	ortho.SetToOrtho(0, 80, 0, 60, -10, 10); //size of screen UI
+	ortho.SetToOrtho(0, UI_width, 0, UI_height, -10, 10); //size of screen UI
 	projectionStack.PushMatrix();
 	projectionStack.LoadMatrix(ortho);
 	viewStack.PushMatrix();

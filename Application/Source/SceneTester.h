@@ -39,6 +39,8 @@ public:
 
 	bool scene_change;
 
+	int UI_height, UI_width;
+
 	enum GEOMETRY_TYPE //added (Step 1)
 	{
 		GEO_AXES = 0,
