@@ -159,6 +159,7 @@
     <ClCompile Include="Source\Money.cpp" />
     <ClCompile Include="Source\Person.cpp" />
     <ClCompile Include="Source\SceneTester.cpp" />
+    <ClCompile Include="Source\Score.cpp" />
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
   </ItemGroup>
@@ -177,6 +178,7 @@
     <ClInclude Include="Source\Money.h" />
     <ClInclude Include="Source\Person.h" />
     <ClInclude Include="Source\SceneTester.h" />
+    <ClInclude Include="Source\Score.h" />
     <ClInclude Include="Source\Transform.h" />
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\Vertex.h" />
