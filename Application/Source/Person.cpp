@@ -1,6 +1,6 @@
 #include "Person.h"
 
-Person::Person(Vector3 position) : currentPosition(position), timesMoved(100), state(NOSTATE)
+Person::Person(Vector3 position) : currentPosition(position), timesMoved(100), state(NOSTATE), waitTime(0)
 {
 	srand((unsigned)time(0));
 }

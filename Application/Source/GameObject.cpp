@@ -2,7 +2,6 @@
 
 GameObject::GameObject()
 {
-	collider = nullptr;
 }
 
 GameObject::~GameObject()

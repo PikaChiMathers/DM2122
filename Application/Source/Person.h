@@ -20,8 +20,8 @@ public:
 	Vector3 getPosition();
 
 private:
-	int timesMoved;		//position person is currently moving to
 	Vector3 currentPosition;	//current position of person
+	int timesMoved;		//position person is currently moving to
 	unsigned state;				//current state of person
 	double waitTime;			//timer for stationary
 };
