@@ -16,12 +16,12 @@ public:
 	Person(Vector3 position);
 	~Person();
 
-	void Update(double dt);
-	Vector3 getPosition();
+	void Update(double dt);		//moves person per update
+	Vector3 getPosition();		//return position of person
 
 private:
 	Vector3 currentPosition;	//current position of person
-	int timesMoved;		//position person is currently moving to
+	int timesMoved;				//position person is currently moving to
 	unsigned state;				//current state of person
 	double waitTime;			//timer for stationary
 };
