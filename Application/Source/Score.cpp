@@ -20,6 +20,21 @@ void Score::saveScore()
 	}
 }
 
+void Score::increaseScore(int num,int value)
+{
+	score[num] += value;
+}
+
+void Score::resetScore(int num)
+{
+	score[num] = 0;
+}
+
+void Score::decreaseScore(int num,int value)
+{
+	score[num] -= value;
+}
+
 int Score::getScore(int num)
 {
 	return score[num];
