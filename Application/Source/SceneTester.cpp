@@ -25,7 +25,7 @@ void SceneTester::Init()
 {
 	camera.Init(Vector3(40, 30, 30), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
-	Map.Set(Maps::MAP_TYPE::MAP_CITY);
+	Map.Set(Maps::MAP_TYPE::M_CITY);
 
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
@@ -247,34 +247,22 @@ void SceneTester::Update(double dt)
 	//if (Application::IsKeyPressed('Y'))
 	//	lights[0].isOn = true;
 
+	//for testing purposes
 	if (Application::IsKeyPressed('V'))
 		scene_change = true;
 
 
-	if (scene_change)
+	if (scene_change) //to ensure that the skybox only updates when the scene changes
 	{
-		switch (Map.type)
-		{
-		case(Maps::MAP_TYPE::MAP_CITY):
-			meshList[GEO_FRONT]->textureID = LoadTGA("Maps//City//Skybox//front.tga");
-			meshList[GEO_BACK]->textureID = LoadTGA("Maps//City//Skybox//back.tga");
-			meshList[GEO_LEFT]->textureID = LoadTGA("Maps//City//Skybox//left.tga");
-			meshList[GEO_RIGHT]->textureID = LoadTGA("Maps//City//Skybox//right.tga");
-			meshList[GEO_TOP]->textureID = LoadTGA("Maps//City//Skybox//top.tga");
-			meshList[GEO_BOTTOM]->textureID = LoadTGA("Maps//City//Skybox//bottom.tga");
-			break;
-		default:
-			meshList[GEO_FRONT]->textureID = LoadTGA("Maps//City//Skybox//front.tga");
-			meshList[GEO_BACK]->textureID = LoadTGA("Maps//City//Skybox//back.tga");
-			meshList[GEO_LEFT]->textureID = LoadTGA("Maps//City//Skybox//left.tga");
-			meshList[GEO_RIGHT]->textureID = LoadTGA("Maps//City//Skybox//right.tga");
-			meshList[GEO_TOP]->textureID = LoadTGA("Maps//City//Skybox//top.tga");
-			meshList[GEO_BOTTOM]->textureID = LoadTGA("Maps//City//Skybox//bottom.tga");
-			break;
-		}
+		meshList[GEO_FRONT]->textureID = LoadTGA((Map.skybox_loc[0]).std::string::c_str());
+		meshList[GEO_BACK]->textureID = LoadTGA((Map.skybox_loc[1]).std::string::c_str());
+		meshList[GEO_LEFT]->textureID = LoadTGA((Map.skybox_loc[2]).std::string::c_str());
+		meshList[GEO_RIGHT]->textureID = LoadTGA((Map.skybox_loc[3]).std::string::c_str());
+		meshList[GEO_TOP]->textureID = LoadTGA((Map.skybox_loc[4]).std::string::c_str());
+		meshList[GEO_BOTTOM]->textureID = LoadTGA((Map.skybox_loc[5]).std::string::c_str());
+
 		scene_change = false;
 	}
-
 		//Mouse Inputs
 	static bool bLButtonState = false;
 	if (!bLButtonState && Application::IsMousePressed(0))
@@ -481,7 +469,12 @@ void SceneTester::Render() //My Own Pattern
 
 	std::ostringstream mn;
 	mn << "Money:" << money.getMoney();
-	RenderTextOnScreen(meshList[GEO_TEXT], mn.str(), Color(1, 1, 0), 3, 135, 87);
+	RenderTextOnScreen(meshList[GEO_TEXT], mn.str(), Color(1, 1, 0), 3, 130, 84);
+
+	std::ostringstream sc;
+	sc << "Score:" << score.getScore(0);
+	RenderTextOnScreen(meshList[GEO_TEXT], sc.str(), Color(1, 0, 0), 3, 130, 87);
+
 }
 
 void SceneTester::Exit()
