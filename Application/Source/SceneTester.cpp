@@ -447,6 +447,10 @@ void SceneTester::Render() //My Own Pattern
 	ss.precision(5);
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, 0);
+
+	std::ostringstream mn;
+	mn << "Money: " << money.getMoney();
+	RenderTextOnScreen(meshList[GEO_TEXT], mn.str(), Color(0, 1, 0), 3, 52, 57);
 }
 
 void SceneTester::Exit()
