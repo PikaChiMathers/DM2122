@@ -66,6 +66,9 @@
     <ClCompile Include="Source\Money.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\ColliderManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Score.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -128,6 +131,10 @@
     <ClInclude Include="Source\SceneTester.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ColliderManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Money.h">
     <ClInclude Include="Source\Maps.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -4,17 +4,16 @@
 
 struct Maps
 { //Map struct is to change the skybox and objs in map depending on map_type
-    enum MAP_TYPE
+    enum class MAP_TYPE
     {
-        MAP_CITY,
+        MAP_CITY = 0,
         NUM_MAPS,
     };
 
     MAP_TYPE type;
-    std::string skybox_loc;
     std::string objs_loc;
 
-    Maps(MAP_TYPE type = MAP_CITY)
+    Maps(MAP_TYPE type = MAP_TYPE::MAP_CITY)
     {
         Set(type);
     }
@@ -22,13 +21,13 @@ struct Maps
     void Set(MAP_TYPE type)
     {
         this->type = type;
+
+        std::string location;
         switch (type)
         {
-        case 0:
-            skybox_loc = "Image//";
+        case (MAP_TYPE::MAP_CITY): 
             break;
         default:
-            skybox_loc = "Image//";
             break;
         }
     }
