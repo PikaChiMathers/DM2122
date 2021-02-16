@@ -2,16 +2,18 @@
 
 GameObject::GameObject()
 {
+	collider = nullptr;
 }
 
 GameObject::~GameObject()
 {
+	RemoveCollider();
 }
 
-void GameObject::SetPositionX(float x) { transform.position.x = x; }
-void GameObject::SetPositionY(float y) { transform.position.y = y; }
-void GameObject::SetPositionZ(float z) { transform.position.z = z; }
-void GameObject::SetPosition(Position pos) { transform.position = pos; }
+void GameObject::SetPositionX(float x) { transform.position.x = x; ColliderUpdate(); }
+void GameObject::SetPositionY(float y) { transform.position.y = y; ColliderUpdate(); }
+void GameObject::SetPositionZ(float z) { transform.position.z = z; ColliderUpdate(); }
+void GameObject::SetPosition(Position pos) { transform.position = pos; ColliderUpdate(); }
 float GameObject::GetPositionX() { return transform.position.x; }
 float GameObject::GetPositionY() { return transform.position.y; }
 float GameObject::GetPositionZ() { return transform.position.z; }
@@ -34,3 +36,35 @@ float GameObject::GetScaleX() { return transform.scale.x; }
 float GameObject::GetScaleY() { return transform.scale.y; }
 float GameObject::GetScaleZ() { return transform.scale.z; }
 Scale GameObject::GetScale() { return transform.scale; }
+
+void GameObject::AddCollider()
+{
+	if (collider == nullptr)
+	{
+		collider = new Collider();
+		ColliderManager::PushCollider(collider);
+	}
+}
+
+void GameObject::RemoveCollider()
+{
+	if (collider != nullptr)
+	{
+		ColliderManager::RemoveCollider(collider);
+		delete collider;
+		collider = nullptr;
+	}
+}
+
+Collider* GameObject::GetCollider()
+{
+	return collider;
+}
+
+void GameObject::ColliderUpdate()
+{
+	if (collider != nullptr)
+	{
+		collider->SetPosition(transform.position);
+	}
+}

@@ -2,6 +2,11 @@
 
 Collider::Collider()
 {
+	
+}
+
+Collider::Collider(Position position, Size size) : position(position), size(size)
+{
 }
 
 Collider::~Collider()

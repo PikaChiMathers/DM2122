@@ -203,6 +203,9 @@ void SceneTester::Init()
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 
+	gameObject.AddCollider();
+	box.AddCollider();
+	box.SetPosition(Position(10, 0, 10));
 }
 
 void SceneTester::Update(double dt)
@@ -227,22 +230,22 @@ void SceneTester::Update(double dt)
 	if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
 
-	if (Application::IsKeyPressed('I'))
-		lights[0].position.z -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('K'))
-		lights[0].position.z += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('J'))
-		lights[0].position.x -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('L'))
-		lights[0].position.x += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('O'))
-		lights[0].position.y -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('U'))
-		lights[0].position.y += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('T'))
-		lights[0].isOn = false;
-	if (Application::IsKeyPressed('Y'))
-		lights[0].isOn = true;
+	//if (Application::IsKeyPressed('I'))
+	//	lights[0].position.z -= (float)(LSPEED * dt);
+	//if (Application::IsKeyPressed('K'))
+	//	lights[0].position.z += (float)(LSPEED * dt);
+	//if (Application::IsKeyPressed('J'))
+	//	lights[0].position.x -= (float)(LSPEED * dt);
+	//if (Application::IsKeyPressed('L'))
+	//	lights[0].position.x += (float)(LSPEED * dt);
+	//if (Application::IsKeyPressed('O'))
+	//	lights[0].position.y -= (float)(LSPEED * dt);
+	//if (Application::IsKeyPressed('U'))
+	//	lights[0].position.y += (float)(LSPEED * dt);
+	//if (Application::IsKeyPressed('T'))
+	//	lights[0].isOn = false;
+	//if (Application::IsKeyPressed('Y'))
+	//	lights[0].isOn = true;
 
 	if (Application::IsKeyPressed('V'))
 		scene_change = true;
@@ -271,33 +274,6 @@ void SceneTester::Update(double dt)
 		}
 		scene_change = false;
 	}
-
-	/*if (Application::IsKeyPressed(VK_DOWN))
-		lights[1].position.z -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed(VK_UP))
-		lights[1].position.z += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed(VK_LEFT))
-		lights[1].position.x -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed(VK_RIGHT))
-		lights[1].position.x += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('O'))
-		lights[1].position.y -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('U'))
-		lights[1].position.y += (float)(LSPEED * dt);*/
-
-		//editor commands
-	/*if (Application::IsKeyPressed(VK_DOWN))
-		y_value -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed(VK_UP))
-		y_value += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed(VK_LEFT))
-		x_value -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed(VK_RIGHT))
-		x_value += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('Z'))
-		z_value -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('X'))
-		z_value += (float)(LSPEED * dt);*/
 
 		//Mouse Inputs
 	static bool bLButtonState = false;
@@ -389,6 +365,22 @@ void SceneTester::Update(double dt)
 		camera.Reset();
 	}
 
+	if (Application::IsKeyPressed('T'))
+	{
+		gameObject.SetPositionZ(gameObject.GetPositionZ() + 5 * dt);
+	}
+	if (Application::IsKeyPressed('G'))
+	{
+		gameObject.SetPositionZ(gameObject.GetPositionZ() - 5 * dt);
+	}
+	if (Application::IsKeyPressed('F'))
+	{
+		gameObject.SetPositionX(gameObject.GetPositionX() + 5 * dt);
+	}
+	if (Application::IsKeyPressed('H'))
+	{
+		gameObject.SetPositionX(gameObject.GetPositionX() - 5 * dt);
+	}
 }
 
 void SceneTester::Render() //My Own Pattern
@@ -468,14 +460,24 @@ void SceneTester::Render() //My Own Pattern
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(person.getPosition().x, person.getPosition().y, person.getPosition().z);
+	modelStack.Translate(gameObject.GetPositionX(), gameObject.GetPositionY(), gameObject.GetPositionZ());
 	RenderMesh(meshList[GEO_CUBE], false);
 	modelStack.PopMatrix();
 
+	modelStack.PushMatrix();
+	modelStack.Translate(box.GetPositionX(), box.GetPositionY(), box.GetPositionZ());
+	RenderMesh(meshList[GEO_CUBE], false);
+	modelStack.PopMatrix();
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, 0);
+
+	std::string col = (ColliderManager::CheckCollision(gameObject.GetCollider()) == nullptr ? "false" : "true");
+
+	RenderTextOnScreen(meshList[GEO_TEXT], "Collide" + col, Color(0, 1, 0), 4, 0, 4);
+	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(box.GetCollider()->GetPosition().x) + ", " + std::to_string(box.GetCollider()->GetPosition().y) + ", " + std::to_string(box.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 8);
+	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetCollider()->GetPosition().x) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().y) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 10);
 
 	std::ostringstream mn;
 	mn << "Money:" << money.getMoney();
