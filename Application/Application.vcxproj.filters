@@ -69,7 +69,7 @@
     <ClCompile Include="Source\ColliderManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Dialogue.cpp">
+    <ClCompile Include="Source\Dialogue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Score.cpp">
@@ -140,7 +140,7 @@
     <ClInclude Include="Source\Money.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Dialogue.h">
+    <ClInclude Include="Source\ColliderManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Maps.h">
