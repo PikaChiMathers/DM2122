@@ -13,9 +13,12 @@ public:
 	Vector3 defaultPosition;
 	Vector3 defaultTarget;
 	Vector3 defaultUp;
-
+	Vector3 view, right;
+	
 	Vector3 pos_bound;
 	Vector3 neg_bound;
+
+	float yaw, pitch;
 
 	Camera3();
 	~Camera3();
