@@ -92,9 +92,9 @@ void Application::Init()
 	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //We don't want the old OpenGL 
 
-
-	m_width = 800;
-	m_height = 600;
+	//HD screen size
+	m_width = 1280;
+	m_height = 720;
 	m_window = glfwCreateWindow(m_width, m_height, "Test Window", NULL, NULL);
 	//Create a window and create its OpenGL context
 	/*m_window = glfwCreateWindow(800, 600, "Test Window", NULL, NULL);*/

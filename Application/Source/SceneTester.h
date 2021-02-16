@@ -13,6 +13,7 @@
 #include "Person.h"
 #include "Money.h"
 #include "Maps.h"
+#include "Score.h"
 
 #include <sstream>
 
@@ -40,6 +41,8 @@ public:
 	Color red, blue, green, pink, Lblue, purple, orange, yellow, cyan, magenta, moonshade;
 
 	bool scene_change;
+
+	int UI_height, UI_width;
 
 	enum GEOMETRY_TYPE //added (Step 1)
 	{
@@ -126,6 +129,7 @@ private: //added (Step 2)
 	Person person;
 	Money money;
 	Maps Map;
+	Score score;
 
 	GameObject gameObject;
 	GameObject box;
