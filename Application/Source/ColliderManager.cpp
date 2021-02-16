@@ -28,7 +28,19 @@ void ColliderManager::PushCollider(Collider* col)
 	}
 }
 
-Collider* ColliderManager::checkCollision(Collider* col)
+void ColliderManager::RemoveCollider(Collider* col)
+{
+	for (std::vector<Collider*>::iterator it = ColliderList.begin(); it != ColliderList.end(); it++)
+	{
+		if ((*it) == col)
+		{
+			ColliderList.erase(it);
+			break;
+		}
+	}
+}
+
+Collider* ColliderManager::CheckCollision(Collider* col)
 {
 	for (std::vector<Collider*>::iterator it = ColliderList.begin(); it != ColliderList.end(); it++)
 	{

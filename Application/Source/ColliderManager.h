@@ -13,6 +13,7 @@ public:
 	~ColliderManager();
 	static bool ListContains(Collider* col);
 	static void PushCollider(Collider* col);
-	static Collider* checkCollision(Collider* col);
+	static void RemoveCollider(Collider* col);
+	static Collider* CheckCollision(Collider* col);
 };
 #endif

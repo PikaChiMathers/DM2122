@@ -8,6 +8,7 @@
 #include "Vertex.h"
 #include "Light.h"
 
+#include "GameObject.h"
 #include "Person.h"
 #include "Money.h"
 #include "Maps.h"
@@ -124,6 +125,9 @@ private: //added (Step 2)
 	Person person;
 	Money money;
 	Maps Map;
+
+	GameObject gameObject;
+	GameObject box;
 
 	unsigned m_vertexArrayID;
 	/*unsigned m_vertexBuffer[NUM_GEOMETRY];

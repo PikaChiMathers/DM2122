@@ -37,8 +37,10 @@ public:
 	float GetScaleZ();
 	Scale GetScale();
 
-	void addCollider();
-	void removeCollider();
+	void AddCollider();
+	void RemoveCollider();
+	Collider* GetCollider();
+	void ColliderUpdate();
 };
 
 #endif
