@@ -35,6 +35,11 @@ void Score::decreaseScore(int num,int value)
 	score[num] -= value;
 }
 
+void Score::setScore(int num, int value)
+{
+	score[num] = value;
+}
+
 int Score::getScore(int num)
 {
 	return score[num];

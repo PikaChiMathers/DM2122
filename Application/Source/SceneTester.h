@@ -41,6 +41,7 @@ public:
 	Color red, blue, green, pink, Lblue, purple, orange, yellow, cyan, magenta, moonshade;
 
 	bool scene_change;
+	bool coin_collect; // To stop rendering of coin after collected
 
 	int UI_height, UI_width;
 
@@ -152,8 +153,6 @@ private: //added (Step 2)
 
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
-
-	void RenderCoin();
 
 	void RenderSkybox();
 
