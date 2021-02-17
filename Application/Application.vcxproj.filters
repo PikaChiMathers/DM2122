@@ -81,7 +81,7 @@
     <ClCompile Include="Source\BasicPhysics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BusStop.cpp">
+    <ClCompile Include="Source\BusStop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -170,7 +170,7 @@
     <ClInclude Include="Source\BasicPhysics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BusStop.h">
+    <ClInclude Include="Source\BusStop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
