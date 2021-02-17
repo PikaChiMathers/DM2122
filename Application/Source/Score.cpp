@@ -6,13 +6,15 @@ Score::Score() :
 	passengerCount = 0;
 }
 
-void Score::saveScore()
+void Score::saveScore(int num)
 {
 	money.SuccessfulTourist(passengerCount);
 
-	int tempscore = money.getMoney();
-	for (int i = 9; i > -1; i--) {
-		if (tempscore < score[i]) {
+	int tempscore = getScore(num);
+	for (int i = 9; i > -1; i--) 
+	{
+		if (tempscore < score[i]) 
+		{
 			int tempscore2 = score[i];
 			score[i] = tempscore;
 			tempscore = tempscore2;

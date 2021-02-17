@@ -20,6 +20,11 @@ void Money::DecreaseMoney(int minus)
 	money -= minus;
 }
 
+void Money::SetMoney(int value)
+{
+	money = value;
+}
+
 void Money::ResetMoney()
 {
 	money = 0;
