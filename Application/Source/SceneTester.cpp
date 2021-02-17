@@ -99,9 +99,6 @@ void SceneTester::Init()
 	meshList[GEO_COIN] = MeshBuilder::GenerateOBJMTL("coin", "OBJ//coin.obj", "OBJ//coin.mtl");
 	meshList[GEO_COIN]->textureID = LoadTGA("Image//coin.tga");
 
-	meshList[GEO_PASSPORT] = MeshBuilder::GenerateOBJMTL("passport", "OBJ//passport.obj", "OBJ//passport.mtl");
-	/*meshList[GEO_PASSPORT]->textureID = LoadTGA("Image//passport.tga");*/
-
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -219,9 +216,6 @@ void SceneTester::Init()
 	coin.AddCollider();
 	coin.SetPosition(Position(5, 0, 0));
 	coin.GetCollider()->SetIsTrigger(true);
-	passport.AddCollider();
-	passport.SetPosition(Position(10, 0, 0));
-	passport.GetCollider()->SetIsTrigger(true);
 }
 
 void SceneTester::Update(double dt)
@@ -495,11 +489,6 @@ void SceneTester::Render() //My Own Pattern
 		RenderMesh(meshList[GEO_COIN], true);
 		modelStack.PopMatrix();
 	}
-
-	modelStack.PushMatrix();
-	modelStack.Translate(passport.GetPositionX(), passport.GetPositionY(), passport.GetPositionZ());
-	RenderMesh(meshList[GEO_PASSPORT], true);
-	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(box.GetPositionX(), box.GetPositionY(), box.GetPositionZ());
