@@ -10,7 +10,7 @@ class BasicPhysics
 	float mass, drag;
 	bool usesGravity;
 public:
-	BasicPhysics(float mass = 1.f, float drag = 0);
+	BasicPhysics(float mass = 1.f, float drag = 1.f);
 	~BasicPhysics();
 	void SetGravity(bool use);
 	bool UsesGravity();
@@ -19,8 +19,8 @@ public:
 	void SetDrag(int drag);
 	int GetDrag();
 	void SetVelocity(Vector3 velocity);
+	void AddVelocity(Vector3 velocity);
 	Vector3 GetVelocity();
-
-	void PhysicsUpdate();
+	void PhysicsUpdate(double dt); // call in Update in GameObject class
 };
 #endif

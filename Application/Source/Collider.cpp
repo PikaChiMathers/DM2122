@@ -2,15 +2,17 @@
 
 Collider::Collider()
 {
-	
+	physics = nullptr;
 }
 
 Collider::Collider(Position position, Size size) : position(position), size(size)
 {
+	physics = nullptr;
 }
 
 Collider::~Collider()
 {
+	RemovePhysics();
 }
 
 void Collider::SetPosition(Position pos)
@@ -31,4 +33,24 @@ Position Collider::GetPosition()
 Size Collider::GetSize()
 {
 	return size;
+}
+
+void Collider::AddPhysics()
+{
+	if (physics == nullptr)
+	physics = new BasicPhysics();
+}
+
+BasicPhysics* Collider::GetPhysics()
+{
+	return physics;
+}
+
+void Collider::RemovePhysics()
+{
+	if (physics != nullptr)
+	{
+		delete physics;
+		physics = nullptr;
+	}
 }

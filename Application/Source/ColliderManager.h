@@ -15,7 +15,5 @@ public:
 	static void PushCollider(Collider* col);
 	static void RemoveCollider(Collider* col);
 	static Collider* CheckCollision(Collider* col);
-
-	static void ColliderUpdate(double dt);
 };
 #endif
