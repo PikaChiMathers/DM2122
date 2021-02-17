@@ -97,6 +97,7 @@ void SceneTester::Init()
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//trebuchet.tga");
 
 	meshList[GEO_COIN] = MeshBuilder::GenerateOBJMTL("coin", "OBJ//coin.obj", "OBJ//coin.mtl");
+	meshList[GEO_COIN]->textureID = LoadTGA("Image//coin.tga");
 
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);

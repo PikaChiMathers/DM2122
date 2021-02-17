@@ -151,7 +151,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Sound.cpp" />
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\BasicPhysics.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
@@ -171,10 +170,10 @@
     <ClCompile Include="Source\SceneTester.cpp" />
     <ClCompile Include="Source\Score.cpp" />
     <ClCompile Include="Source\shader.cpp" />
+    <ClCompile Include="Source\Sound.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sound.h" />
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\BasicPhysics.h" />
     <ClInclude Include="Source\Camera.h" />
@@ -193,6 +192,7 @@
     <ClInclude Include="Source\Person.h" />
     <ClInclude Include="Source\SceneTester.h" />
     <ClInclude Include="Source\Score.h" />
+    <ClInclude Include="Source\Sound.h" />
     <ClInclude Include="Source\Transform.h" />
     <ClInclude Include="Source\Utility.h" />
     <ClInclude Include="Source\Vertex.h" />
