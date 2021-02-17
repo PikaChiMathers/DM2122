@@ -482,7 +482,10 @@ void SceneTester::Render() //My Own Pattern
 
 	if (coin_collect == false)
 	{
-		RenderCoin();
+		modelStack.PushMatrix();
+		modelStack.Translate(coin.GetPositionX(), coin.GetPositionY(), coin.GetPositionZ());
+		RenderMesh(meshList[GEO_COIN], true);
+		modelStack.PopMatrix();
 	}
 
 	modelStack.PushMatrix();
@@ -573,15 +576,6 @@ void SceneTester::RenderMesh(Mesh* mesh, bool enableLight)
 	{
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-}
-
-void SceneTester::RenderCoin()
-{
-	modelStack.PushMatrix();
-	modelStack.Translate(coin.GetPositionX(), coin.GetPositionY(), coin.GetPositionZ());
-	RenderMesh(meshList[GEO_COIN], true);
-	modelStack.PopMatrix();
-
 }
 
 void SceneTester::RenderSkybox()

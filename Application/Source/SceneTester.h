@@ -154,8 +154,6 @@ private: //added (Step 2)
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
 
-	void RenderCoin();
-
 	void RenderSkybox();
 
 	void RenderText(Mesh* mesh, std::string text, Color color);
