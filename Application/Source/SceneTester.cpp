@@ -207,6 +207,7 @@ void SceneTester::Init()
 
 	gameObject.AddCollider();
 	gameObject.GetCollider()->AddPhysics();
+	gameObject.GetCollider()->GetPhysics()->SetDrag(10);
 	box.AddCollider();
 	box.SetPosition(Position(10, 0, 10));
 	coin.AddCollider();
@@ -383,7 +384,7 @@ void SceneTester::Update(double dt)
 		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(1, 0, 0) * 3 * dt);
 	}
 
-	std::string coinC = (ColliderManager::CheckCollision(coin.GetCollider()) == nullptr ? "false" : "true");
+	std::string coinC = (GameObject::CheckCollision(coin.GetCollider()) == nullptr ? "false" : "true");
 
 	
 	if (coinC == "true")
