@@ -94,6 +94,8 @@ void SceneTester::Init()
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//trebuchet.tga");
 
+	meshList[GEO_COIN] = MeshBuilder::GenerateOBJMTL("coin", "OBJ//coin.obj", "OBJ//coin.mtl");
+
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -207,6 +209,8 @@ void SceneTester::Init()
 	gameObject.GetCollider()->AddPhysics();
 	box.AddCollider();
 	box.SetPosition(Position(10, 0, 10));
+	coin.AddCollider();
+	coin.SetPosition(Position(5, 0, 0));
 }
 
 void SceneTester::Update(double dt)
@@ -378,6 +382,15 @@ void SceneTester::Update(double dt)
 		//gameObject.SetPositionX(gameObject.GetPositionX() + 5 * dt);
 		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(1, 0, 0) * 3 * dt);
 	}
+
+	std::string coinC = (ColliderManager::CheckCollision(coin.GetCollider()) == nullptr ? "false" : "true");
+
+	
+	if (coinC == "true")
+	{
+		money.IncreaseMoney(100);
+	}
+	
 }
 
 void SceneTester::Render() //My Own Pattern
@@ -460,6 +473,8 @@ void SceneTester::Render() //My Own Pattern
 	modelStack.Translate(gameObject.GetPositionX(), gameObject.GetPositionY(), gameObject.GetPositionZ());
 	RenderMesh(meshList[GEO_CUBE], false);
 	modelStack.PopMatrix();
+
+	RenderCoin();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(box.GetPositionX(), box.GetPositionY(), box.GetPositionZ());
@@ -549,6 +564,15 @@ void SceneTester::RenderMesh(Mesh* mesh, bool enableLight)
 	{
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
+}
+
+void SceneTester::RenderCoin()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(coin.GetPositionX(), coin.GetPositionY(), coin.GetPositionZ());
+	RenderMesh(meshList[GEO_COIN], true);
+	modelStack.PopMatrix();
+
 }
 
 void SceneTester::RenderSkybox()
