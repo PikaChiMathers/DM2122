@@ -94,6 +94,8 @@ void SceneTester::Init()
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//trebuchet.tga");
 
+	meshList[GEO_COIN] = MeshBuilder::GenerateOBJ("coin", "OBJ//coin.mtl");
+
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -534,6 +536,15 @@ void SceneTester::RenderMesh(Mesh* mesh, bool enableLight)
 	{
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
+}
+
+void SceneTester::RenderCoin(int x, int y, int z)
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(x, y, z);
+	RenderMesh(meshList[GEO_COIN], true);
+	modelStack.PopMatrix();
+
 }
 
 void SceneTester::RenderSkybox()
