@@ -1,6 +1,7 @@
 #pragma once
-#include "Collider.h"
+#include "GameObject.h"
+
 class BusStop :
-    public Collider
+    public GameObject
 {
 };
