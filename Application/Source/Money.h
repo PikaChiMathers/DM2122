@@ -9,6 +9,7 @@ public:
 	void IncreaseMoney(int);
 	void SuccessfulTourist(int);
 	void DecreaseMoney(int);
+	void SetMoney(int);
 	void ResetMoney();
 	int getMoney();
 };

@@ -11,7 +11,7 @@ public:
 	Score();
 
 	Money money;
-	void saveScore();
+	void saveScore(int);
 	void increaseScore(int, int);
 	void resetScore(int);
 	void decreaseScore(int, int);
