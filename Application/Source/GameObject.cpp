@@ -105,13 +105,19 @@ void GameObject::RemoveCollider(GameObject* obj)
 
 GameObject* GameObject::CheckCollision(Collider* obj)
 {
+	if (obj == nullptr) return nullptr;
+	return CheckCollision(obj->GetPosition(), obj->GetSize(), obj);
+}
+
+GameObject* GameObject::CheckCollision(Position pos, Size size, Collider* exclude)
+{
 	for (std::vector<GameObject*>::iterator it = ColliderList.begin(); it != ColliderList.end(); it++)
 	{
-		if ((*it)->GetCollider() != obj)
+		if ((*it)->GetCollider() != exclude)
 		{
-			if (abs((*it)->GetCollider()->GetPosition().x - obj->GetPosition().x) < ((*it)->GetCollider()->GetSize().x + obj->GetSize().x) * 0.5f &&
-				abs((*it)->GetCollider()->GetPosition().y - obj->GetPosition().y) < ((*it)->GetCollider()->GetSize().y + obj->GetSize().y) * 0.5f &&
-				abs((*it)->GetCollider()->GetPosition().z - obj->GetPosition().z) < ((*it)->GetCollider()->GetSize().z + obj->GetSize().z) * 0.5f)
+			if (abs((*it)->GetCollider()->GetPosition().x - pos.x) < ((*it)->GetCollider()->GetSize().x + size.x) * 0.5f &&
+				abs((*it)->GetCollider()->GetPosition().y - pos.y) < ((*it)->GetCollider()->GetSize().y + size.y) * 0.5f &&
+				abs((*it)->GetCollider()->GetPosition().z - pos.z) < ((*it)->GetCollider()->GetSize().z + size.z) * 0.5f)
 			{
 				return (*it);
 			}
@@ -125,13 +131,50 @@ void GameObject::GameObjectUpdate(double dt)
 	for (std::vector<GameObject*>::iterator it = ColliderList.begin(); it != ColliderList.end(); it++)
 	{
 		GameObject* gameObject = (*it);
-		if (gameObject->GetCollider()->GetPhysics() != nullptr)
+		if (gameObject->GetCollider()->GetPhysics() != nullptr && !gameObject->GetCollider()->GetIsTrigger())
 		{
 			BasicPhysics* physics = gameObject->GetCollider()->GetPhysics();
 			if (physics->GetVelocity().Length() > 0)
 			{
 				physics->PhysicsUpdate(dt);
-				gameObject->SetPosition(Position(gameObject->GetPositionX() + physics->GetVelocity().x, gameObject->GetPositionY() + physics->GetVelocity().y, gameObject->GetPositionZ() + physics->GetVelocity().z));
+				Position newPos(gameObject->GetPositionX() + physics->GetVelocity().x, gameObject->GetPositionY() + physics->GetVelocity().y, gameObject->GetPositionZ() + physics->GetVelocity().z);
+				bool colliding = true;
+				for (int i = 0; i < 5; i++) // if after 5 attempts to get the obj out of other colliders and still fail, just dont move it.
+				{
+					GameObject* hit = CheckCollision(newPos, gameObject->GetCollider()->GetSize(), gameObject->GetCollider());
+					if (hit == nullptr || hit->GetCollider()->GetIsTrigger())
+					{
+						colliding = false;
+						break;
+					}
+					if (hit->GetCollider()->GetPhysics() == nullptr)
+					{
+						float xDif = (gameObject->GetCollider()->GetSize().x + hit->GetCollider()->GetSize().x) * .5f - abs(newPos.x - hit->GetPositionX());
+						float yDif = (gameObject->GetCollider()->GetSize().y + hit->GetCollider()->GetSize().y) * .5f - abs(newPos.y - hit->GetPositionY());
+						float zDif = (gameObject->GetCollider()->GetSize().z + hit->GetCollider()->GetSize().z) * .5f - abs(newPos.z - hit->GetPositionZ());
+						if (xDif < yDif && xDif < zDif)
+						{
+							newPos.x += newPos.x > hit->GetPositionX() ? xDif : -xDif;
+						}
+						else if (yDif < zDif)
+						{
+							newPos.y += newPos.y > hit->GetPositionY() ? yDif : -yDif;
+						}
+						else
+						{
+							newPos.z += newPos.z > hit->GetPositionZ() ? zDif : -zDif;
+						}
+					}
+					else
+					{
+						//do physics things
+						std::cout << "cant get out\n";
+					}
+				}
+				if (!colliding)
+				{
+					gameObject->SetPosition(newPos);
+				}
 			}
 		}
 	}
