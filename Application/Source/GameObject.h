@@ -4,7 +4,7 @@
 
 #include<vector>
 #include"Transform.h"
-#include"ColliderManager.h"
+#include"Collider.h"
 class GameObject
 {
 	Transform transform;
@@ -41,6 +41,17 @@ public:
 	void RemoveCollider();
 	Collider* GetCollider();
 	void ColliderUpdate();
+
+private:
+	static std::vector<GameObject*>ColliderList; // GameObjects with Colliders
+public:
+	static bool ListContains(GameObject* col);
+	static void PushCollider(GameObject* col);
+	static void RemoveCollider(GameObject* col);
+	static GameObject* CheckCollision(Collider* col);
+	static GameObject* CheckCollision(Position pos, Size size = 1, Collider* exclude = nullptr);
+
+	static void GameObjectUpdate(double dt); // run every update
 };
 
 #endif

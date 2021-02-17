@@ -41,8 +41,13 @@ public:
 	Color red, blue, green, pink, Lblue, purple, orange, yellow, cyan, magenta, moonshade;
 
 	bool scene_change;
+	bool coin_collect; // To stop rendering of coin after collected
 
 	int UI_height, UI_width;
+
+	int colCount = 0;
+	bool colEnter = false;
+
 
 	enum GEOMETRY_TYPE //added (Step 1)
 	{
@@ -135,6 +140,7 @@ private: //added (Step 2)
 
 	GameObject gameObject;
 	GameObject box;
+	GameObject coin;
 
 	unsigned m_vertexArrayID;
 	/*unsigned m_vertexBuffer[NUM_GEOMETRY];
@@ -147,8 +153,6 @@ private: //added (Step 2)
 
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
-
-	void RenderCoin(  int, int, int);
 
 	void RenderSkybox();
 

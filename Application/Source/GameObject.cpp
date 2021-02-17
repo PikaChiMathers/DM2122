@@ -42,7 +42,7 @@ void GameObject::AddCollider()
 	if (collider == nullptr)
 	{
 		collider = new Collider();
-		ColliderManager::PushCollider(collider);
+		GameObject::PushCollider(this);
 	}
 }
 
@@ -50,7 +50,7 @@ void GameObject::RemoveCollider()
 {
 	if (collider != nullptr)
 	{
-		ColliderManager::RemoveCollider(collider);
+		GameObject::RemoveCollider(this);
 		delete collider;
 		collider = nullptr;
 	}
@@ -66,5 +66,116 @@ void GameObject::ColliderUpdate()
 	if (collider != nullptr)
 	{
 		collider->SetPosition(transform.position);
+	}
+}
+
+/**************************************************/
+//Collider/physics Update area
+/**************************************************/
+std::vector<GameObject*> GameObject::ColliderList;
+
+bool GameObject::ListContains(GameObject* obj)
+{
+	for (std::vector<GameObject*>::iterator it = ColliderList.begin(); it != ColliderList.end(); it++)
+	{
+		if ((*it) == obj) return true;
+	}
+	return false;
+}
+
+void GameObject::PushCollider(GameObject* obj)
+{
+	if (!ListContains(obj))
+	{
+		ColliderList.push_back(obj);
+	}
+}
+
+void GameObject::RemoveCollider(GameObject* obj)
+{
+	for (std::vector<GameObject*>::iterator it = ColliderList.begin(); it != ColliderList.end(); it++)
+	{
+		if ((*it) == obj)
+		{
+			ColliderList.erase(it);
+			break;
+		}
+	}
+}
+
+GameObject* GameObject::CheckCollision(Collider* obj)
+{
+	if (obj == nullptr) return nullptr;
+	return CheckCollision(obj->GetPosition(), obj->GetSize(), obj);
+}
+
+GameObject* GameObject::CheckCollision(Position pos, Size size, Collider* exclude)
+{
+	for (std::vector<GameObject*>::iterator it = ColliderList.begin(); it != ColliderList.end(); it++)
+	{
+		if ((*it)->GetCollider() != exclude)
+		{
+			if (abs((*it)->GetCollider()->GetPosition().x - pos.x) < ((*it)->GetCollider()->GetSize().x + size.x) * 0.5f &&
+				abs((*it)->GetCollider()->GetPosition().y - pos.y) < ((*it)->GetCollider()->GetSize().y + size.y) * 0.5f &&
+				abs((*it)->GetCollider()->GetPosition().z - pos.z) < ((*it)->GetCollider()->GetSize().z + size.z) * 0.5f)
+			{
+				return (*it);
+			}
+		}
+	}
+	return nullptr;
+}
+
+void GameObject::GameObjectUpdate(double dt)
+{
+	for (std::vector<GameObject*>::iterator it = ColliderList.begin(); it != ColliderList.end(); it++)
+	{
+		GameObject* gameObject = (*it);
+		if (gameObject->GetCollider()->GetPhysics() != nullptr && !gameObject->GetCollider()->GetIsTrigger())
+		{
+			BasicPhysics* physics = gameObject->GetCollider()->GetPhysics();
+			if (physics->GetVelocity().Length() > 0)
+			{
+				physics->PhysicsUpdate(dt);
+				Position newPos(gameObject->GetPositionX() + physics->GetVelocity().x, gameObject->GetPositionY() + physics->GetVelocity().y, gameObject->GetPositionZ() + physics->GetVelocity().z);
+				bool colliding = true;
+				for (int i = 0; i < 5; i++) // if after 5 attempts to get the obj out of other colliders and still fail, just dont move it.
+				{
+					GameObject* hit = CheckCollision(newPos, gameObject->GetCollider()->GetSize(), gameObject->GetCollider());
+					if (hit == nullptr || hit->GetCollider()->GetIsTrigger())
+					{
+						colliding = false;
+						break;
+					}
+					if (hit->GetCollider()->GetPhysics() == nullptr)
+					{
+						float xDif = (gameObject->GetCollider()->GetSize().x + hit->GetCollider()->GetSize().x) * .5f - abs(newPos.x - hit->GetPositionX());
+						float yDif = (gameObject->GetCollider()->GetSize().y + hit->GetCollider()->GetSize().y) * .5f - abs(newPos.y - hit->GetPositionY());
+						float zDif = (gameObject->GetCollider()->GetSize().z + hit->GetCollider()->GetSize().z) * .5f - abs(newPos.z - hit->GetPositionZ());
+						if (xDif < yDif && xDif < zDif)
+						{
+							newPos.x += newPos.x > hit->GetPositionX() ? xDif : -xDif;
+						}
+						else if (yDif < zDif)
+						{
+							newPos.y += newPos.y > hit->GetPositionY() ? yDif : -yDif;
+						}
+						else
+						{
+							newPos.z += newPos.z > hit->GetPositionZ() ? zDif : -zDif;
+						}
+					}
+					else
+					{
+						//do physics things
+						std::cout << "cant get out\n";
+					}
+				}
+				if (!colliding)
+				{
+					gameObject->SetPosition(newPos);
+				}
+			}
+		}
 	}
 }

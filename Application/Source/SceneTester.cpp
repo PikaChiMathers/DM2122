@@ -33,6 +33,8 @@ void SceneTester::Init()
 
 	rotateAngle = 0;
 
+	coin_collect = false;
+
 	//Set background color to dark blue (Step 3a)
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
@@ -94,7 +96,7 @@ void SceneTester::Init()
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//trebuchet.tga");
 
-	meshList[GEO_COIN] = MeshBuilder::GenerateOBJ("coin", "OBJ//coin.mtl");
+	meshList[GEO_COIN] = MeshBuilder::GenerateOBJMTL("coin", "OBJ//coin.obj", "OBJ//coin.mtl");
 
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
@@ -206,12 +208,18 @@ void SceneTester::Init()
 	glEnable(GL_DEPTH_TEST);
 
 	gameObject.AddCollider();
+	gameObject.GetCollider()->AddPhysics();
+	gameObject.GetCollider()->GetPhysics()->SetDrag(10);
 	box.AddCollider();
 	box.SetPosition(Position(10, 0, 10));
+	coin.AddCollider();
+	coin.SetPosition(Position(5, 0, 0));
+	coin.GetCollider()->SetIsTrigger(true);
 }
 
 void SceneTester::Update(double dt)
 {
+	GameObject::GameObjectUpdate(dt);
 	camera.Update(dt);
 
 	person.Update(dt);
@@ -360,20 +368,36 @@ void SceneTester::Update(double dt)
 
 	if (Application::IsKeyPressed('T'))
 	{
-		gameObject.SetPositionZ(gameObject.GetPositionZ() - 5 * dt);
+		//gameObject.SetPositionZ(gameObject.GetPositionZ() - 5 * dt);
+		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(0, 0, -1) * 3 * dt);
 	}
 	if (Application::IsKeyPressed('G'))
 	{
-		gameObject.SetPositionZ(gameObject.GetPositionZ() + 5 * dt);
+		//gameObject.SetPositionZ(gameObject.GetPositionZ() + 5 * dt);
+		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(0, 0, 1) * 3 * dt);
 	}
 	if (Application::IsKeyPressed('F'))
 	{
-		gameObject.SetPositionX(gameObject.GetPositionX() - 5 * dt);
+		//gameObject.SetPositionX(gameObject.GetPositionX() - 5 * dt);
+		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(-1, 0, 0) * 3 * dt);
 	}
 	if (Application::IsKeyPressed('H'))
 	{
-		gameObject.SetPositionX(gameObject.GetPositionX() + 5 * dt);
+		//gameObject.SetPositionX(gameObject.GetPositionX() + 5 * dt);
+		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(1, 0, 0) * 3 * dt);
 	}
+
+	std::string coinC = (GameObject::CheckCollision(coin.GetCollider()) == nullptr ? "false" : "true");
+
+	
+	if (coinC == "true")
+	{
+		money.IncreaseMoney(100);
+		coin_collect = true;
+		coin.SetPositionY(-10);
+	}
+	
+	score.setScore(0, money.getMoney());
 }
 
 void SceneTester::Render() //My Own Pattern
@@ -457,6 +481,14 @@ void SceneTester::Render() //My Own Pattern
 	RenderMesh(meshList[GEO_CUBE], false);
 	modelStack.PopMatrix();
 
+	if (coin_collect == false)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(coin.GetPositionX(), coin.GetPositionY(), coin.GetPositionZ());
+		RenderMesh(meshList[GEO_COIN], true);
+		modelStack.PopMatrix();
+	}
+
 	modelStack.PushMatrix();
 	modelStack.Translate(box.GetPositionX(), box.GetPositionY(), box.GetPositionZ());
 	RenderMesh(meshList[GEO_CUBE], false);
@@ -464,11 +496,20 @@ void SceneTester::Render() //My Own Pattern
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, 0);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, Application::GetWindowHeight() * .1f);
 
-	std::string col = (ColliderManager::CheckCollision(gameObject.GetCollider()) == nullptr ? "false" : "true");
-
-	RenderTextOnScreen(meshList[GEO_TEXT], "Collide" + col, Color(0, 1, 0), 4, 0, 4);
+	std::string col = (GameObject::CheckCollision(gameObject.GetCollider()) == nullptr ? "false" : "true");
+	if (GameObject::CheckCollision(gameObject.GetCollider()) != nullptr && !colEnter)
+	{
+		colEnter = true;
+		colCount++;
+	}
+	if (colEnter && (GameObject::CheckCollision(gameObject.GetCollider()) == nullptr))
+	{ 
+		colEnter = false;
+	}
+	RenderTextOnScreen(meshList[GEO_TEXT], "Collide: " + col, Color(0, 1, 0), 4, 0, 4);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Collide Count: " + std::to_string(colCount), Color(0, 1, 0), 4, 0, 0);
 	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(box.GetCollider()->GetPosition().x) + ", " + std::to_string(box.GetCollider()->GetPosition().y) + ", " + std::to_string(box.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 8);
 	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetCollider()->GetPosition().x) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().y) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 10);
 
@@ -536,15 +577,6 @@ void SceneTester::RenderMesh(Mesh* mesh, bool enableLight)
 	{
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-}
-
-void SceneTester::RenderCoin(int x, int y, int z)
-{
-	modelStack.PushMatrix();
-	modelStack.Translate(x, y, z);
-	RenderMesh(meshList[GEO_COIN], true);
-	modelStack.PopMatrix();
-
 }
 
 void SceneTester::RenderSkybox()

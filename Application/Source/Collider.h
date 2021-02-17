@@ -3,6 +3,7 @@
 #define COLLIDER_H
 
 #include "Vertex.h"
+#include "BasicPhysics.h"
 #include <vector>
 
 struct Size
@@ -23,6 +24,8 @@ class Collider
 {
 	Position position, newPosition;
 	Size size;
+	BasicPhysics* physics;
+	bool isTrigger; // allows objects to pass thru
 public:
 	Collider();
 	Collider(Position position, Size size);
@@ -31,5 +34,11 @@ public:
 	void SetSize(Size size);
 	Position GetPosition();
 	Size GetSize();
+	void SetIsTrigger(bool isTrigger);
+	bool GetIsTrigger();
+
+	void AddPhysics();
+	BasicPhysics* GetPhysics();
+	void RemovePhysics();
 };
 #endif
