@@ -209,8 +209,9 @@ void SceneTester::Init()
 
 	gameObject.AddCollider();
 	gameObject.GetCollider()->AddPhysics();
-	gameObject.GetCollider()->GetPhysics()->SetDrag(10);
+	gameObject.GetCollider()->GetPhysics()->SetDrag(5);
 	box.AddCollider();
+	//box.GetCollider()->AddPhysics();
 	box.SetPosition(Position(10, 0, 10));
 	coin.AddCollider();
 	coin.SetPosition(Position(5, 0, 0));
@@ -369,22 +370,22 @@ void SceneTester::Update(double dt)
 	if (Application::IsKeyPressed('T'))
 	{
 		//gameObject.SetPositionZ(gameObject.GetPositionZ() - 5 * dt);
-		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(0, 0, -1) * 3 * dt);
+		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(0, 0, -1) * 10 * dt);
 	}
 	if (Application::IsKeyPressed('G'))
 	{
 		//gameObject.SetPositionZ(gameObject.GetPositionZ() + 5 * dt);
-		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(0, 0, 1) * 3 * dt);
+		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(0, 0, 1) * 10 * dt);
 	}
 	if (Application::IsKeyPressed('F'))
 	{
 		//gameObject.SetPositionX(gameObject.GetPositionX() - 5 * dt);
-		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(-1, 0, 0) * 3 * dt);
+		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(-1, 0, 0) * 10 * dt);
 	}
 	if (Application::IsKeyPressed('H'))
 	{
 		//gameObject.SetPositionX(gameObject.GetPositionX() + 5 * dt);
-		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(1, 0, 0) * 3 * dt);
+		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(1, 0, 0) * 10 * dt);
 	}
 
 	std::string coinC = (GameObject::CheckCollision(coin.GetCollider()) == nullptr ? "false" : "true");
@@ -512,6 +513,8 @@ void SceneTester::Render() //My Own Pattern
 	RenderTextOnScreen(meshList[GEO_TEXT], "Collide Count: " + std::to_string(colCount), Color(0, 1, 0), 4, 0, 0);
 	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(box.GetCollider()->GetPosition().x) + ", " + std::to_string(box.GetCollider()->GetPosition().y) + ", " + std::to_string(box.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 8);
 	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetCollider()->GetPosition().x) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().y) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 10);
+	//RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(box.GetCollider()->GetPhysics()->GetVelocity().x) + ", " + std::to_string(box.GetCollider()->GetPhysics()->GetVelocity().y) + ", " + std::to_string(box.GetCollider()->GetPhysics()->GetVelocity().z), Color(0, 1, 0), 2, 0, 12);
+	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetCollider()->GetPhysics()->GetVelocity().x) + ", " + std::to_string(gameObject.GetCollider()->GetPhysics()->GetVelocity().y) + ", " + std::to_string(gameObject.GetCollider()->GetPhysics()->GetVelocity().z), Color(0, 1, 0), 2, 0, 14);
 
 	std::ostringstream mn;
 	mn << "Money:" << money.getMoney();

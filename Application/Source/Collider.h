@@ -22,7 +22,7 @@ struct Size
 };
 class Collider
 {
-	Position position, newPosition;
+	Position position;
 	Size size;
 	BasicPhysics* physics;
 	bool isTrigger; // allows objects to pass thru
