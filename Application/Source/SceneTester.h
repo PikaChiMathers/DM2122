@@ -45,6 +45,10 @@ public:
 
 	int UI_height, UI_width;
 
+	int colCount = 0;
+	bool colEnter = false;
+
+
 	enum GEOMETRY_TYPE //added (Step 1)
 	{
 		GEO_AXES = 0,

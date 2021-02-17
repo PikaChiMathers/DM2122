@@ -42,7 +42,7 @@ void GameObject::AddCollider()
 	if (collider == nullptr)
 	{
 		collider = new Collider();
-		ColliderManager::PushCollider(collider);
+		GameObject::PushCollider(this);
 	}
 }
 
@@ -50,7 +50,7 @@ void GameObject::RemoveCollider()
 {
 	if (collider != nullptr)
 	{
-		ColliderManager::RemoveCollider(collider);
+		GameObject::RemoveCollider(this);
 		delete collider;
 		collider = nullptr;
 	}
@@ -66,5 +66,73 @@ void GameObject::ColliderUpdate()
 	if (collider != nullptr)
 	{
 		collider->SetPosition(transform.position);
+	}
+}
+
+/**************************************************/
+//Collider/physics Update area
+/**************************************************/
+std::vector<GameObject*> GameObject::ColliderList;
+
+bool GameObject::ListContains(GameObject* obj)
+{
+	for (std::vector<GameObject*>::iterator it = ColliderList.begin(); it != ColliderList.end(); it++)
+	{
+		if ((*it) == obj) return true;
+	}
+	return false;
+}
+
+void GameObject::PushCollider(GameObject* obj)
+{
+	if (!ListContains(obj))
+	{
+		ColliderList.push_back(obj);
+	}
+}
+
+void GameObject::RemoveCollider(GameObject* obj)
+{
+	for (std::vector<GameObject*>::iterator it = ColliderList.begin(); it != ColliderList.end(); it++)
+	{
+		if ((*it) == obj)
+		{
+			ColliderList.erase(it);
+			break;
+		}
+	}
+}
+
+GameObject* GameObject::CheckCollision(Collider* obj)
+{
+	for (std::vector<GameObject*>::iterator it = ColliderList.begin(); it != ColliderList.end(); it++)
+	{
+		if ((*it)->GetCollider() != obj)
+		{
+			if (abs((*it)->GetCollider()->GetPosition().x - obj->GetPosition().x) < ((*it)->GetCollider()->GetSize().x + obj->GetSize().x) * 0.5f &&
+				abs((*it)->GetCollider()->GetPosition().y - obj->GetPosition().y) < ((*it)->GetCollider()->GetSize().y + obj->GetSize().y) * 0.5f &&
+				abs((*it)->GetCollider()->GetPosition().z - obj->GetPosition().z) < ((*it)->GetCollider()->GetSize().z + obj->GetSize().z) * 0.5f)
+			{
+				return (*it);
+			}
+		}
+	}
+	return nullptr;
+}
+
+void GameObject::GameObjectUpdate(double dt)
+{
+	for (std::vector<GameObject*>::iterator it = ColliderList.begin(); it != ColliderList.end(); it++)
+	{
+		GameObject* gameObject = (*it);
+		if (gameObject->GetCollider()->GetPhysics() != nullptr)
+		{
+			BasicPhysics* physics = gameObject->GetCollider()->GetPhysics();
+			if (physics->GetVelocity().Length() > 0)
+			{
+				physics->PhysicsUpdate(dt);
+				gameObject->SetPosition(Position(gameObject->GetPositionX() + physics->GetVelocity().x, gameObject->GetPositionY() + physics->GetVelocity().y, gameObject->GetPositionZ() + physics->GetVelocity().z));
+			}
+		}
 	}
 }

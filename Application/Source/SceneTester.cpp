@@ -208,6 +208,8 @@ void SceneTester::Init()
 	glEnable(GL_DEPTH_TEST);
 
 	gameObject.AddCollider();
+	gameObject.GetCollider()->AddPhysics();
+	gameObject.GetCollider()->GetPhysics()->SetDrag(10);
 	box.AddCollider();
 	box.SetPosition(Position(10, 0, 10));
 	coin.AddCollider();
@@ -216,6 +218,7 @@ void SceneTester::Init()
 
 void SceneTester::Update(double dt)
 {
+	GameObject::GameObjectUpdate(dt);
 	camera.Update(dt);
 
 	person.Update(dt);
@@ -364,22 +367,26 @@ void SceneTester::Update(double dt)
 
 	if (Application::IsKeyPressed('T'))
 	{
-		gameObject.SetPositionZ(gameObject.GetPositionZ() - 5 * dt);
+		//gameObject.SetPositionZ(gameObject.GetPositionZ() - 5 * dt);
+		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(0, 0, -1) * 3 * dt);
 	}
 	if (Application::IsKeyPressed('G'))
 	{
-		gameObject.SetPositionZ(gameObject.GetPositionZ() + 5 * dt);
+		//gameObject.SetPositionZ(gameObject.GetPositionZ() + 5 * dt);
+		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(0, 0, 1) * 3 * dt);
 	}
 	if (Application::IsKeyPressed('F'))
 	{
-		gameObject.SetPositionX(gameObject.GetPositionX() - 5 * dt);
+		//gameObject.SetPositionX(gameObject.GetPositionX() - 5 * dt);
+		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(-1, 0, 0) * 3 * dt);
 	}
 	if (Application::IsKeyPressed('H'))
 	{
-		gameObject.SetPositionX(gameObject.GetPositionX() + 5 * dt);
+		//gameObject.SetPositionX(gameObject.GetPositionX() + 5 * dt);
+		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(1, 0, 0) * 3 * dt);
 	}
 
-	std::string coinC = (ColliderManager::CheckCollision(coin.GetCollider()) == nullptr ? "false" : "true");
+	std::string coinC = (GameObject::CheckCollision(coin.GetCollider()) == nullptr ? "false" : "true");
 
 	
 	if (coinC == "true")
@@ -484,11 +491,20 @@ void SceneTester::Render() //My Own Pattern
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, 0);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, Application::GetWindowHeight() * .1f);
 
-	std::string col = (ColliderManager::CheckCollision(gameObject.GetCollider()) == nullptr ? "false" : "true");
-
-	RenderTextOnScreen(meshList[GEO_TEXT], "Collide" + col, Color(0, 1, 0), 4, 0, 4);
+	std::string col = (GameObject::CheckCollision(gameObject.GetCollider()) == nullptr ? "false" : "true");
+	if (GameObject::CheckCollision(gameObject.GetCollider()) != nullptr && !colEnter)
+	{
+		colEnter = true;
+		colCount++;
+	}
+	if (colEnter && (GameObject::CheckCollision(gameObject.GetCollider()) == nullptr))
+	{ 
+		colEnter = false;
+	}
+	RenderTextOnScreen(meshList[GEO_TEXT], "Collide: " + col, Color(0, 1, 0), 4, 0, 4);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Collide Count: " + std::to_string(colCount), Color(0, 1, 0), 4, 0, 0);
 	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(box.GetCollider()->GetPosition().x) + ", " + std::to_string(box.GetCollider()->GetPosition().y) + ", " + std::to_string(box.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 8);
 	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetCollider()->GetPosition().x) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().y) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 10);
 
