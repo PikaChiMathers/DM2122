@@ -3,11 +3,13 @@
 Collider::Collider()
 {
 	physics = nullptr;
+	isTrigger = false;
 }
 
 Collider::Collider(Position position, Size size) : position(position), size(size)
 {
 	physics = nullptr;
+	isTrigger = false;
 }
 
 Collider::~Collider()
@@ -33,6 +35,16 @@ Position Collider::GetPosition()
 Size Collider::GetSize()
 {
 	return size;
+}
+
+void Collider::SetIsTrigger(bool IsTrigger)
+{
+	this->isTrigger = IsTrigger;
+}
+
+bool Collider::GetIsTrigger()
+{
+	return isTrigger;
 }
 
 void Collider::AddPhysics()

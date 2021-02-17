@@ -49,6 +49,7 @@ public:
 	static void PushCollider(GameObject* col);
 	static void RemoveCollider(GameObject* col);
 	static GameObject* CheckCollision(Collider* col);
+	static GameObject* CheckCollision(Position pos, Size size = 1, Collider* exclude = nullptr);
 
 	static void GameObjectUpdate(double dt); // run every update
 };

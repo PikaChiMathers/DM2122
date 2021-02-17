@@ -214,6 +214,7 @@ void SceneTester::Init()
 	box.SetPosition(Position(10, 0, 10));
 	coin.AddCollider();
 	coin.SetPosition(Position(5, 0, 0));
+	coin.GetCollider()->SetIsTrigger(true);
 }
 
 void SceneTester::Update(double dt)
