@@ -45,19 +45,19 @@ void Camera3::Update(double dt)
 	}
 	if (Application::IsKeyPressed('A'))
 	{
-		position -= right * CAMERA_SPEED * dt;
+		position -= right * 0.3f * CAMERA_SPEED * dt;
 	}
 	if (Application::IsKeyPressed('D'))
 	{
-		position += right * CAMERA_SPEED * dt;
+		position += right * 0.3f * CAMERA_SPEED * dt;
 	}
 	if (Application::IsKeyPressed('S'))
 	{
-		position -= view * ZOOM_SPEED * dt;
+		position -= view * 0.3f * ZOOM_SPEED * dt;
 	}
 	if (Application::IsKeyPressed('W'))
 	{
-		position += view * ZOOM_SPEED * dt;
+		position += view * 0.3f * ZOOM_SPEED * dt;
 	}
 
 	if (Application::IsKeyPressed(VK_DOWN))
@@ -67,7 +67,7 @@ void Camera3::Update(double dt)
 		up = right.Cross(view).Normalized();
 		Mtx44 rotation;
 		rotation.SetToRotation(-pitch, right.x, right.y, right.z);
-		view = rotation * view;
+		view = rotation * view * 0.3f;
 	}
 	if (Application::IsKeyPressed(VK_LEFT))
 	{
