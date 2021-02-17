@@ -396,6 +396,7 @@ void SceneTester::Update(double dt)
 		coin.SetPositionY(-10);
 	}
 	
+	score.setScore(0, money.getMoney());
 }
 
 void SceneTester::Render() //My Own Pattern

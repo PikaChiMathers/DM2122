@@ -15,6 +15,7 @@ public:
 	void increaseScore(int, int);
 	void resetScore(int);
 	void decreaseScore(int, int);
+	void setScore(int, int);
 	int getScore(int);
 };
 
