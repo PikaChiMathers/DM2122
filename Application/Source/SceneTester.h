@@ -41,6 +41,7 @@ public:
 	Color red, blue, green, pink, Lblue, purple, orange, yellow, cyan, magenta, moonshade;
 
 	bool scene_change;
+	bool coin_collect; // To stop rendering of coin after collected
 
 	int UI_height, UI_width;
 

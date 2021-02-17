@@ -33,6 +33,8 @@ void SceneTester::Init()
 
 	rotateAngle = 0;
 
+	coin_collect = false;
+
 	//Set background color to dark blue (Step 3a)
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
@@ -383,6 +385,8 @@ void SceneTester::Update(double dt)
 	if (coinC == "true")
 	{
 		money.IncreaseMoney(100);
+		coin_collect = true;
+		coin.SetPositionY(-10);
 	}
 	
 }
@@ -468,7 +472,10 @@ void SceneTester::Render() //My Own Pattern
 	RenderMesh(meshList[GEO_CUBE], false);
 	modelStack.PopMatrix();
 
-	RenderCoin();
+	if (coin_collect == false)
+	{
+		RenderCoin();
+	}
 
 	modelStack.PushMatrix();
 	modelStack.Translate(box.GetPositionX(), box.GetPositionY(), box.GetPositionZ());
