@@ -135,6 +135,7 @@ private: //added (Step 2)
 
 	GameObject gameObject;
 	GameObject box;
+	GameObject coin;
 
 	unsigned m_vertexArrayID;
 	/*unsigned m_vertexBuffer[NUM_GEOMETRY];
@@ -148,7 +149,7 @@ private: //added (Step 2)
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
 
-	void RenderCoin(  int, int, int);
+	void RenderCoin();
 
 	void RenderSkybox();
 
