@@ -58,6 +58,7 @@ public:
 		GEO_CUBE,
 
 		GEO_COIN,
+		GEO_PASSPORT,
 
 		GEO_LIGHTBALL,
 		GEO_SPHERE,
@@ -141,6 +142,7 @@ private: //added (Step 2)
 	GameObject gameObject;
 	GameObject box;
 	GameObject coin;
+	GameObject passport;
 
 	unsigned m_vertexArrayID;
 	/*unsigned m_vertexBuffer[NUM_GEOMETRY];
