@@ -10,7 +10,7 @@ class BasicPhysics
 	float mass, drag;
 	bool usesGravity;
 public:
-	BasicPhysics(float mass = 1.f, float drag = 1.f);
+	BasicPhysics(float mass = 1.f, float drag = 0.f);
 	~BasicPhysics();
 	void SetGravity(bool use);
 	bool UsesGravity();
