@@ -1,5 +1,5 @@
-#ifndef SCENE_TEST
-#define SCENE_TEST
+#ifndef SCENE_MAP
+#define SCENE_MAP
 
 #include "Scene.h"
 #include "Camera2.h"
@@ -17,11 +17,11 @@
 
 #include <sstream>
 
-class SceneTester : public Scene
+class SceneMapping : public Scene
 {
 public:
-	SceneTester();
-	~SceneTester();
+	SceneMapping();
+	~SceneMapping();
 
 	virtual void Init();
 	virtual void Update(double dt);
