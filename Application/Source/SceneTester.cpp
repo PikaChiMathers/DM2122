@@ -27,6 +27,8 @@ void SceneTester::Init()
 
 	map.Set(Maps::MAP_TYPE::M_CITY, Maps::SKYBOX_TYPE::SB_DAY);
 
+	dialogue = new Dialogue("Dialogue//D1.txt");
+
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
@@ -61,7 +63,8 @@ void SceneTester::Init()
 
 
 	moonshade.Set(0.93f, 0.93f, 0.88f);
-	
+
+	meshList[GEO_TEST] = MeshBuilder::GenerateOBJ("test", "OBJ//bus.obj", Color(1, 0, 0));
 
 	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("Rsphere", red, 30, 30, 1);
 	meshList[GEO_SPHERE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
@@ -390,6 +393,10 @@ void SceneTester::Update(double dt)
 		gameObject.moveRight();
 	}
 
+	if (Application::IsKeyPressed(VK_SPACE))
+		std::cout << dialogue->Update() << std::endl;
+
+
 	std::string coinC = (GameObject::CheckCollision(coin.GetCollider()) == nullptr ? "false" : "true");
 
 	
@@ -464,6 +471,8 @@ void SceneTester::Render() //My Own Pattern
 	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &mvp.a[0]); //update the shader with new MVP
 
 	RenderMesh(meshList[GEO_AXES], false);
+
+	RenderMesh(meshList[GEO_TEST], lights[0].isOn);
 
 	modelStack.PushMatrix();
 	modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
