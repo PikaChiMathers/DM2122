@@ -1,28 +1,50 @@
 #pragma once
 
 #include <string>
+#include <vector>
+#include <Vector3.h>
 
 struct Maps
-{ //Map struct is to change the skybox and objs in map depending on map_type
+{ //Map struct is to change the environment depending on the skybox and map type
+    enum class SKYBOX_TYPE
+    {
+        SB_DAY = 0,
+        SB_NIGHT,
+        NUM_SKYBOX,
+    };
+
     enum class MAP_TYPE
     {
-        M_DAY = 0,
-        M_NIGHT,
+        M_CITY = 0,
+        M_TRIVIA,
         NUM_MAPS,
     };
 
     MAP_TYPE type;
+    SKYBOX_TYPE skybox;
     std::string skybox_loc[6];
     std::string objs_loc;
 
-    Maps(MAP_TYPE type = MAP_TYPE::M_DAY)
-    {
-        Set(type);
+    Maps(MAP_TYPE type = MAP_TYPE::M_CITY, SKYBOX_TYPE skybox = SKYBOX_TYPE::SB_DAY)
+    {   //default constructor
+        Set(type, skybox);
     }
 
-    void Set(MAP_TYPE type)
+    Maps(MAP_TYPE type, SKYBOX_TYPE skybox)
     {
+        Set(type, skybox);
+    }
+
+    void Set(MAP_TYPE type, SKYBOX_TYPE skybox)
+    {   //Sets the map type and skybox type
         this->type = type;
+        this->skybox = skybox;
+
+        Set(skybox);
+    }
+
+    void Set(SKYBOX_TYPE skybox) 
+    {   //Sets the Skybox sides
 
         //Initialzes the different sides
         skybox_loc[0] = "front.tga";
@@ -32,14 +54,14 @@ struct Maps
         skybox_loc[4] = "top.tga";
         skybox_loc[5] = "bottom.tga";
 
-        //Sets up location
+        //Sets up location of the .tga of each side
         std::string location;
-        switch (type)
+        switch (skybox)
         {
-        case (MAP_TYPE::M_DAY):
+        case (SKYBOX_TYPE::SB_DAY):
             location = "Maps//City//Day//Skybox//";
             break;
-        case (MAP_TYPE::M_NIGHT):
+        case (SKYBOX_TYPE::SB_NIGHT):
             location = "Maps//City//Night//Skybox//";
             break;
 
