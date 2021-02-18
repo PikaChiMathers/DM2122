@@ -25,7 +25,7 @@ void Bus::moveBackward()
 
 void Bus::moveLeft()
 {
-	GetCollider()->GetPhysics()->AddVelocity(Vector3(1, 0, 0) * acceleration);
+	GetCollider()->GetPhysics()->AddVelocity(Vector3(1, 0, 0) * -acceleration);
 }
 
 void Bus::moveRight()
