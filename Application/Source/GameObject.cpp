@@ -136,8 +136,7 @@ void GameObject::GameObjectUpdate(double dt)
 			BasicPhysics* physics = gameObject->GetCollider()->GetPhysics();
 			if (physics->GetVelocity().Length() > 0)
 			{
-				physics->PhysicsUpdate(dt);
-				Position newPos(gameObject->GetPositionX() + physics->GetVelocity().x, gameObject->GetPositionY() + physics->GetVelocity().y, gameObject->GetPositionZ() + physics->GetVelocity().z);
+				Position newPos(gameObject->GetPositionX() + physics->GetVelocity().x * dt, gameObject->GetPositionY() + physics->GetVelocity().y * dt, gameObject->GetPositionZ() + physics->GetVelocity().z * dt);
 				bool colliding = true;
 				for (int i = 0; i < 5; i++) // if after 5 attempts to get the obj out of other colliders and still fail, just dont move it.
 				{
@@ -147,7 +146,7 @@ void GameObject::GameObjectUpdate(double dt)
 						colliding = false;
 						break;
 					}
-					if (hit->GetCollider()->GetPhysics() == nullptr)
+					//if (hit->GetCollider()->GetPhysics() == nullptr)
 					{
 						float xDif = (gameObject->GetCollider()->GetSize().x + hit->GetCollider()->GetSize().x) * .5f - abs(newPos.x - hit->GetPositionX());
 						float yDif = (gameObject->GetCollider()->GetSize().y + hit->GetCollider()->GetSize().y) * .5f - abs(newPos.y - hit->GetPositionY());
@@ -165,16 +164,30 @@ void GameObject::GameObjectUpdate(double dt)
 							newPos.z += newPos.z > hit->GetPositionZ() ? zDif : -zDif;
 						}
 					}
-					else
-					{
-						//do physics things
-						std::cout << "cant get out\n";
-					}
+					//else
+					//{
+						//BasicPhysics* hitPhysics = hit->GetCollider()->GetPhysics();
+						///***********************************
+						//formula: 
+						//v1f = ( (m1 - m2)u1 + 2m2 u2 ) / m1 + m2
+						//v2f = ( (m2 - m1)u2 + 2m1 u1 ) / m1 + m2
+						//************************************/
+						//physics->SetVelocity(((physics->GetMass() - hitPhysics->GetMass()) * physics->GetVelocity() + 2 * hitPhysics->GetMass() * hitPhysics->GetVelocity()) * (1 / (physics->GetMass() + hitPhysics->GetMass())));
+						//hitPhysics->SetVelocity(((hitPhysics->GetMass() - physics->GetMass()) * hitPhysics->GetVelocity() + 2 * physics->GetMass() * physics->GetVelocity()) * (1 / (physics->GetMass() + hitPhysics->GetMass())));
+						//colliding = false;
+						//break;
+						
+					//}
 				}
-				if (!colliding)
+				if (colliding)
+				{
+					std::cout << "cant get out\n";
+				}
+				else
 				{
 					gameObject->SetPosition(newPos);
 				}
+				physics->PhysicsUpdate(dt);
 			}
 		}
 	}
