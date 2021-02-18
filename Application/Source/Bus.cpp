@@ -35,3 +35,8 @@ void Bus::GameObjectUpdate(double dt)
 	GetCollider()->GetPhysics()->AddVelocity(Vector3(xVelocity, 0, zVelocity));
 	if (xVelocity == 0 && zVelocity == 0) GetCollider()->GetPhysics()->SetDrag(brakePower);
 }
+
+std::string Bus::Type()
+{
+	return "Bus";
+}

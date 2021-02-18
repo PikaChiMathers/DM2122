@@ -79,7 +79,37 @@ void GameObject::ColliderUpdate()
 	}
 }
 
+void GameObject::SetTag(std::string tag)
+{
+	this->tag = tag;
+}
+
+std::string GameObject::GetTag()
+{
+	return tag;
+}
+
 void GameObject::GameObjectUpdate(double dt)
+{
+	
+}
+
+std::string GameObject::Type()
+{
+	return "Base";
+}
+
+void GameObject::OnTriggerEnter(GameObject* gameObject)
+{
+
+}
+
+void GameObject::OnTriggerStay(GameObject* gameObject)
+{
+
+}
+
+void GameObject::OnTriggerExit(GameObject* gameObject)
 {
 
 }
@@ -141,6 +171,30 @@ GameObject* GameObject::CheckCollision(Position pos, Size size, Collider* exclud
 	return nullptr;
 }
 
+std::vector<GameObject*> GameObject::CheckCollisions(Collider* obj)
+{
+	if (obj == nullptr) return std::vector<GameObject*>();
+	return CheckCollisions(obj->GetPosition(), obj->GetSize(), obj);
+}
+
+std::vector<GameObject*> GameObject::CheckCollisions(Position pos, Size size, Collider* exclude)
+{
+	std::vector<GameObject*>GameObjectsInCollider;
+	for (std::vector<GameObject*>::iterator it = ColliderList.begin(); it != ColliderList.end(); it++)
+	{
+		if ((*it)->GetCollider() != exclude)
+		{
+			if (abs((*it)->GetCollider()->GetPosition().x - pos.x) < ((*it)->GetCollider()->GetSize().x + size.x) * 0.5f &&
+				abs((*it)->GetCollider()->GetPosition().y - pos.y) < ((*it)->GetCollider()->GetSize().y + size.y) * 0.5f &&
+				abs((*it)->GetCollider()->GetPosition().z - pos.z) < ((*it)->GetCollider()->GetSize().z + size.z) * 0.5f)
+			{
+				GameObjectsInCollider.push_back((*it));
+			}
+		}
+	}
+	return GameObjectsInCollider;
+}
+
 void GameObject::GameObjectUpdateManager(double dt)
 {
 	for (std::vector<GameObject*>::iterator it = GameObjectList.begin(); it != GameObjectList.end(); it++)
@@ -149,7 +203,34 @@ void GameObject::GameObjectUpdateManager(double dt)
 		if ((*it)->GetCollider() != nullptr)
 		{
 			GameObject* gameObject = (*it);
-			if (gameObject->GetCollider()->GetPhysics() != nullptr && !gameObject->GetCollider()->GetIsTrigger())
+			if (gameObject->GetCollider()->GetIsTrigger()) // Check for Trigger Collider Objects
+			{
+				std::vector<GameObject*>CheckTrigger = CheckCollisions(gameObject->GetCollider());
+				for (std::vector<GameObject*>::iterator it = gameObject->InTrigger.begin(); it != gameObject->InTrigger.end(); it++)
+				{
+					bool notMatched = true;
+					for (std::vector<GameObject*>::iterator itNew = CheckTrigger.begin(); itNew != CheckTrigger.end(); itNew++)
+					{
+						if ((*it) == (*itNew))
+						{
+							gameObject->OnTriggerStay((*itNew));
+							CheckTrigger.erase(itNew);
+							notMatched = false;
+							break;
+						}
+					}
+					if (notMatched)
+					{
+						gameObject->OnTriggerExit((*it));
+						gameObject->InTrigger.erase(it);
+					}
+				}
+				for (std::vector<GameObject*>::iterator it = CheckTrigger.begin(); it != CheckTrigger.end(); it++)
+				{
+					gameObject->OnTriggerEnter((*it));
+				}
+			}
+			if (gameObject->GetCollider()->GetPhysics() != nullptr && !gameObject->GetCollider()->GetIsTrigger()) // check for collision
 			{
 				BasicPhysics* physics = gameObject->GetCollider()->GetPhysics();
 				if (physics->GetVelocity().Length() > 0)
@@ -172,14 +253,17 @@ void GameObject::GameObjectUpdateManager(double dt)
 							if (xDif < yDif && xDif < zDif)
 							{
 								newPos.x += newPos.x > hit->GetPositionX() ? xDif : -xDif;
+								physics->SetVelocity(Vector3(0, physics->GetVelocity().y, physics->GetVelocity().z));
 							}
 							else if (yDif < zDif)
 							{
 								newPos.y += newPos.y > hit->GetPositionY() ? yDif : -yDif;
+								physics->SetVelocity(Vector3(physics->GetVelocity().x, 0, physics->GetVelocity().z));
 							}
 							else
 							{
 								newPos.z += newPos.z > hit->GetPositionZ() ? zDif : -zDif;
+								physics->SetVelocity(Vector3(physics->GetVelocity().x, physics->GetVelocity().y, 0));
 							}
 						}
 						//else

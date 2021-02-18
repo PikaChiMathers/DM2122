@@ -6,11 +6,16 @@
 #include"Transform.h"
 #include"Collider.h"
 #include"Application.h"
-class GameObject // use this as the base class for objects that needs collider.
+class GameObject // use this as the base class for objects
 {
 	Transform transform;
 	Collider* collider; // add this for collider. from collider, you can add physics component.
+	std::string tag;
+
 public:
+	//Used to store GameObjects that are inside a trigger box of the current GameObject.
+	std::vector<GameObject*>InTrigger;
+
 	GameObject();
 	~GameObject();
 	void SetPositionX(float x);
@@ -43,19 +48,40 @@ public:
 	Collider* GetCollider();
 	void ColliderUpdate();
 
-	virtual void GameObjectUpdate(double dt); // this runs every update in the Scene's update function.
+	void SetTag(std::string tag);
+	std::string GetTag();
+
+	// this runs every update in the Scene's update function.
+	virtual void GameObjectUpdate(double dt); 
+
+	// return the name of the class
+	virtual std::string Type(); 
+
+	//Return GameObject that entered the trigger collision box and runs the function
+	virtual void OnTriggerEnter(GameObject* gameObject);
+	//Return GameObject that has already entered the trigger collision box and is still inside, and runs the function
+	virtual void OnTriggerStay(GameObject* gameObject);
+	//Return GameObject that exits the trigger collision box and runs the function
+	virtual void OnTriggerExit(GameObject* gameObject);
 
 private:
-	static std::vector<GameObject*>GameObjectList; // all GameObjects
-	static std::vector<GameObject*>ColliderList; // GameObjects with Colliders
+	// all GameObjects
+	static std::vector<GameObject*>GameObjectList; 
+	// GameObjects with Colliders
+	static std::vector<GameObject*>ColliderList;
 public:
 	static bool ListContains(GameObject* col);
 	static void PushCollider(GameObject* col);
 	static void EraseCollider(GameObject* col);
+	//returns first gameobject found that is within a collider box
 	static GameObject* CheckCollision(Collider* col);
 	static GameObject* CheckCollision(Position pos, Size size = 1, Collider* exclude = nullptr);
+	//return all gameobjects found within a collider box
+	static std::vector<GameObject*> CheckCollisions(Collider* col);
+	static std::vector<GameObject*> CheckCollisions(Position pos, Size size = 1, Collider* exclude = nullptr);
 
-	static void GameObjectUpdateManager(double dt); // run every update
+	// run every update in Scene::Update
+	static void GameObjectUpdateManager(double dt); 
 };
 
 #endif

@@ -14,5 +14,6 @@ public:
 	void setBrakePower(float brake);
 
 	void GameObjectUpdate(double dt);
+	std::string Type();
 };
 #endif
