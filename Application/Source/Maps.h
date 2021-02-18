@@ -30,11 +30,6 @@ struct Maps
         Set(type, skybox);
     }
 
-    Maps(MAP_TYPE type, SKYBOX_TYPE skybox)
-    {
-        Set(type, skybox);
-    }
-
     void Set(MAP_TYPE type, SKYBOX_TYPE skybox)
     {   //Sets the map type and skybox type
         this->type = type;
