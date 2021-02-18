@@ -212,7 +212,7 @@ void SceneTester::Init()
 	gameObject.GetCollider()->AddPhysics();
 	gameObject.GetCollider()->GetPhysics()->SetDrag(5);
 	box.AddCollider();
-	//box.GetCollider()->AddPhysics();
+	box.GetCollider()->AddPhysics();
 	box.SetPosition(Position(10, 0, 10));
 	coin.AddCollider();
 	coin.SetPosition(Position(5, 0, 0));
@@ -500,7 +500,6 @@ void SceneTester::Render() //My Own Pattern
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, Application::GetWindowHeight() * .1f);
 
-	std::string col = (GameObject::CheckCollision(gameObject.GetCollider()) == nullptr ? "false" : "true");
 	if (GameObject::CheckCollision(gameObject.GetCollider()) != nullptr && !colEnter)
 	{
 		colEnter = true;
@@ -510,7 +509,7 @@ void SceneTester::Render() //My Own Pattern
 	{ 
 		colEnter = false;
 	}
-	RenderTextOnScreen(meshList[GEO_TEXT], "Collide: " + col, Color(0, 1, 0), 4, 0, 4);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Collide: " + std::to_string(colEnter), Color(0, 1, 0), 4, 0, 4);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Collide Count: " + std::to_string(colCount), Color(0, 1, 0), 4, 0, 0);
 	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(box.GetCollider()->GetPosition().x) + ", " + std::to_string(box.GetCollider()->GetPosition().y) + ", " + std::to_string(box.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 8);
 	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetCollider()->GetPosition().x) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().y) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 10);
