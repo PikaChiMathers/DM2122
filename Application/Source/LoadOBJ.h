@@ -22,6 +22,16 @@ void IndexVBO(
 	std::vector<Vertex> & out_vertices
 );
 
+void IndexVBO(
+	std::vector<Position>& in_vertices,
+	std::vector<TexCoord>& in_uvs,
+	std::vector<Vector3>& in_normals,
+
+	std::vector<unsigned>& out_indices,
+	std::vector<Vertex>& out_vertices,
+	Color color
+);
+
 bool LoadOBJMTL(
 	const char* file_path, 
 	const char* mtl_path,

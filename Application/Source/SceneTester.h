@@ -10,10 +10,13 @@
 #include "Light.h"
 
 #include "GameObject.h"
+#include "Bus.h"
 #include "Person.h"
 #include "Money.h"
 #include "Maps.h"
 #include "Score.h"
+
+#include "Dialogue.h"
 
 #include <sstream>
 
@@ -72,6 +75,8 @@ public:
 		GEO_BACK,
 
 		GEO_TEXT,
+
+		GEO_TEST,
 
 		NUM_GEOMETRY,
 	};
@@ -139,7 +144,10 @@ private: //added (Step 2)
 	Maps map;
 	Score score;
 
-	GameObject gameObject;
+	Dialogue* dialogue;
+
+	//GameObject gameObject;
+	Bus gameObject;
 	GameObject box;
 	GameObject coin;
 	GameObject passport;

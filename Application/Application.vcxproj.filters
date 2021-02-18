@@ -93,6 +93,12 @@
     <ClCompile Include="Source\SceneMapping.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Bus.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Collectibles.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -161,9 +167,6 @@
     <ClInclude Include="Source\Maps.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\ColliderManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Dialogue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -189,6 +192,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneMapping.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Bus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Collectibles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

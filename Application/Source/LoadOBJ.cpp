@@ -183,6 +183,46 @@ void IndexVBO(
 	}
 }
 
+void IndexVBO(std::vector<Position>& in_vertices,
+			  std::vector<TexCoord>& in_uvs, 
+			  std::vector<Vector3>& in_normals,
+			  std::vector<unsigned>& out_indices,
+			  std::vector<Vertex>& out_vertices,
+			  Color color)
+{
+	std::map<PackedVertex, unsigned short> VertexToOutIndex;
+
+	// For each input vertex
+	for (unsigned int i = 0; i < in_vertices.size(); ++i)
+	{
+
+		PackedVertex packed = { in_vertices[i], in_uvs[i], in_normals[i] };
+
+		// Try to find a similar vertex in out_XXXX
+		unsigned short index;
+		bool found = getSimilarVertexIndex_fast(packed, VertexToOutIndex, index);
+
+		if (found)
+		{
+			// A similar vertex is already in the VBO, use it instead !
+			out_indices.push_back(index);
+		}
+		else
+		{
+			// If not, it needs to be added in the output data.
+			Vertex v;
+			v.pos.Set(in_vertices[i].x, in_vertices[i].y, in_vertices[i].z);
+			v.texCoord.Set(in_uvs[i].u, in_uvs[i].v);
+			v.normal.Set(in_normals[i].x, in_normals[i].y, in_normals[i].z);
+			v.color.Set(color.r, color.g, color.b); 
+			out_vertices.push_back(v);
+			unsigned newindex = (unsigned)out_vertices.size() - 1;
+			out_indices.push_back(newindex);
+			VertexToOutIndex[packed] = newindex;
+		}
+	}
+}
+
 bool LoadMTL(const char* file_path, std::map<std::string, Material*>& materials_map)
 {
 	std::ifstream fileStream(file_path, std::ios::binary);
