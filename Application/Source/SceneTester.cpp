@@ -209,7 +209,7 @@ void SceneTester::Init()
 
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
-
+	
 	gameObject.AddCollider();
 	gameObject.GetCollider()->AddPhysics();
 	gameObject.GetCollider()->GetPhysics()->SetDrag(5);
