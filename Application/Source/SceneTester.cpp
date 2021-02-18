@@ -27,6 +27,8 @@ void SceneTester::Init()
 
 	map.Set(Maps::MAP_TYPE::M_CITY, Maps::SKYBOX_TYPE::SB_DAY);
 
+	dialogue = new Dialogue("Dialogue//D1.txt");
+
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
@@ -392,6 +394,10 @@ void SceneTester::Update(double dt)
 		//gameObject.SetPositionX(gameObject.GetPositionX() + 5 * dt);
 		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(1, 0, 0) * 10 * dt);
 	}
+
+	if (Application::IsKeyPressed(VK_SPACE))
+		std::cout << dialogue->Update() << std::endl;
+
 
 	std::string coinC = (GameObject::CheckCollision(coin.GetCollider()) == nullptr ? "false" : "true");
 
