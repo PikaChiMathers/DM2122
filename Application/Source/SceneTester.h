@@ -146,7 +146,7 @@ private: //added (Step 2)
 
 	Dialogue* dialogue;
 
-	GameObject gameObject;
+	//GameObject gameObject;
 	Bus gameObject;
 	GameObject box;
 	GameObject coin;
