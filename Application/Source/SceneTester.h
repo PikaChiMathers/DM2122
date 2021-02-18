@@ -75,6 +75,8 @@ public:
 
 		GEO_TEXT,
 
+		GEO_TEST,
+
 		NUM_GEOMETRY,
 	};
 
