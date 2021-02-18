@@ -215,7 +215,7 @@ void SceneTester::Init()
 
 	gameObject.AddCollider();
 	gameObject.GetCollider()->AddPhysics();
-	gameObject.GetCollider()->GetPhysics()->SetDrag(5);
+	gameObject.GetCollider()->GetPhysics()->SetDrag(1);
 	box.AddCollider();
 	box.GetCollider()->AddPhysics();
 	box.SetPosition(Position(10, 0, 10));
@@ -378,22 +378,22 @@ void SceneTester::Update(double dt)
 	if (Application::IsKeyPressed('T'))
 	{
 		//gameObject.SetPositionZ(gameObject.GetPositionZ() - 5 * dt);
-		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(0, 0, -1) * 10 * dt);
+		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(0, 0, -1) * 100 * dt);
 	}
 	if (Application::IsKeyPressed('G'))
 	{
 		//gameObject.SetPositionZ(gameObject.GetPositionZ() + 5 * dt);
-		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(0, 0, 1) * 10 * dt);
+		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(0, 0, 1) * 100 * dt);
 	}
 	if (Application::IsKeyPressed('F'))
 	{
 		//gameObject.SetPositionX(gameObject.GetPositionX() - 5 * dt);
-		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(-1, 0, 0) * 10 * dt);
+		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(-1, 0, 0) * 100 * dt);
 	}
 	if (Application::IsKeyPressed('H'))
 	{
 		//gameObject.SetPositionX(gameObject.GetPositionX() + 5 * dt);
-		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(1, 0, 0) * 10 * dt);
+		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(1, 0, 0) * 100 * dt);
 	}
 
 	if (Application::IsKeyPressed(VK_SPACE))

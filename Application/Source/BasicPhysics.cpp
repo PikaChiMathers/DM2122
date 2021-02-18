@@ -32,7 +32,7 @@ int BasicPhysics::GetMass()
 
 void BasicPhysics::SetDrag(int drag)
 {
-	this->drag = drag >= 0 ? drag : 1;
+	this->drag = drag > 0 ? drag : 0;
 }
 
 int BasicPhysics::GetDrag()
