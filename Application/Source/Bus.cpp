@@ -6,29 +6,32 @@ Bus::Bus()
 	brakePower = 5;
 	AddCollider();
 	GetCollider()->AddPhysics();
-	GetCollider()->GetPhysics()->SetDrag(1);
 }
 
 Bus::~Bus()
 {
 }
 
-void Bus::moveFoward()
+void Bus::GameObjectUpdate(double dt)
 {
-	GetCollider()->GetPhysics()->AddVelocity(Vector3(0, 0, 1) * acceleration);
-}
-
-void Bus::moveBackward()
-{
-	GetCollider()->GetPhysics()->AddVelocity(Vector3(0, 0, 1) * -acceleration);
-}
-
-void Bus::moveLeft()
-{
-	GetCollider()->GetPhysics()->AddVelocity(Vector3(1, 0, 0) * -acceleration);
-}
-
-void Bus::moveRight()
-{
-	GetCollider()->GetPhysics()->AddVelocity(Vector3(1, 0, 0) * acceleration);
+	float xVelocity = 0, zVelocity = 0;
+	GetCollider()->GetPhysics()->SetDrag(1);
+	if (Application::IsKeyPressed('T'))
+	{
+		zVelocity -= acceleration * dt;
+	}
+	if (Application::IsKeyPressed('G'))
+	{
+		zVelocity += acceleration * dt;
+	}
+	if (Application::IsKeyPressed('F'))
+	{
+		xVelocity -= acceleration * dt;
+	}
+	if (Application::IsKeyPressed('H'))
+	{
+		xVelocity += acceleration * dt;
+	}
+	GetCollider()->GetPhysics()->AddVelocity(Vector3(xVelocity, 0, zVelocity));
+	if (xVelocity == 0 && zVelocity == 0) GetCollider()->GetPhysics()->SetDrag(brakePower);
 }

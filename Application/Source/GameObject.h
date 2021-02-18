@@ -5,6 +5,7 @@
 #include<vector>
 #include"Transform.h"
 #include"Collider.h"
+#include"Application.h"
 class GameObject // use this as the base class for objects that needs collider.
 {
 	Transform transform;
@@ -42,16 +43,19 @@ public:
 	Collider* GetCollider();
 	void ColliderUpdate();
 
+	virtual void GameObjectUpdate(double dt); // this runs every update in the Scene's update function.
+
 private:
+	static std::vector<GameObject*>GameObjectList; // all GameObjects
 	static std::vector<GameObject*>ColliderList; // GameObjects with Colliders
 public:
 	static bool ListContains(GameObject* col);
 	static void PushCollider(GameObject* col);
-	static void RemoveCollider(GameObject* col);
+	static void EraseCollider(GameObject* col);
 	static GameObject* CheckCollision(Collider* col);
 	static GameObject* CheckCollision(Position pos, Size size = 1, Collider* exclude = nullptr);
 
-	static void GameObjectUpdate(double dt); // run every update
+	static void GameObjectUpdateManager(double dt); // run every update
 };
 
 #endif

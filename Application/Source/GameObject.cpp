@@ -1,13 +1,23 @@
 #include"GameObject.h"
 
+std::vector<GameObject*> GameObject::GameObjectList;
 GameObject::GameObject()
 {
 	collider = nullptr;
+	GameObjectList.push_back(this);
 }
 
 GameObject::~GameObject()
 {
 	RemoveCollider();
+	for (std::vector<GameObject*>::iterator it = GameObjectList.begin(); it != GameObjectList.end(); it++)
+	{
+		if ((*it) == this)
+		{
+			GameObjectList.erase(it);
+			break;
+		}
+	}
 }
 
 void GameObject::SetPositionX(float x) { transform.position.x = x; ColliderUpdate(); }
@@ -50,7 +60,7 @@ void GameObject::RemoveCollider()
 {
 	if (collider != nullptr)
 	{
-		GameObject::RemoveCollider(this);
+		GameObject::EraseCollider(this);
 		delete collider;
 		collider = nullptr;
 	}
@@ -67,6 +77,11 @@ void GameObject::ColliderUpdate()
 	{
 		collider->SetPosition(transform.position);
 	}
+}
+
+void GameObject::GameObjectUpdate(double dt)
+{
+
 }
 
 /**************************************************/
@@ -91,7 +106,7 @@ void GameObject::PushCollider(GameObject* obj)
 	}
 }
 
-void GameObject::RemoveCollider(GameObject* obj)
+void GameObject::EraseCollider(GameObject* obj)
 {
 	for (std::vector<GameObject*>::iterator it = ColliderList.begin(); it != ColliderList.end(); it++)
 	{
@@ -126,68 +141,72 @@ GameObject* GameObject::CheckCollision(Position pos, Size size, Collider* exclud
 	return nullptr;
 }
 
-void GameObject::GameObjectUpdate(double dt)
+void GameObject::GameObjectUpdateManager(double dt)
 {
-	for (std::vector<GameObject*>::iterator it = ColliderList.begin(); it != ColliderList.end(); it++)
+	for (std::vector<GameObject*>::iterator it = GameObjectList.begin(); it != GameObjectList.end(); it++)
 	{
-		GameObject* gameObject = (*it);
-		if (gameObject->GetCollider()->GetPhysics() != nullptr && !gameObject->GetCollider()->GetIsTrigger())
+		(*it)->GameObjectUpdate(dt);
+		if ((*it)->GetCollider() != nullptr)
 		{
-			BasicPhysics* physics = gameObject->GetCollider()->GetPhysics();
-			if (physics->GetVelocity().Length() > 0)
+			GameObject* gameObject = (*it);
+			if (gameObject->GetCollider()->GetPhysics() != nullptr && !gameObject->GetCollider()->GetIsTrigger())
 			{
-				Position newPos(gameObject->GetPositionX() + physics->GetVelocity().x * dt, gameObject->GetPositionY() + physics->GetVelocity().y * dt, gameObject->GetPositionZ() + physics->GetVelocity().z * dt);
-				bool colliding = true;
-				for (int i = 0; i < 5; i++) // if after 5 attempts to get the obj out of other colliders and still fail, just dont move it.
+				BasicPhysics* physics = gameObject->GetCollider()->GetPhysics();
+				if (physics->GetVelocity().Length() > 0)
 				{
-					GameObject* hit = CheckCollision(newPos, gameObject->GetCollider()->GetSize(), gameObject->GetCollider());
-					if (hit == nullptr || hit->GetCollider()->GetIsTrigger())
+					Position newPos(gameObject->GetPositionX() + physics->GetVelocity().x * dt, gameObject->GetPositionY() + physics->GetVelocity().y * dt, gameObject->GetPositionZ() + physics->GetVelocity().z * dt);
+					bool colliding = true;
+					for (int i = 0; i < 5; i++) // if after 5 attempts to get the obj out of other colliders and still fail, just dont move it.
 					{
-						colliding = false;
-						break;
+						GameObject* hit = CheckCollision(newPos, gameObject->GetCollider()->GetSize(), gameObject->GetCollider());
+						if (hit == nullptr || hit->GetCollider()->GetIsTrigger())
+						{
+							colliding = false;
+							break;
+						}
+						//if (hit->GetCollider()->GetPhysics() == nullptr)
+						{
+							float xDif = (gameObject->GetCollider()->GetSize().x + hit->GetCollider()->GetSize().x) * .5f - abs(newPos.x - hit->GetPositionX());
+							float yDif = (gameObject->GetCollider()->GetSize().y + hit->GetCollider()->GetSize().y) * .5f - abs(newPos.y - hit->GetPositionY());
+							float zDif = (gameObject->GetCollider()->GetSize().z + hit->GetCollider()->GetSize().z) * .5f - abs(newPos.z - hit->GetPositionZ());
+							if (xDif < yDif && xDif < zDif)
+							{
+								newPos.x += newPos.x > hit->GetPositionX() ? xDif : -xDif;
+							}
+							else if (yDif < zDif)
+							{
+								newPos.y += newPos.y > hit->GetPositionY() ? yDif : -yDif;
+							}
+							else
+							{
+								newPos.z += newPos.z > hit->GetPositionZ() ? zDif : -zDif;
+							}
+						}
+						//else
+						//{
+							//BasicPhysics* hitPhysics = hit->GetCollider()->GetPhysics();
+							///***********************************
+							//formula: 
+							//v1f = ( (m1 - m2)u1 + 2m2 u2 ) / m1 + m2
+							//v2f = ( (m2 - m1)u2 + 2m1 u1 ) / m1 + m2
+							//************************************/
+							//physics->SetVelocity(((physics->GetMass() - hitPhysics->GetMass()) * physics->GetVelocity() + 2 * hitPhysics->GetMass() * hitPhysics->GetVelocity()) * (1 / (physics->GetMass() + hitPhysics->GetMass())));
+							//hitPhysics->SetVelocity(((hitPhysics->GetMass() - physics->GetMass()) * hitPhysics->GetVelocity() + 2 * physics->GetMass() * physics->GetVelocity()) * (1 / (physics->GetMass() + hitPhysics->GetMass())));
+							//colliding = false;
+							//break;
+
+						//}
 					}
-					//if (hit->GetCollider()->GetPhysics() == nullptr)
+					if (colliding)
 					{
-						float xDif = (gameObject->GetCollider()->GetSize().x + hit->GetCollider()->GetSize().x) * .5f - abs(newPos.x - hit->GetPositionX());
-						float yDif = (gameObject->GetCollider()->GetSize().y + hit->GetCollider()->GetSize().y) * .5f - abs(newPos.y - hit->GetPositionY());
-						float zDif = (gameObject->GetCollider()->GetSize().z + hit->GetCollider()->GetSize().z) * .5f - abs(newPos.z - hit->GetPositionZ());
-						if (xDif < yDif && xDif < zDif)
-						{
-							newPos.x += newPos.x > hit->GetPositionX() ? xDif : -xDif;
-						}
-						else if (yDif < zDif)
-						{
-							newPos.y += newPos.y > hit->GetPositionY() ? yDif : -yDif;
-						}
-						else
-						{
-							newPos.z += newPos.z > hit->GetPositionZ() ? zDif : -zDif;
-						}
+						std::cout << "cant get out\n";
 					}
-					//else
-					//{
-						//BasicPhysics* hitPhysics = hit->GetCollider()->GetPhysics();
-						///***********************************
-						//formula: 
-						//v1f = ( (m1 - m2)u1 + 2m2 u2 ) / m1 + m2
-						//v2f = ( (m2 - m1)u2 + 2m1 u1 ) / m1 + m2
-						//************************************/
-						//physics->SetVelocity(((physics->GetMass() - hitPhysics->GetMass()) * physics->GetVelocity() + 2 * hitPhysics->GetMass() * hitPhysics->GetVelocity()) * (1 / (physics->GetMass() + hitPhysics->GetMass())));
-						//hitPhysics->SetVelocity(((hitPhysics->GetMass() - physics->GetMass()) * hitPhysics->GetVelocity() + 2 * physics->GetMass() * physics->GetVelocity()) * (1 / (physics->GetMass() + hitPhysics->GetMass())));
-						//colliding = false;
-						//break;
-						
-					//}
+					else
+					{
+						gameObject->SetPosition(newPos);
+					}
+					physics->PhysicsUpdate(dt);
 				}
-				if (colliding)
-				{
-					std::cout << "cant get out\n";
-				}
-				else
-				{
-					gameObject->SetPosition(newPos);
-				}
-				physics->PhysicsUpdate(dt);
 			}
 		}
 	}

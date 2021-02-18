@@ -224,7 +224,7 @@ void SceneMapping::Init()
 
 void SceneMapping::Update(double dt)
 {
-	GameObject::GameObjectUpdate(dt);
+	GameObject::GameObjectUpdateManager(dt);
 	camera.Update(dt);
 
 	person.Update(dt);

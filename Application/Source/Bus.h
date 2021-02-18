@@ -10,11 +10,9 @@ class Bus : public GameObject
 public:
 	Bus();
 	~Bus();
-	void moveFoward();
-	void moveBackward();
-	void moveLeft();
-	void moveRight();
 	void setAccel(float accel);
 	void setBrakePower(float brake);
+
+	void GameObjectUpdate(double dt);
 };
 #endif
