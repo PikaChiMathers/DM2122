@@ -5,10 +5,10 @@
 #include<vector>
 #include"Transform.h"
 #include"Collider.h"
-class GameObject
+class GameObject // use this as the base class for objects that needs collider.
 {
 	Transform transform;
-	Collider* collider;
+	Collider* collider; // add this for collider. from collider, you can add physics component.
 public:
 	GameObject();
 	~GameObject();

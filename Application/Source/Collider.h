@@ -22,9 +22,9 @@ struct Size
 };
 class Collider
 {
-	Position position, newPosition;
+	Position position;
 	Size size;
-	BasicPhysics* physics;
+	BasicPhysics* physics; // add this if you want the object to stop moving when colliding with other colliders. Use the add/set velocity function to move
 	bool isTrigger; // allows objects to pass thru
 public:
 	Collider();
