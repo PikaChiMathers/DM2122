@@ -210,9 +210,6 @@ void SceneTester::Init()
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 
-	gameObject.AddCollider();
-	gameObject.GetCollider()->AddPhysics();
-	gameObject.GetCollider()->GetPhysics()->SetDrag(1);
 	box.AddCollider();
 	box.GetCollider()->AddPhysics();
 	box.SetPosition(Position(10, 0, 10));
@@ -375,22 +372,22 @@ void SceneTester::Update(double dt)
 	if (Application::IsKeyPressed('T'))
 	{
 		//gameObject.SetPositionZ(gameObject.GetPositionZ() - 5 * dt);
-		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(0, 0, -1) * 100 * dt);
+		gameObject.moveFoward();
 	}
 	if (Application::IsKeyPressed('G'))
 	{
 		//gameObject.SetPositionZ(gameObject.GetPositionZ() + 5 * dt);
-		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(0, 0, 1) * 100 * dt);
+		gameObject.moveBackward();
 	}
 	if (Application::IsKeyPressed('F'))
 	{
 		//gameObject.SetPositionX(gameObject.GetPositionX() - 5 * dt);
-		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(-1, 0, 0) * 100 * dt);
+		gameObject.moveLeft();
 	}
 	if (Application::IsKeyPressed('H'))
 	{
 		//gameObject.SetPositionX(gameObject.GetPositionX() + 5 * dt);
-		gameObject.GetCollider()->GetPhysics()->AddVelocity(Vector3(1, 0, 0) * 100 * dt);
+		gameObject.moveRight();
 	}
 
 	std::string coinC = (GameObject::CheckCollision(coin.GetCollider()) == nullptr ? "false" : "true");

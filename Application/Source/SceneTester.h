@@ -10,6 +10,7 @@
 #include "Light.h"
 
 #include "GameObject.h"
+#include "Bus.h"
 #include "Person.h"
 #include "Money.h"
 #include "Maps.h"
@@ -139,7 +140,7 @@ private: //added (Step 2)
 	Maps map;
 	Score score;
 
-	GameObject gameObject;
+	Bus gameObject;
 	GameObject box;
 	GameObject coin;
 	GameObject passport;
