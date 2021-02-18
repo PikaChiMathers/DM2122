@@ -32,16 +32,14 @@ std::string Dialogue::getPersonTalking()
 
 std::string Dialogue::Update()
 {
-	char buf[2];
-	file.getline(buf, 2);
-	if (strncmp(buf, "1 ", 2))
+	char buf[300];
+	file.getline(buf, 300);
+	if (strncmp("1 ", buf, 2))
 		personTalking = "Player";
-	else if(strncmp(buf, "2 ", 2))
+	else if(strncmp("2 ", buf, 2))
 		personTalking = "Boss Goose";
-	else if (strncmp(buf, "3 ", 2))
+	else if (strncmp("3 ", buf, 2))
 		personTalking = "Boss Duck";
 
-	std::string line;
-	std::getline(file, line);
-	return line;
+	return std::string(buf + 2);
 }
