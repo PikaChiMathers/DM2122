@@ -1,6 +1,6 @@
 #include "Dialogue.h"
 
-Dialogue::Dialogue(std::string fileName) : totalLines(0), personTalking("")
+Dialogue::Dialogue(std::string fileName) : totalLines(0), personTalking(""), currentLine(0)
 {
 	file.open(fileName);
 	if (!file)
@@ -18,6 +18,11 @@ Dialogue::Dialogue(std::string fileName) : totalLines(0), personTalking("")
 Dialogue::~Dialogue()
 {
 	file.close();
+}
+
+int Dialogue::getCurrentLine()
+{
+	return currentLine;
 }
 
 int Dialogue::getTotalLines()
@@ -40,6 +45,8 @@ std::string Dialogue::Update()
 		personTalking = "Boss Goose";
 	else if (strncmp("3 ", buf, 2))
 		personTalking = "Boss Duck";
+
+	++currentLine;
 
 	return std::string(buf + 2);
 }

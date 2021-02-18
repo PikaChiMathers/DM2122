@@ -10,6 +10,7 @@
 #include "Light.h"
 
 #include "GameObject.h"
+#include "Bus.h"
 #include "Person.h"
 #include "Money.h"
 #include "Maps.h"
@@ -145,7 +146,8 @@ private: //added (Step 2)
 
 	Dialogue* dialogue;
 
-	GameObject gameObject;
+	//GameObject gameObject;
+	Bus gameObject;
 	GameObject box;
 	GameObject coin;
 	GameObject passport;
