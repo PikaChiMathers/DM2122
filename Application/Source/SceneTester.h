@@ -15,6 +15,8 @@
 #include "Maps.h"
 #include "Score.h"
 
+#include "Dialogue.h"
+
 #include <sstream>
 
 class SceneTester : public Scene
@@ -72,6 +74,8 @@ public:
 		GEO_BACK,
 
 		GEO_TEXT,
+
+		GEO_TEST,
 
 		NUM_GEOMETRY,
 	};
@@ -138,6 +142,8 @@ private: //added (Step 2)
 	Money money;
 	Maps map;
 	Score score;
+
+	Dialogue* dialogue;
 
 	GameObject gameObject;
 	GameObject box;
