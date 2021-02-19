@@ -102,7 +102,7 @@ void SceneTester::Init()
 	meshList[GEO_COIN] = MeshBuilder::GenerateOBJMTL("coin", "OBJ//coin.obj", "OBJ//coin.mtl");
 	meshList[GEO_COIN]->textureID = LoadTGA("Image//coin.tga");
 
-	//meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJMTL("goose", )
+	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("goose", "OBJ//goose.obj", Color(1 ,1, 1));
 	meshList[GEO_PASSPORT] = MeshBuilder::GenerateOBJMTL("passport", "OBJ//passport.obj", "OBJ//passport.mtl");
 
 	glDisable(GL_CULL_FACE);
@@ -460,7 +460,6 @@ void SceneTester::Render() //My Own Pattern
 	modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
 	RenderMesh(meshList[GEO_LIGHTBALL], false);
 	modelStack.PopMatrix();
-
 	RenderSkybox();
 
 	modelStack.PushMatrix();
@@ -484,6 +483,11 @@ void SceneTester::Render() //My Own Pattern
 	}
 
 	modelStack.PushMatrix();
+	RenderMesh(meshList[GEO_GOOSE], true);
+	modelStack.Scale(0.8, 0, 0);
+	modelStack.PopMatrix();
+
+	/*modelStack.PushMatrix();
 	modelStack.Translate(passport.GetPositionX(), passport.GetPositionY(), passport.GetPositionZ());
 	RenderMesh(meshList[GEO_PASSPORT], true);
 	modelStack.PopMatrix();
@@ -491,7 +495,7 @@ void SceneTester::Render() //My Own Pattern
 	modelStack.PushMatrix();
 	modelStack.Translate(box.GetPositionX(), box.GetPositionY(), box.GetPositionZ());
 	RenderMesh(meshList[GEO_CUBE], false);
-	modelStack.PopMatrix();
+	modelStack.PopMatrix();*/
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
