@@ -374,7 +374,8 @@ void SceneTester::Update(double dt)
 	}
 
 	if (Application::IsKeyPressed(VK_SPACE))
-		std::cout << dialogue->Update() << std::endl;
+		if (dialogue->getCurrentLine() < dialogue->getTotalLines())
+			std::cout << dialogue->Update() << std::endl;
 
 
 	std::string coinC = (GameObject::CheckCollision(coin.GetCollider()) == nullptr ? "false" : "true");
