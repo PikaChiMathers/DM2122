@@ -20,6 +20,11 @@ void Collider::SetPosition(Position pos)
 	position = pos;
 }
 
+void Collider::SetRotation(Rotation rot)
+{
+	rotation = rot;
+}
+
 void Collider::SetSize(Size size)
 {
 	this->size = size;
@@ -28,6 +33,11 @@ void Collider::SetSize(Size size)
 Position Collider::GetPosition()
 {
 	return position;
+}
+
+Rotation Collider::GetRotation()
+{
+	return rotation;
 }
 
 Size Collider::GetSize()

@@ -217,6 +217,7 @@ void SceneTester::Init()
 	box.AddCollider();
 	//box.GetCollider()->AddPhysics();
 	box.SetPosition(Position(10, 0, 10));
+	box.SetScale(Scale(2, 1, 1));
 	//box.GetCollider()->SetIsTrigger(true);
 	coin.AddCollider();
 	coin.SetPosition(Position(5, 0, 0));
@@ -494,6 +495,7 @@ void SceneTester::Render() //My Own Pattern
 
 	modelStack.PushMatrix();
 	modelStack.Translate(box.GetPositionX(), box.GetPositionY(), box.GetPositionZ());
+	modelStack.Scale(box.GetScaleX(), box.GetScaleY(), box.GetScaleZ());
 	RenderMesh(meshList[GEO_CUBE], false);
 	modelStack.PopMatrix();*/
 	std::ostringstream ss;

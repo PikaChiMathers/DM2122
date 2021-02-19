@@ -23,13 +23,13 @@ struct Transform
 	Position position;
 	Rotation rotation;
 	Scale scale;
-	Vector3 up;
-	Vector3 right;
-	Vector3 foward;
-	void Update()
+	Vector3 up = Vector3(0, 1, 0);
+	Vector3 right = Vector3(1, 0, 0);
+	Vector3 foward = Vector3(0, 0, -1);
+	/*void UpdateDirectionVectors()
 	{
 		
-	}
+	}*/
 };
 
 #endif
