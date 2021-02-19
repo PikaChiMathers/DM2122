@@ -31,19 +31,19 @@ float GameObject::GetPositionY() { return transform.position.y; }
 float GameObject::GetPositionZ() { return transform.position.z; }
 Position GameObject::GetPosition() { return transform.position; }
 
-void GameObject::SetRotateX(float x) { transform.rotation.x = x; }
-void GameObject::SetRotateY(float y) { transform.rotation.y = y; }
-void GameObject::SetRotateZ(float z) { transform.rotation.z = z; }
-void GameObject::SetRotate(Rotation rot) { transform.rotation = rot; }
+void GameObject::SetRotateX(float x) { transform.rotation.x = x; ColliderUpdate(); }
+void GameObject::SetRotateY(float y) { transform.rotation.y = y; ColliderUpdate(); }
+void GameObject::SetRotateZ(float z) { transform.rotation.z = z; ColliderUpdate(); }
+void GameObject::SetRotate(Rotation rot) { transform.rotation = rot; ColliderUpdate(); }
 float GameObject::GetRotateX() { return transform.rotation.x; }
 float GameObject::GetRotateY() { return transform.rotation.y; }
 float GameObject::GetRotateZ() { return transform.rotation.z; }
 Rotation GameObject::GetRotate() { return transform.rotation; }
 
-void GameObject::SetScaleX(float x) { transform.scale.x = x; }
-void GameObject::SetScaleY(float y) { transform.scale.y = y; }
-void GameObject::SetScaleZ(float z) { transform.scale.z = z; }
-void GameObject::SetScale(Scale scale) { transform.scale = scale; }
+void GameObject::SetScaleX(float x) { transform.scale.x = x; ColliderUpdate(); }
+void GameObject::SetScaleY(float y) { transform.scale.y = y; ColliderUpdate(); }
+void GameObject::SetScaleZ(float z) { transform.scale.z = z; ColliderUpdate(); }
+void GameObject::SetScale(Scale scale) { transform.scale = scale; ColliderUpdate(); }
 float GameObject::GetScaleX() { return transform.scale.x; }
 float GameObject::GetScaleY() { return transform.scale.y; }
 float GameObject::GetScaleZ() { return transform.scale.z; }
@@ -78,6 +78,8 @@ void GameObject::ColliderUpdate()
 	if (collider != nullptr)
 	{
 		collider->SetPosition(transform.position);
+		collider->SetRotation(transform.rotation);
+		collider->SetSize(Size(transform.scale.x, transform.scale.y, transform.scale.z));
 	}
 }
 
@@ -206,6 +208,7 @@ std::vector<GameObject*> GameObject::CheckCollisions(Position pos, Size size, Co
 	{
 		if ((*it)->GetCollider() != exclude)
 		{
+			float xLen1, yLen1, zLen1;
 			if (abs((*it)->GetCollider()->GetPosition().x - pos.x) < ((*it)->GetCollider()->GetSize().x + size.x) * 0.5f &&
 				abs((*it)->GetCollider()->GetPosition().y - pos.y) < ((*it)->GetCollider()->GetSize().y + size.y) * 0.5f &&
 				abs((*it)->GetCollider()->GetPosition().z - pos.z) < ((*it)->GetCollider()->GetSize().z + size.z) * 0.5f)
