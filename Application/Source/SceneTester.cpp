@@ -214,9 +214,9 @@ void SceneTester::Init()
 	glEnable(GL_DEPTH_TEST);
 
 	box.AddCollider();
-	box.GetCollider()->AddPhysics();
+	//box.GetCollider()->AddPhysics();
 	box.SetPosition(Position(10, 0, 10));
-	box.GetCollider()->SetIsTrigger(true);
+	//box.GetCollider()->SetIsTrigger(true);
 	coin.AddCollider();
 	coin.SetPosition(Position(5, 0, 0));
 	coin.GetCollider()->SetIsTrigger(true);
