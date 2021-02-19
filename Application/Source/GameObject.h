@@ -5,11 +5,13 @@
 #include<vector>
 #include"Transform.h"
 #include"Collider.h"
+#include"BasicPhysics.h"
 #include"Application.h"
 class GameObject // use this as the base class for objects
 {
 	Transform transform;
 	Collider* collider; // add this for collider. from collider, you can add physics component.
+	BasicPhysics* physics; // add this if you want the object to stop moving when colliding with other colliders. Use the add/set velocity function to move
 	std::string tag;
 
 public:
@@ -47,6 +49,10 @@ public:
 	void RemoveCollider();
 	Collider* GetCollider();
 	void ColliderUpdate();
+
+	void AddPhysics();
+	BasicPhysics* GetPhysics();
+	void RemovePhysics();
 
 	void SetTag(std::string tag);
 	std::string GetTag();
