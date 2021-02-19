@@ -93,13 +93,10 @@
     <ClCompile Include="Source\Bus.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Collectibles.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Camera4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\DM2122\Application\Source\Shop.cpp">
+    <ClCompile Include="Source\Collectibles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -197,13 +194,10 @@
     <ClInclude Include="Source\Bus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Collectibles.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Camera4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\DM2122\Application\Source\Shop.h">
+    <ClInclude Include="Source\Collectibles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
