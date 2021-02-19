@@ -81,9 +81,6 @@
     <ClCompile Include="Source\BusStop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Shop.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Sound.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -100,6 +97,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Camera4.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\DM2122\Application\Source\Shop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\BoxCollider.cpp">
@@ -188,9 +188,6 @@
     <ClInclude Include="Source\BusStop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Shop.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Sound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -210,6 +207,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Camera4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\DM2122\Application\Source\Shop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\DM2122\Application\Source\Shop.cpp" />
     <ClCompile Include="Collectibles.cpp" />
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\BasicPhysics.cpp" />
@@ -176,11 +177,11 @@
     <ClCompile Include="Source\SceneTester.cpp" />
     <ClCompile Include="Source\Score.cpp" />
     <ClCompile Include="Source\shader.cpp" />
-    <ClCompile Include="Source\Shop.cpp" />
     <ClCompile Include="Source\Sound.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\DM2122\Application\Source\Shop.h" />
     <ClInclude Include="Collectibles.h" />
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\BasicPhysics.h" />
@@ -205,7 +206,6 @@
     <ClInclude Include="Source\SceneMapping.h" />
     <ClInclude Include="Source\SceneTester.h" />
     <ClInclude Include="Source\Score.h" />
-    <ClInclude Include="Source\Shop.h" />
     <ClInclude Include="Source\Sound.h" />
     <ClInclude Include="Source\Transform.h" />
     <ClInclude Include="Source\Utility.h" />
