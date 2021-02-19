@@ -64,7 +64,7 @@ void SceneTester::Init()
 
 	moonshade.Set(0.93f, 0.93f, 0.88f);
 
-	meshList[GEO_TEST] = MeshBuilder::GenerateOBJ("test", "OBJ//bus.obj", Color(1, 0, 0));
+	meshList[GEO_TEST] = MeshBuilder::GenerateOBJ("test", "OBJ//bus.obj", Color(1, 1, 1));
 
 	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("Rsphere", red, 30, 30, 1);
 	meshList[GEO_SPHERE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
@@ -216,6 +216,7 @@ void SceneTester::Init()
 	box.AddCollider();
 	box.GetCollider()->AddPhysics();
 	box.SetPosition(Position(10, 0, 10));
+	box.GetCollider()->SetIsTrigger(true);
 	coin.AddCollider();
 	coin.SetPosition(Position(5, 0, 0));
 	coin.GetCollider()->SetIsTrigger(true);
@@ -225,7 +226,7 @@ void SceneTester::Init()
 
 void SceneTester::Update(double dt)
 {
-	GameObject::GameObjectUpdate(dt);
+	GameObject::GameObjectUpdateManager(dt);
 	camera.Update(dt);
 
 	person.Update(dt);
@@ -372,27 +373,6 @@ void SceneTester::Update(double dt)
 		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
 	}
 
-	if (Application::IsKeyPressed('T'))
-	{
-		//gameObject.SetPositionZ(gameObject.GetPositionZ() - 5 * dt);
-		gameObject.moveFoward();
-	}
-	if (Application::IsKeyPressed('G'))
-	{
-		//gameObject.SetPositionZ(gameObject.GetPositionZ() + 5 * dt);
-		gameObject.moveBackward();
-	}
-	if (Application::IsKeyPressed('F'))
-	{
-		//gameObject.SetPositionX(gameObject.GetPositionX() - 5 * dt);
-		gameObject.moveLeft();
-	}
-	if (Application::IsKeyPressed('H'))
-	{
-		//gameObject.SetPositionX(gameObject.GetPositionX() + 5 * dt);
-		gameObject.moveRight();
-	}
-
 	if (Application::IsKeyPressed(VK_SPACE))
 		std::cout << dialogue->Update() << std::endl;
 
@@ -518,7 +498,7 @@ void SceneTester::Render() //My Own Pattern
 	if (GameObject::CheckCollision(gameObject.GetCollider()) != nullptr && !colEnter)
 	{
 		colEnter = true;
-		colCount++;
+		colCount++; 
 	}
 	if (colEnter && (GameObject::CheckCollision(gameObject.GetCollider()) == nullptr))
 	{ 
