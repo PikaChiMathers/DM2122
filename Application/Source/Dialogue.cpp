@@ -7,8 +7,13 @@ Dialogue::Dialogue(std::string fileName) : totalLines(0), personTalking(""), cur
 		std::cout << "Cannot open dialogue file" << std::endl;
 
 	if (file.is_open())
-		while (!file.eof())
+	{
+		std::string line;
+		while (std::getline(file, line))
+		{
 			++totalLines;
+		}
+	}
 
 	file.close();
 
