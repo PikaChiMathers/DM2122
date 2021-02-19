@@ -64,7 +64,7 @@ void SceneTester::Init()
 
 	moonshade.Set(0.93f, 0.93f, 0.88f);
 
-	meshList[GEO_TEST] = MeshBuilder::GenerateOBJ("test", "OBJ//bus.obj", Color(1, 1, 1));
+	meshList[GEO_TEST] = MeshBuilder::GenerateOBJMTL("test", "OBJ//bus.obj", "OBJ//bus.mtl");
 
 	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("Rsphere", red, 30, 30, 1);
 	meshList[GEO_SPHERE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
@@ -217,6 +217,7 @@ void SceneTester::Init()
 	box.AddCollider();
 	//box.GetCollider()->AddPhysics();
 	box.SetPosition(Position(10, 0, 10));
+	box.SetScale(Scale(2, 1, 1));
 	//box.GetCollider()->SetIsTrigger(true);
 	coin.AddCollider();
 	coin.SetPosition(Position(5, 0, 0));
@@ -494,6 +495,7 @@ void SceneTester::Render() //My Own Pattern
 
 	modelStack.PushMatrix();
 	modelStack.Translate(box.GetPositionX(), box.GetPositionY(), box.GetPositionZ());
+	modelStack.Scale(box.GetScaleX(), box.GetScaleY(), box.GetScaleZ());
 	RenderMesh(meshList[GEO_CUBE], false);
 	modelStack.PopMatrix();*/
 	std::ostringstream ss;

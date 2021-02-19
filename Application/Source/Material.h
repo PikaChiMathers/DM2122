@@ -43,7 +43,7 @@ Material& operator=(const Material& rhs)
 	kAmbient = .1f;
 	kDiffuse = .1f;
 	kSpecular = .1f;
-	kShininess = .1f;
+	kShininess = 1.f;
 	 size = 0;
 	}
 };
