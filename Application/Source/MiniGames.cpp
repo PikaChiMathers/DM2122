@@ -2,7 +2,8 @@
 
 MiniGames::MiniGames()
 {
-	is_running = false;
+	is_running = false; //boolean for if a MiniGame is running
+	game_started = false; //Game only starts after player clicks start
 }
 
 MiniGames::~MiniGames()
@@ -11,8 +12,7 @@ MiniGames::~MiniGames()
 
 void MiniGames::Start_MG(MG_TYPE type)
 {
-	is_running = true; //MiniGame will only run 
-	game_started = false; //Game only starts after player clicks start
+	is_running = true;
 	this->type = type;
 }
 
