@@ -96,6 +96,7 @@
     <ClCompile Include="Source\Camera4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Shop.cpp">
     <ClCompile Include="Source\Collectibles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -197,6 +198,7 @@
     <ClInclude Include="Source\Camera4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Shop.h">
     <ClInclude Include="Source\Collectibles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
