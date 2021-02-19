@@ -214,9 +214,9 @@ void SceneTester::Init()
 	glEnable(GL_DEPTH_TEST);
 
 	box.AddCollider();
-	box.GetCollider()->AddPhysics();
+	//box.GetCollider()->AddPhysics();
 	box.SetPosition(Position(10, 0, 10));
-	box.GetCollider()->SetIsTrigger(true);
+	//box.GetCollider()->SetIsTrigger(true);
 	coin.AddCollider();
 	coin.SetPosition(Position(5, 0, 0));
 	coin.GetCollider()->SetIsTrigger(true);
@@ -510,7 +510,7 @@ void SceneTester::Render() //My Own Pattern
 	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(box.GetCollider()->GetPosition().x) + ", " + std::to_string(box.GetCollider()->GetPosition().y) + ", " + std::to_string(box.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 8);
 	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetCollider()->GetPosition().x) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().y) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 10);
 	//RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(box.GetCollider()->GetPhysics()->GetVelocity().x) + ", " + std::to_string(box.GetCollider()->GetPhysics()->GetVelocity().y) + ", " + std::to_string(box.GetCollider()->GetPhysics()->GetVelocity().z), Color(0, 1, 0), 2, 0, 12);
-	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetCollider()->GetPhysics()->GetVelocity().x) + ", " + std::to_string(gameObject.GetCollider()->GetPhysics()->GetVelocity().y) + ", " + std::to_string(gameObject.GetCollider()->GetPhysics()->GetVelocity().z), Color(0, 1, 0), 2, 0, 14);
+	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetPhysics()->GetVelocity().x) + ", " + std::to_string(gameObject.GetPhysics()->GetVelocity().y) + ", " + std::to_string(gameObject.GetPhysics()->GetVelocity().z), Color(0, 1, 0), 2, 0, 14);
 
 	std::ostringstream mn;
 	mn << "Money:" << money.getMoney();
