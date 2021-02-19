@@ -1,30 +1,20 @@
-#ifndef SCENE_TEST
-#define SCENE_TEST
+#ifndef SCENE_SHOP
+#define SCENE_SHOP
 
 #include "Scene.h"
-#include "Camera2.h"
-#include "Camera3.h"
+#include "Camera4.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Vertex.h"
 #include "Light.h"
-
-#include "GameObject.h"
-#include "Bus.h"
-#include "Person.h"
-#include "Money.h"
 #include "Maps.h"
-#include "Score.h"
-
-#include "Dialogue.h"
-
 #include <sstream>
 
-class SceneTester : public Scene
+class SceneShop : public Scene
 {
 public:
-	SceneTester();
-	~SceneTester();
+	SceneShop();
+	~SceneShop();
 
 	virtual void Init();
 	virtual void Update(double dt);
@@ -43,30 +33,16 @@ public:
 
 	Color red, blue, green, pink, Lblue, purple, orange, yellow, cyan, magenta, moonshade;
 
-	bool scene_change;
-	bool coin_collect; // To stop rendering of coin after collected
-
 	int UI_height, UI_width;
-
-	int colCount = 0;
-	bool colEnter = false;
-
 
 	enum GEOMETRY_TYPE //added (Step 1)
 	{
 		GEO_AXES = 0,
 
+		GEO_BUS,
 		GEO_QUAD,
 
-		GEO_CUBE,
-
-		GEO_COIN,
-		GEO_PASSPORT,
-		GEO_GOOSE,
-
 		GEO_LIGHTBALL,
-		GEO_SPHERE,
-		GEO_CIRCLE,
 
 		GEO_LEFT,
 		GEO_RIGHT,
@@ -76,8 +52,6 @@ public:
 		GEO_BACK,
 
 		GEO_TEXT,
-
-		GEO_TEST,
 
 		NUM_GEOMETRY,
 	};
@@ -103,7 +77,6 @@ public:
 		U_LIGHT0_COSINNER,
 		U_LIGHT0_EXPONENT,
 
-
 		U_LIGHT1_POSITION,
 		U_LIGHT1_COLOR,
 		U_LIGHT1_POWER,
@@ -115,7 +88,6 @@ public:
 		U_LIGHT1_COSCUTOFF,
 		U_LIGHT1_COSINNER,
 		U_LIGHT1_EXPONENT,
-
 
 		U_LIGHTENABLED,
 		U_NUMLIGHTS,
@@ -138,31 +110,18 @@ public:
 
 
 private: //added (Step 2)
-	Camera3 camera;
+	Camera4 camera;
 	Light lights[NUM_LIGHTS];
-	Person person;
-	Money money;
+
 	Maps map;
-	Score score;
 
-	Dialogue* dialogue;
-
-	//GameObject gameObject;
-	Bus gameObject;
-	GameObject box;
-	GameObject coin;
-	GameObject passport;
-	GameObject goose;
+	bool scene_change;
 
 	unsigned m_vertexArrayID;
-	/*unsigned m_vertexBuffer[NUM_GEOMETRY];
-	unsigned m_colorBuffer[NUM_GEOMETRY];
-	unsigned m_indexBuffer[NUM_GEOMETRY];*/
 
 	Mesh* meshList[NUM_GEOMETRY];
 
 	MS modelStack, viewStack, projectionStack;
-
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
 

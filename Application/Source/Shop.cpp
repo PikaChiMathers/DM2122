@@ -1,6 +1,6 @@
 #include "Shop.h"
 
-Shop::Shop() : upgradeLevel()
+Shop::Shop() : upgradeLevel{0, 0, 0}
 {
 
 }
