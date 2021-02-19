@@ -96,7 +96,7 @@
     <ClCompile Include="Source\Camera4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Shop.cpp">
+    <ClCompile Include="Source\Shop.cpp">
     <ClCompile Include="Source\Collectibles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

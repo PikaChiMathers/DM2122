@@ -152,7 +152,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Collectibles.cpp" />
-    <ClCompile Include="Shop.cpp" />
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\BasicPhysics.cpp" />
     <ClCompile Include="Source\Bus.cpp" />
@@ -177,6 +176,7 @@
     <ClCompile Include="Source\SceneTester.cpp" />
     <ClCompile Include="Source\Score.cpp" />
     <ClCompile Include="Source\shader.cpp" />
+    <ClCompile Include="Source\Shop.cpp" />
     <ClCompile Include="Source\Sound.cpp" />
     <ClCompile Include="Source\Utility.cpp" />
   </ItemGroup>
