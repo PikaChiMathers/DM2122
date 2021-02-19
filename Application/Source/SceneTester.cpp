@@ -64,7 +64,7 @@ void SceneTester::Init()
 
 	moonshade.Set(0.93f, 0.93f, 0.88f);
 
-	meshList[GEO_TEST] = MeshBuilder::GenerateOBJ("test", "OBJ//bus.obj", Color(1, 1, 1));
+	meshList[GEO_TEST] = MeshBuilder::GenerateOBJMTL("test", "OBJ//bus.obj", "OBJ//bus.mtl");
 
 	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("Rsphere", red, 30, 30, 1);
 	meshList[GEO_SPHERE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
