@@ -154,6 +154,7 @@
     <ClCompile Include="Collectibles.cpp" />
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\BasicPhysics.cpp" />
+    <ClCompile Include="Source\BoxCollider.cpp" />
     <ClCompile Include="Source\Bus.cpp" />
     <ClCompile Include="Source\BusStop.cpp" />
     <ClCompile Include="Source\Camera.cpp" />
@@ -172,6 +173,7 @@
     <ClCompile Include="Source\Money.cpp" />
     <ClCompile Include="Source\Person.cpp" />
     <ClCompile Include="Source\SceneMapping.cpp" />
+    <ClCompile Include="Source\SceneShop.cpp" />
     <ClCompile Include="Source\SceneTester.cpp" />
     <ClCompile Include="Source\Score.cpp" />
     <ClCompile Include="Source\shader.cpp" />
@@ -183,6 +185,7 @@
     <ClInclude Include="Collectibles.h" />
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\BasicPhysics.h" />
+    <ClInclude Include="Source\BoxCollider.h" />
     <ClInclude Include="Source\Bus.h" />
     <ClInclude Include="Source\BusStop.h" />
     <ClInclude Include="Source\Camera.h" />
@@ -201,6 +204,7 @@
     <ClInclude Include="Source\Money.h" />
     <ClInclude Include="Source\Person.h" />
     <ClInclude Include="Source\SceneMapping.h" />
+    <ClInclude Include="Source\SceneShop.h" />
     <ClInclude Include="Source\SceneTester.h" />
     <ClInclude Include="Source\Score.h" />
     <ClInclude Include="Source\Shop.h" />
