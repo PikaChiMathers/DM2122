@@ -99,6 +99,9 @@ void SceneMapping::Init()
 	meshList[GEO_COIN] = MeshBuilder::GenerateOBJMTL("coin", "OBJ//coin.obj", "OBJ//coin.mtl");
 	meshList[GEO_COIN]->textureID = LoadTGA("Image//coin.tga");
 
+	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJMTL("goose", "OBJ//goose.obj", "OBJ//goose.mtl");
+	meshList[GEO_GOOSE]->textureID = LoadTGA("Image//");
+
 	meshList[GEO_PASSPORT] = MeshBuilder::GenerateOBJMTL("passport", "OBJ//passport.obj", "OBJ//passport.mtl");
 
 	glDisable(GL_CULL_FACE);
