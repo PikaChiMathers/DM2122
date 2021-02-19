@@ -203,5 +203,8 @@
     <ClInclude Include="Source\Camera4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Shop.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

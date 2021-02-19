@@ -181,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collectibles.h" />
+    <ClInclude Include="Shop.h" />
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\BasicPhysics.h" />
     <ClInclude Include="Source\Bus.h" />
