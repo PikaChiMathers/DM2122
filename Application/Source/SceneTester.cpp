@@ -102,6 +102,7 @@ void SceneTester::Init()
 	meshList[GEO_COIN] = MeshBuilder::GenerateOBJMTL("coin", "OBJ//coin.obj", "OBJ//coin.mtl");
 	meshList[GEO_COIN]->textureID = LoadTGA("Image//coin.tga");
 
+	//meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJMTL("goose", )
 	meshList[GEO_PASSPORT] = MeshBuilder::GenerateOBJMTL("passport", "OBJ//passport.obj", "OBJ//passport.mtl");
 
 	glDisable(GL_CULL_FACE);
