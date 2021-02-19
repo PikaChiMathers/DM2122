@@ -4,12 +4,14 @@ std::vector<GameObject*> GameObject::GameObjectList;
 GameObject::GameObject()
 {
 	collider = nullptr;
+	physics = nullptr;
 	GameObjectList.push_back(this);
 }
 
 GameObject::~GameObject()
 {
 	RemoveCollider();
+	RemovePhysics();
 	for (std::vector<GameObject*>::iterator it = GameObjectList.begin(); it != GameObjectList.end(); it++)
 	{
 		if ((*it) == this)
@@ -76,6 +78,26 @@ void GameObject::ColliderUpdate()
 	if (collider != nullptr)
 	{
 		collider->SetPosition(transform.position);
+	}
+}
+
+void GameObject::AddPhysics()
+{
+	if (physics == nullptr)
+		physics = new BasicPhysics();
+}
+
+BasicPhysics* GameObject::GetPhysics()
+{
+	return physics;
+}
+
+void GameObject::RemovePhysics()
+{
+	if (physics != nullptr)
+	{
+		delete physics;
+		physics = nullptr;
 	}
 }
 
@@ -230,9 +252,9 @@ void GameObject::GameObjectUpdateManager(double dt)
 					gameObject->OnTriggerEnter((*it));
 				}
 			}
-			if (gameObject->GetCollider()->GetPhysics() != nullptr && !gameObject->GetCollider()->GetIsTrigger()) // check for collision
+			if (gameObject->GetPhysics() != nullptr && !gameObject->GetCollider()->GetIsTrigger()) // check for collision
 			{
-				BasicPhysics* physics = gameObject->GetCollider()->GetPhysics();
+				BasicPhysics* physics = gameObject->GetPhysics();
 				if (physics->GetVelocity().Length() > 0)
 				{
 					Position newPos(gameObject->GetPositionX() + physics->GetVelocity().x * dt, gameObject->GetPositionY() + physics->GetVelocity().y * dt, gameObject->GetPositionZ() + physics->GetVelocity().z * dt);
