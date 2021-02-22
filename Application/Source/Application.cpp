@@ -13,7 +13,7 @@
 
 
 #include "SceneShop.h"
-#include "SceneTester.h"
+#include "SceneTrivia.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
@@ -134,7 +134,7 @@ void Application::Run()
 	/*Scene *scene = new Assignment2();*/
 
 	Scene* scene1 = new SceneShop();
-	Scene* scene2 = new SceneTester();
+	Scene* scene2 = new SceneTrivia();
 	Scene* scene = scene2;
 	scene1->Init();
 	scene2->Init();

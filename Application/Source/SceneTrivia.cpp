@@ -1,5 +1,5 @@
 #define LSPEED 10.f
-#include "SceneMapping.h"
+#include "SceneTrivia.h"
 #include "GL\glew.h"
 
 #include "shader.hpp"
@@ -12,20 +12,22 @@
 #include "Application.h"
 
 
-SceneMapping::SceneMapping() : person(Vector3(0, 0, 0))
+SceneTrivia::SceneTrivia() : person(Vector3(0, 0, 0))
 {
 }
 
-SceneMapping::~SceneMapping()
+SceneTrivia::~SceneTrivia()
 {
 }
 
 
-void SceneMapping::Init() 
+void SceneTrivia::Init()
 {
 	camera.Init(Vector3(40, 30, 30), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
 	map.Set(Maps::MAP_TYPE::M_CITY, Maps::SKYBOX_TYPE::SB_DAY);
+
+	dialogue = new Dialogue("Dialogue//D1.txt");
 
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
@@ -61,7 +63,8 @@ void SceneMapping::Init()
 
 
 	moonshade.Set(0.93f, 0.93f, 0.88f);
-	
+
+	meshList[GEO_TEST] = MeshBuilder::GenerateOBJ("test", "OBJ//podium.obj");
 
 	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("Rsphere", red, 30, 30, 1);
 	meshList[GEO_SPHERE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
@@ -99,9 +102,7 @@ void SceneMapping::Init()
 	meshList[GEO_COIN] = MeshBuilder::GenerateOBJMTL("coin", "OBJ//coin.obj", "OBJ//coin.mtl");
 	meshList[GEO_COIN]->textureID = LoadTGA("Image//coin.tga");
 
-	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJMTL("goose", "OBJ//goose.obj", "OBJ//goose.mtl");
-	meshList[GEO_GOOSE]->textureID = LoadTGA("Image//");
-
+	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("goose", "OBJ//goose.obj", Color(1, 1, 1));
 	meshList[GEO_PASSPORT] = MeshBuilder::GenerateOBJMTL("passport", "OBJ//passport.obj", "OBJ//passport.mtl");
 
 	glDisable(GL_CULL_FACE);
@@ -159,7 +160,7 @@ void SceneMapping::Init()
 	m_parameters[U_TEXT_COLOR] = glGetUniformLocation(m_programID, "textColor");
 
 	glUseProgram(m_programID);
-	
+
 
 	lights[0].type = Light::LIGHT_POINT;
 	lights[0].position.Set(0, 20, 0);
@@ -199,7 +200,7 @@ void SceneMapping::Init()
 
 
 
-	
+
 	glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
 	glUniform3fv(m_parameters[U_LIGHT1_COLOR], 1, &lights[1].color.r);
 	glUniform1f(m_parameters[U_LIGHT1_POWER], lights[1].power);
@@ -213,11 +214,11 @@ void SceneMapping::Init()
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 
-	gameObject.AddCollider();
-	gameObject.AddPhysics();
-	gameObject.GetPhysics()->SetDrag(10);
 	box.AddCollider();
+	//box.GetCollider()->AddPhysics();
 	box.SetPosition(Position(10, 0, 10));
+	box.SetScale(Scale(2, 1, 1));
+	//box.GetCollider()->SetIsTrigger(true);
 	coin.AddCollider();
 	coin.SetPosition(Position(5, 0, 0));
 	coin.GetCollider()->SetIsTrigger(true);
@@ -225,7 +226,7 @@ void SceneMapping::Init()
 	passport.SetPosition(Position(10, 0, 0));
 }
 
-void SceneMapping::Update(double dt)
+void SceneTrivia::Update(double dt)
 {
 	GameObject::GameObjectUpdateManager(dt);
 	camera.Update(dt);
@@ -234,7 +235,7 @@ void SceneMapping::Update(double dt)
 
 	fps = 1.0f / dt;
 
-	rotateAngle += (float)( 50 * dt);
+	rotateAngle += (float)(50 * dt);
 	translateX += (float)(translateXDir * 10 * dt);
 	translateY += (float)(translateYDir * 50 * dt);
 	scaleAll += (float)(scaleDir * 2 * dt);
@@ -289,7 +290,7 @@ void SceneMapping::Update(double dt)
 
 		scene_change = false;
 	}
-		//Mouse Inputs
+	//Mouse Inputs
 	static bool bLButtonState = false;
 	if (!bLButtonState && Application::IsMousePressed(0))
 	{
@@ -304,8 +305,8 @@ void SceneMapping::Update(double dt)
 		Application::GetCursorPos(&x, &y);
 		int w = Application::GetWindowWidth();
 		int h = Application::GetWindowHeight();
-		float posX = x/10; //convert (0,800) to (0,80)
-		float posY = 60 - (y/10); //convert (600,0) to (0,60)
+		float posX = x / 10; //convert (0,800) to (0,80)
+		float posY = 60 - (y / 10); //convert (600,0) to (0,60)
 		std::cout << "posX:" << posX << " , posY:" << posY <<
 			std::endl;
 		if (posX > 20 && posX < 60 && posY >
@@ -374,41 +375,25 @@ void SceneMapping::Update(double dt)
 		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
 	}
 
-	if (Application::IsKeyPressed('T'))
-	{
-		//gameObject.SetPositionZ(gameObject.GetPositionZ() - 5 * dt);
-		gameObject.GetPhysics()->AddVelocity(Vector3(0, 0, -1) * 3 * dt);
-	}
-	if (Application::IsKeyPressed('G'))
-	{
-		//gameObject.SetPositionZ(gameObject.GetPositionZ() + 5 * dt);
-		gameObject.GetPhysics()->AddVelocity(Vector3(0, 0, 1) * 3 * dt);
-	}
-	if (Application::IsKeyPressed('F'))
-	{
-		//gameObject.SetPositionX(gameObject.GetPositionX() - 5 * dt);
-		gameObject.GetPhysics()->AddVelocity(Vector3(-1, 0, 0) * 3 * dt);
-	}
-	if (Application::IsKeyPressed('H'))
-	{
-		//gameObject.SetPositionX(gameObject.GetPositionX() + 5 * dt);
-		gameObject.GetPhysics()->AddVelocity(Vector3(1, 0, 0) * 3 * dt);
-	}
+	if (Application::IsKeyPressed(VK_SPACE))
+		if (dialogue->getCurrentLine() < dialogue->getTotalLines())
+			std::cout << dialogue->Update() << std::endl;
+
 
 	std::string coinC = (GameObject::CheckCollision(coin.GetCollider()) == nullptr ? "false" : "true");
 
-	
+
 	if (coinC == "true")
 	{
 		money.IncreaseMoney(100);
 		coin_collect = true;
 		coin.SetPositionY(-10);
 	}
-	
+
 	score.setScore(0, money.getMoney());
 }
 
-void SceneMapping::Render() //My Own Pattern
+void SceneTrivia::Render() //My Own Pattern
 {
 	// Render VBO here
 
@@ -470,79 +455,31 @@ void SceneMapping::Render() //My Own Pattern
 
 	RenderMesh(meshList[GEO_AXES], false);
 
+	RenderMesh(meshList[GEO_TEST], false);
+
 	modelStack.PushMatrix();
 	modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
 	RenderMesh(meshList[GEO_LIGHTBALL], false);
 	modelStack.PopMatrix();
-
 	RenderSkybox();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(0, -.1f, 0);
-	modelStack.Rotate(90, 1, 0, 0);
+	modelStack.Rotate(-90, 1, 0, 0);
 	modelStack.Scale(200, 200, 200);
 	RenderMesh(meshList[GEO_QUAD], lights[0].isOn);
 	modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
-	modelStack.Translate(gameObject.GetPositionX(), gameObject.GetPositionY(), gameObject.GetPositionZ());
-	RenderMesh(meshList[GEO_CUBE], false);
-	modelStack.PopMatrix();
-
-	if (coin_collect == false)
-	{
-		modelStack.PushMatrix();
-		modelStack.Translate(coin.GetPositionX(), coin.GetPositionY(), coin.GetPositionZ());
-		RenderMesh(meshList[GEO_COIN], true);
-		modelStack.PopMatrix();
-	}
-
-	modelStack.PushMatrix();
-	modelStack.Translate(passport.GetPositionX(), passport.GetPositionY(), passport.GetPositionZ());
-	RenderMesh(meshList[GEO_PASSPORT], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(box.GetPositionX(), box.GetPositionY(), box.GetPositionZ());
-	RenderMesh(meshList[GEO_CUBE], false);
-	modelStack.PopMatrix();
-
-	std::string col = (GameObject::CheckCollision(gameObject.GetCollider()) == nullptr ? "false" : "true");
-	if (GameObject::CheckCollision(gameObject.GetCollider()) != nullptr && !colEnter)
-	{
-		colEnter = true;
-		colCount++;
-	}
-	if (colEnter && (GameObject::CheckCollision(gameObject.GetCollider()) == nullptr))
-	{ 
-		colEnter = false;
-	}
-	
 
 
-	{ //Text on screen
-		std::ostringstream ss;
-		ss.precision(5);
-		ss << "FPS: " << fps;
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, Application::GetWindowHeight() * .1f);
-
-		RenderTextOnScreen(meshList[GEO_TEXT], "Collide: " + col, Color(0, 1, 0), 4, 0, 4);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Collide Count: " + std::to_string(colCount), Color(0, 1, 0), 4, 0, 0);
-		RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(box.GetCollider()->GetPosition().x) + ", " + std::to_string(box.GetCollider()->GetPosition().y) + ", " + std::to_string(box.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 8);
-		RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetCollider()->GetPosition().x) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().y) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 10);
-
-		std::ostringstream mn;
-		mn << "Money:" << money.getMoney();
-		RenderTextOnScreen(meshList[GEO_TEXT], mn.str(), Color(1, 1, 0), 3, 130, 84);
-
-		std::ostringstream sc;
-		sc << "Score:" << score.getScore(0);
-		RenderTextOnScreen(meshList[GEO_TEXT], sc.str(), Color(1, 0, 0), 3, 130, 87);
-	}
+	std::ostringstream ss;
+	ss.precision(5);
+	ss << "FPS: " << fps;
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, Application::GetWindowHeight() * .1f);
 
 }
 
-void SceneMapping::Exit()
+void SceneTrivia::Exit()
 {
 	// Cleanup VBO here
 
@@ -553,7 +490,7 @@ void SceneMapping::Exit()
 
 }
 
-void SceneMapping::RenderMesh(Mesh* mesh, bool enableLight)
+void SceneTrivia::RenderMesh(Mesh* mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 
@@ -598,7 +535,7 @@ void SceneMapping::RenderMesh(Mesh* mesh, bool enableLight)
 	}
 }
 
-void SceneMapping::RenderSkybox()
+void SceneTrivia::RenderSkybox()
 {
 	modelStack.PushMatrix();
 	modelStack.Translate(499, 0, 0);
@@ -620,20 +557,20 @@ void SceneMapping::RenderSkybox()
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_LEFT], false);
 	modelStack.PopMatrix();
-	
+
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0, -499);
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_RIGHT], false);
 	modelStack.PopMatrix();
-	
+
 	modelStack.PushMatrix();
 	modelStack.Translate(0, -499, 0);
 	modelStack.Rotate(90, 1, 0, 0);
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_BOTTOM], false);
 	modelStack.PopMatrix();
-	
+
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 499, 0);
 	modelStack.Rotate(-90, 1, 0, 0);
@@ -642,7 +579,7 @@ void SceneMapping::RenderSkybox()
 	modelStack.PopMatrix();
 }
 
-void SceneMapping::RenderText(Mesh* mesh, std::string text, Color color)
+void SceneTrivia::RenderText(Mesh* mesh, std::string text, Color color)
 {
 	// Enable blending
 	glEnable(GL_BLEND);
@@ -673,7 +610,7 @@ void SceneMapping::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneMapping::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+void SceneTrivia::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
 	// Enable blending
 	glEnable(GL_BLEND);
@@ -718,7 +655,7 @@ void SceneMapping::RenderTextOnScreen(Mesh* mesh, std::string text, Color color,
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneMapping::RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int sizey)
+void SceneTrivia::RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int sizey)
 {
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
@@ -729,7 +666,7 @@ void SceneMapping::RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int s
 	viewStack.LoadIdentity(); //No need camera for ortho mode
 	modelStack.PushMatrix();
 	modelStack.LoadIdentity();
-	modelStack.Translate(x, y, 0); 
+	modelStack.Translate(x, y, 0);
 	modelStack.Rotate(180, 1, 0, 0);
 	modelStack.Scale(sizex, sizey, 1);
 	RenderMesh(mesh, false); //UI should not have light

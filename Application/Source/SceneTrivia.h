@@ -1,5 +1,5 @@
-#ifndef SCENE_MAP
-#define SCENE_MAP
+#ifndef SCENE_TRIVIA
+#define SCENE_TRIVIA
 
 #include "Scene.h"
 #include "Camera2.h"
@@ -10,18 +10,21 @@
 #include "Light.h"
 
 #include "GameObject.h"
+#include "Bus.h"
 #include "Person.h"
 #include "Money.h"
 #include "Maps.h"
 #include "Score.h"
 
+#include "Dialogue.h"
+
 #include <sstream>
 
-class SceneMapping : public Scene
+class SceneTrivia : public Scene
 {
 public:
-	SceneMapping();
-	~SceneMapping();
+	SceneTrivia();
+	~SceneTrivia();
 
 	virtual void Init();
 	virtual void Update(double dt);
@@ -59,7 +62,6 @@ public:
 
 		GEO_COIN,
 		GEO_PASSPORT,
-		GEO_TABLE,
 		GEO_GOOSE,
 
 		GEO_LIGHTBALL,
@@ -74,6 +76,8 @@ public:
 		GEO_BACK,
 
 		GEO_TEXT,
+
+		GEO_TEST,
 
 		NUM_GEOMETRY,
 	};
@@ -141,10 +145,14 @@ private: //added (Step 2)
 	Maps map;
 	Score score;
 
-	GameObject gameObject;
+	Dialogue* dialogue;
+
+	//GameObject gameObject;
+	Bus gameObject;
 	GameObject box;
 	GameObject coin;
 	GameObject passport;
+	GameObject goose;
 
 	unsigned m_vertexArrayID;
 	/*unsigned m_vertexBuffer[NUM_GEOMETRY];
@@ -165,7 +173,7 @@ private: //added (Step 2)
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 
 	void RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int sizey);
-		
+
 	unsigned m_parameters[U_TOTAL];
 	unsigned m_programID;
 };
