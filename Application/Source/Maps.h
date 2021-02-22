@@ -5,34 +5,25 @@
 #include <Vector3.h>
 
 struct Maps
-{ //Map struct is to change the environment depending on the skybox and map type
+{ //Map struct is to change the skybox
     enum class SKYBOX_TYPE
     {
         SB_DAY = 0,
         SB_NIGHT,
+        SB_SHOP,
         NUM_SKYBOX,
     };
-
-    enum class MAP_TYPE
-    {
-        M_CITY = 0,
-        M_TRIVIA,
-        NUM_MAPS,
-    };
-
-    MAP_TYPE type;
     SKYBOX_TYPE skybox;
     std::string skybox_loc[6];
     std::string objs_loc;
 
-    Maps(MAP_TYPE type = MAP_TYPE::M_CITY, SKYBOX_TYPE skybox = SKYBOX_TYPE::SB_DAY)
+    Maps(SKYBOX_TYPE skybox = SKYBOX_TYPE::SB_DAY)
     {   //default constructor
-        Set(type, skybox);
+        Set(skybox);
     }
 
-    void Set(MAP_TYPE type, SKYBOX_TYPE skybox)
+    void Set(SKYBOX_TYPE skybox)
     {   //Sets the map type and skybox type
-        this->type = type;
         this->skybox = skybox;
 
         Set(skybox);
@@ -54,12 +45,14 @@ struct Maps
         switch (skybox)
         {
         case (SKYBOX_TYPE::SB_DAY):
-            location = "Maps//City//Day//Skybox//";
+            location = "Skybox//Day//";
             break;
         case (SKYBOX_TYPE::SB_NIGHT):
-            location = "Maps//City//Night//Skybox//";
+            location = "Skybox//Night//";
             break;
-
+        case (SKYBOX_TYPE::SB_SHOP):
+            location = "Skybox//Shop//";
+            break;
         default:
             break;
         }
