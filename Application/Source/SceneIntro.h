@@ -16,11 +16,11 @@
 
 #include <sstream>
 
-class SceneTester : public Scene
+class SceneIntro : public Scene
 {
 public:
-	SceneTester();
-	~SceneTester();
+	SceneIntro();
+	~SceneIntro();
 
 	virtual void Init();
 	virtual void Update(double dt);
@@ -40,7 +40,6 @@ public:
 	Color red, blue, green, pink, Lblue, purple, orange, yellow, cyan, magenta, moonshade;
 
 	bool scene_change;
-	bool coin_collect; // To stop rendering of coin after collected
 
 	int UI_height, UI_width;
 
