@@ -13,6 +13,7 @@
 
 
 #include "SceneShop.h"
+#include "SceneTester.h"
 #include "SceneTrivia.h"
 
 GLFWwindow* m_window;
@@ -133,12 +134,16 @@ void Application::Run()
 	//Main Loop
 	/*Scene *scene = new Assignment2();*/
 
-	Scene* scene = new SceneShop();
-	scene->Init();
+	Scene* scene1 = new SceneTester();
+	//Scene* scene2 = new SceneShop();
+	Scene* scene = scene1;
+	scene1->Init();
+	//scene2->Init();
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
 	{
+
 		scene->Update(m_timer.getElapsedTime());
 		scene->Render();
 		//Swap buffers
