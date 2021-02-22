@@ -25,7 +25,7 @@ void SceneTrivia::Init()
 {
 	camera.Init(Vector3(40, 30, 30), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
-	map.Set(Maps::MAP_TYPE::M_CITY, Maps::SKYBOX_TYPE::SB_DAY);
+	map.Set(Maps::SKYBOX_TYPE::SB_DAY);
 
 	dialogue = new Dialogue("Dialogue//D1.txt");
 

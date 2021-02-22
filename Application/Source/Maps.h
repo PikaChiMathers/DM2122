@@ -22,16 +22,9 @@ struct Maps
         Set(skybox);
     }
 
-    void Set(SKYBOX_TYPE skybox)
-    {   //Sets the map type and skybox type
-        this->skybox = skybox;
-
-        Set(skybox);
-    }
-
     void Set(SKYBOX_TYPE skybox) 
     {   //Sets the Skybox sides
-
+        this->skybox = skybox;
         //Initialzes the different sides
         skybox_loc[0] = "front.tga";
         skybox_loc[1] = "back.tga";
