@@ -87,9 +87,6 @@
     <ClCompile Include="Source\MiniGames.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SceneMapping.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Bus.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -105,10 +102,10 @@
     <ClCompile Include="Source\SceneShop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SceneIntro.cpp">
+    <ClCompile Include="Source\Collectibles.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Collectibles.cpp">
+    <ClCompile Include="Source\SceneIntro.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -200,9 +197,6 @@
     <ClInclude Include="Source\MiniGames.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SceneMapping.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Bus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -218,10 +212,10 @@
     <ClInclude Include="Source\SceneShop.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SceneIntro.h">
+    <ClInclude Include="Source\Collectibles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Collectibles.h">
+    <ClInclude Include="Source\SceneIntro.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

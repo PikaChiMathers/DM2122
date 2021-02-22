@@ -173,7 +173,6 @@
     <ClCompile Include="Source\Money.cpp" />
     <ClCompile Include="Source\Person.cpp" />
     <ClCompile Include="Source\SceneIntro.cpp" />
-    <ClCompile Include="Source\SceneMapping.cpp" />
     <ClCompile Include="Source\SceneShop.cpp" />
     <ClCompile Include="Source\SceneTester.cpp" />
     <ClCompile Include="Source\Score.cpp" />
@@ -205,7 +204,6 @@
     <ClInclude Include="Source\Money.h" />
     <ClInclude Include="Source\Person.h" />
     <ClInclude Include="Source\SceneIntro.h" />
-    <ClInclude Include="Source\SceneMapping.h" />
     <ClInclude Include="Source\SceneShop.h" />
     <ClInclude Include="Source\SceneTester.h" />
     <ClInclude Include="Source\Score.h" />
