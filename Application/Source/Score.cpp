@@ -8,7 +8,6 @@ Score::Score() :
 
 void Score::saveScore(int num)
 {
-	money.SuccessfulTourist(passengerCount);
 
 	int tempscore = getScore(num);
 	for (int i = 9; i > -1; i--) 

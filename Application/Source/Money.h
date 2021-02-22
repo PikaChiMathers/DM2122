@@ -1,11 +1,20 @@
 #pragma once
-class Money
+#ifndef MONEY_H
+#define MONEY_H
+
+#include "GameObject.h"
+#include "Score.h"
+
+class Money : public GameObject
 {
 private:
 	int money;
+	GameObject* coins;
+	Score score;
 
 public:
 	Money();
+	void OnTrigerEnter(GameObject*);
 	void IncreaseMoney(int);
 	void SuccessfulTourist(int);
 	void DecreaseMoney(int);
@@ -13,4 +22,4 @@ public:
 	void ResetMoney();
 	int getMoney();
 };
-
+#endif

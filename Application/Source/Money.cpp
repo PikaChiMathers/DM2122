@@ -3,6 +3,16 @@
 Money::Money()
 {
 	money = 0;
+	AddCollider();
+	SetPosition(Position(5, 0, 0));
+	GetCollider()->SetIsTrigger(true);
+}
+
+void Money::OnTrigerEnter(GameObject*)
+{
+	IncreaseMoney(100);
+	score.setScore(0, getMoney());
+	delete this;
 }
 
 void Money::IncreaseMoney(int add)

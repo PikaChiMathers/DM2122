@@ -2,19 +2,15 @@
 #define SCENE_TEST
 
 #include "Scene.h"
-#include "Camera2.h"
-#include "Camera3.h"
+#include "Camera4.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Vertex.h"
 #include "Light.h"
 
 #include "GameObject.h"
-#include "Bus.h"
-#include "Person.h"
-#include "Money.h"
 #include "Maps.h"
-#include "Score.h"
+
 
 #include "Dialogue.h"
 
@@ -57,13 +53,8 @@ public:
 		GEO_AXES = 0,
 
 		GEO_QUAD,
-
 		GEO_CUBE,
-
-		GEO_COIN,
-		GEO_PASSPORT,
 		GEO_GOOSE,
-		GEO_MALL,
 
 		GEO_LIGHTBALL,
 		GEO_SPHERE,
@@ -139,23 +130,14 @@ public:
 
 
 private: //added (Step 2)
-	Camera3 camera;
+	Camera4 camera;
 	Light lights[NUM_LIGHTS];
-	Person person;
-	Money money;
 	Maps map;
-	Score score;
 
 	Dialogue* dialogue;
 
 	//GameObject gameObject;
-	Bus gameObject;
-	GameObject box;
-	GameObject* coin;
-	GameObject passport;
 	GameObject goose;
-
-
 
 	unsigned m_vertexArrayID;
 	/*unsigned m_vertexBuffer[NUM_GEOMETRY];
@@ -176,7 +158,7 @@ private: //added (Step 2)
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 
 	void RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int sizey);
-		
+
 	unsigned m_parameters[U_TOTAL];
 	unsigned m_programID;
 };
