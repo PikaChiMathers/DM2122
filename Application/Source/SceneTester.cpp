@@ -106,7 +106,7 @@ void SceneTester::Init()
 	meshList[GEO_PASSPORT] = MeshBuilder::GenerateOBJMTL("passport", "OBJ//passport.obj", "OBJ//passport.mtl");
 	//meshList[GEO_MALL] = MeshBuilder::GenerateOBJMTL("mall", "OBJ//mall.obj", "OBJ//mall.obj");
 
-	glDisable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -621,14 +621,14 @@ void SceneTester::RenderSkybox()
 	
 	modelStack.PushMatrix();
 	modelStack.Translate(0, -499, 0);
-	modelStack.Rotate(90, 1, 0, 0);
+	modelStack.Rotate(-90, 1, 0, 0);
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_BOTTOM], false);
 	modelStack.PopMatrix();
 	
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 499, 0);
-	modelStack.Rotate(-90, 1, 0, 0);
+	modelStack.Rotate(90, 1, 0, 0);
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_TOP], false);
 	modelStack.PopMatrix();
