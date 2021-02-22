@@ -5,9 +5,9 @@
 
 class BoxCollider : public Collider
 {
-	std::vector<Vector3>points;
 public:
 	BoxCollider();
 	~BoxCollider();
+	OBB GetOBBData();
 };
 #endif

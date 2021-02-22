@@ -33,13 +33,13 @@ void Bus::GameObjectUpdate(double dt)
 	{
 		//xVelocity -= acceleration * dt;
 		//GetPhysics()->AddVelocity(GetRight() * -acceleration * dt);
-		if (velocity.Length() != 0) SetRotateY(GetRotateY() + 90 * dt);
+		/*if (velocity.Length() != 0)*/ SetRotateY(GetRotateY() + 90 * dt);
 	}
 	if (Application::IsKeyPressed('H'))
 	{
 		//xVelocity += acceleration * dt;
 		//GetPhysics()->AddVelocity(GetRight() * acceleration * dt);
-		if (velocity.Length() != 0) SetRotateY(GetRotateY() - 90 * dt);
+		/*if (velocity.Length() != 0)*/ SetRotateY(GetRotateY() - 90 * dt);
 	}
 	if (velocity.Length() > acceleration) velocity *= (50 / velocity.Length());
 	GetPhysics()->AddVelocity(velocity);

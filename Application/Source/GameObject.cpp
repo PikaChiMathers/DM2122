@@ -31,10 +31,10 @@ float GameObject::GetPositionY() { return transform.position.y; }
 float GameObject::GetPositionZ() { return transform.position.z; }
 Position GameObject::GetPosition() { return transform.position; }
 
-void GameObject::SetRotateX(float x) { transform.rotation.x = x; ColliderUpdate(); transform.UpdateDirectionVectors(); }
-void GameObject::SetRotateY(float y) { transform.rotation.y = y; ColliderUpdate(); transform.UpdateDirectionVectors(); }
-void GameObject::SetRotateZ(float z) { transform.rotation.z = z; ColliderUpdate(); transform.UpdateDirectionVectors(); }
-void GameObject::SetRotate(Rotation rot) { transform.rotation = rot; ColliderUpdate(); transform.UpdateDirectionVectors(); }
+void GameObject::SetRotateX(float x) { transform.rotation.x = x; transform.UpdateDirectionVectors(); ColliderUpdate(); }
+void GameObject::SetRotateY(float y) { transform.rotation.y = y; transform.UpdateDirectionVectors(); ColliderUpdate(); }
+void GameObject::SetRotateZ(float z) { transform.rotation.z = z; transform.UpdateDirectionVectors(); ColliderUpdate(); }
+void GameObject::SetRotate(Rotation rot) { transform.rotation = rot; transform.UpdateDirectionVectors(); ColliderUpdate(); }
 float GameObject::GetRotateX() { return transform.rotation.x; }
 float GameObject::GetRotateY() { return transform.rotation.y; }
 float GameObject::GetRotateZ() { return transform.rotation.z; }
@@ -70,6 +70,7 @@ void GameObject::AddCollider()
 	{
 		collider = new Collider();
 		GameObject::PushCollider(this);
+		ColliderUpdate();
 	}
 }
 
@@ -92,8 +93,7 @@ void GameObject::ColliderUpdate()
 {
 	if (collider != nullptr)
 	{
-		collider->SetPosition(transform.position);
-		collider->SetRotation(transform.rotation);
+		collider->SetTransform(transform);
 		collider->SetSize(Size(transform.scale.x, transform.scale.y, transform.scale.z));
 	}
 }
@@ -140,7 +140,7 @@ std::string GameObject::Type()
 
 void GameObject::OnTriggerEnter(GameObject* gameObject)
 {
-
+	
 }
 
 void GameObject::OnTriggerStay(GameObject* gameObject)
@@ -157,6 +157,38 @@ void GameObject::OnTriggerExit(GameObject* gameObject)
 //Collider/physics Update area
 /**************************************************/
 std::vector<GameObject*> GameObject::ColliderList;
+#pragma optimize("", off)
+float GameObject::SATcalculation(Vector3 axis, std::vector<Vector3> points1, std::vector<Vector3> points2)
+{
+	axis.Normalize();
+	float min1, max1, min2, max2;
+	min1 = max1 = points1[0].Dot(axis);
+	for (std::vector<Vector3>::iterator it_point = points1.begin(); it_point != points1.end(); it_point++)
+	{
+		float dist = (*it_point).Dot(axis);
+		if (dist < min1) min1 = dist;
+		if (dist > max1) max1 = dist;
+	}
+	min2 = max2 = points2[0].Dot(axis);
+	for (std::vector<Vector3>::iterator it_point = points2.begin(); it_point != points2.end(); it_point++)
+	{
+		float dist = (*it_point).Dot(axis);
+		if (dist < min2) min2 = dist;
+		if (dist > max2) max2 = dist;
+	}
+	if (min1 < min2)
+	{
+		if (max1 < min2) return -1;
+		//std::cout << max1 - min2 << std::endl;
+		return (max1 - min2);
+	}
+	else // min1 > min 2
+	{
+		if (max2 < min1) return -1;
+		//std::cout << max2 - min1 << std::endl;
+		return (max2 - min1);
+	}
+}
 
 bool GameObject::ListContains(GameObject* obj)
 {
@@ -187,52 +219,115 @@ void GameObject::EraseCollider(GameObject* obj)
 	}
 }
 
-GameObject* GameObject::CheckCollision(Collider* obj)
+Collide GameObject::CheckCollision(Collider* obj)
 {
-	if (obj == nullptr) return nullptr;
-	return CheckCollision(obj->GetPosition(), obj->GetSize(), obj);
+	if (obj == nullptr) return Collide();
+	return CheckCollision(*obj, obj);
 }
 
-GameObject* GameObject::CheckCollision(Position pos, Size size, Collider* exclude)
+Collide GameObject::CheckCollision(Collider refCol, Collider* exclude)
 {
 	for (std::vector<GameObject*>::iterator it = ColliderList.begin(); it != ColliderList.end(); it++)
 	{
 		if ((*it)->GetCollider() != exclude)
 		{
-			if (abs((*it)->GetCollider()->GetPosition().x - pos.x) < ((*it)->GetCollider()->GetSize().x + size.x) * 0.5f &&
-				abs((*it)->GetCollider()->GetPosition().y - pos.y) < ((*it)->GetCollider()->GetSize().y + size.y) * 0.5f &&
-				abs((*it)->GetCollider()->GetPosition().z - pos.z) < ((*it)->GetCollider()->GetSize().z + size.z) * 0.5f)
+			OBB refColData = refCol.GetOBBData();
+			OBB Col2Data = (*it)->GetCollider()->GetOBBData();
+			std::vector<Vector3>axes;
+			for (std::vector<Vector3>::iterator obbIt = refColData.Axes.begin(); obbIt != refColData.Axes.end(); obbIt++) axes.push_back((*obbIt));
+			for (std::vector<Vector3>::iterator obbIt = Col2Data.Axes.begin(); obbIt != Col2Data.Axes.end(); obbIt++) axes.push_back((*obbIt));
+			axes.push_back(axes[0].Cross(axes[3]));
+			axes.push_back(axes[0].Cross(axes[4]));
+			axes.push_back(axes[0].Cross(axes[5]));
+			axes.push_back(axes[1].Cross(axes[3]));
+			axes.push_back(axes[1].Cross(axes[4]));
+			axes.push_back(axes[1].Cross(axes[5]));
+			axes.push_back(axes[2].Cross(axes[3]));
+			axes.push_back(axes[2].Cross(axes[4]));
+			axes.push_back(axes[2].Cross(axes[5]));
+			int shortestAxisVec = 0; // stores the iteration of the axis vector that has shortest overlap dist 
+			float shortestDist = 100000000;
+			shortestDist = GameObject::SATcalculation(axes[0].Normalize(), refColData.Points, Col2Data.Points); // stores the shortest overlap distance
+			for (int i = 1; i < axes.size(); i++)
 			{
-				return (*it);
+				if (axes[i].IsZero()) continue;
+				float dist = GameObject::SATcalculation(axes[i].Normalize(), refColData.Points, Col2Data.Points);
+				if (dist < shortestDist)
+				{
+					shortestDist = dist;
+					shortestAxisVec = i;
+				}
+				if (dist == -1) break;
 			}
+			if (shortestDist == -1) continue; // 1 of the axis vectors has no overlap == no collision
+			Collide collide;
+			collide.gameObject = (*it);
+			collide.axis = axes[shortestAxisVec];
+			collide.distance = shortestDist;
+			return collide;
 		}
 	}
-	return nullptr;
+	return Collide();
 }
 
-std::vector<GameObject*> GameObject::CheckCollisions(Collider* obj)
+std::vector<Collide> GameObject::CheckCollisions(Collider* obj)
 {
-	if (obj == nullptr) return std::vector<GameObject*>();
-	return CheckCollisions(obj->GetPosition(), obj->GetSize(), obj);
+	if (obj == nullptr) return std::vector<Collide>();
+	return CheckCollisions(*obj, obj);
 }
 
-std::vector<GameObject*> GameObject::CheckCollisions(Position pos, Size size, Collider* exclude)
+std::vector<Collide> GameObject::CheckCollisions(Collider refCol, Collider* exclude)
 {
-	std::vector<GameObject*>GameObjectsInCollider;
+	std::vector<Collide>GameObjectsInCollider;
 	for (std::vector<GameObject*>::iterator it = ColliderList.begin(); it != ColliderList.end(); it++)
 	{
 		if ((*it)->GetCollider() != exclude)
 		{
-			if (abs((*it)->GetCollider()->GetPosition().x - pos.x) < ((*it)->GetCollider()->GetSize().x + size.x) * 0.5f &&
+			/*if (abs((*it)->GetCollider()->GetPosition().x - pos.x) < ((*it)->GetCollider()->GetSize().x + size.x) * 0.5f &&
 				abs((*it)->GetCollider()->GetPosition().y - pos.y) < ((*it)->GetCollider()->GetSize().y + size.y) * 0.5f &&
 				abs((*it)->GetCollider()->GetPosition().z - pos.z) < ((*it)->GetCollider()->GetSize().z + size.z) * 0.5f)
 			{
 				GameObjectsInCollider.push_back((*it));
+			}*/
+			OBB refColData = refCol.GetOBBData();
+			OBB Col2Data = (*it)->GetCollider()->GetOBBData();
+			std::vector<Vector3>axes;
+			for (std::vector<Vector3>::iterator obbIt = refColData.Axes.begin(); obbIt != refColData.Axes.end(); obbIt++) axes.push_back((*obbIt));
+			for (std::vector<Vector3>::iterator obbIt = Col2Data.Axes.begin(); obbIt != Col2Data.Axes.end(); obbIt++) axes.push_back((*obbIt));
+			axes.push_back(axes[0].Cross(axes[3]));
+			axes.push_back(axes[0].Cross(axes[4]));
+			axes.push_back(axes[0].Cross(axes[5]));
+			axes.push_back(axes[1].Cross(axes[3]));
+			axes.push_back(axes[1].Cross(axes[4]));
+			axes.push_back(axes[1].Cross(axes[5]));
+			axes.push_back(axes[2].Cross(axes[3]));
+			axes.push_back(axes[2].Cross(axes[4]));
+			axes.push_back(axes[2].Cross(axes[5]));
+			int shortestAxisVec = 0; // stores the iteration of the axis vector that has shortest overlap dist 
+			float shortestDist = 100000000;
+			shortestDist = GameObject::SATcalculation(axes[0].Normalize(), refColData.Points, Col2Data.Points); // stores the shortest overlap distance
+			for (int i = 1; i < axes.size(); i++)
+			{
+				if (axes[i].IsZero()) continue;
+				float dist = GameObject::SATcalculation(axes[i].Normalize(), refColData.Points, Col2Data.Points);
+				if (dist < shortestDist)
+				{
+					shortestDist = dist;
+					shortestAxisVec = i;
+				}
+				if (dist == -1) break;
 			}
+			if (shortestDist == -1) continue; // 1 of the axis vectors has no overlap == no collision
+			Collide collide;
+			collide.gameObject = (*it);
+			collide.axis = axes[shortestAxisVec];
+			collide.distance = shortestDist;
+			GameObjectsInCollider.push_back(collide);
 		}
 	}
 	return GameObjectsInCollider;
 }
+
 
 void GameObject::GameObjectUpdateManager(double dt)
 {
@@ -244,15 +339,15 @@ void GameObject::GameObjectUpdateManager(double dt)
 			GameObject* gameObject = (*it);
 			if (gameObject->GetCollider()->GetIsTrigger()) // Check for Trigger Collider Objects
 			{
-				std::vector<GameObject*>CheckTrigger = CheckCollisions(gameObject->GetCollider());
+				std::vector<Collide>CheckTrigger = CheckCollisions(gameObject->GetCollider());
 				for (std::vector<GameObject*>::iterator it = gameObject->InTrigger.begin(); it != gameObject->InTrigger.end(); it++)
 				{
 					bool notMatched = true;
-					for (std::vector<GameObject*>::iterator itNew = CheckTrigger.begin(); itNew != CheckTrigger.end(); itNew++)
+					for (std::vector<Collide>::iterator itNew = CheckTrigger.begin(); itNew != CheckTrigger.end(); itNew++)
 					{
-						if ((*it) == (*itNew))
+						if ((*it) == (*itNew).gameObject)
 						{
-							gameObject->OnTriggerStay((*itNew));
+							gameObject->OnTriggerStay((*itNew).gameObject);
 							CheckTrigger.erase(itNew);
 							notMatched = false;
 							break;
@@ -264,9 +359,9 @@ void GameObject::GameObjectUpdateManager(double dt)
 						gameObject->InTrigger.erase(it);
 					}
 				}
-				for (std::vector<GameObject*>::iterator it = CheckTrigger.begin(); it != CheckTrigger.end(); it++)
+				for (std::vector<Collide>::iterator it = CheckTrigger.begin(); it != CheckTrigger.end(); it++)
 				{
-					gameObject->OnTriggerEnter((*it));
+					gameObject->OnTriggerEnter((*it).gameObject);
 				}
 			}
 			if (gameObject->GetPhysics() != nullptr && !gameObject->GetCollider()->GetIsTrigger()) // check for collision
@@ -275,35 +370,30 @@ void GameObject::GameObjectUpdateManager(double dt)
 				if (physics->GetVelocity().Length() > 0)
 				{
 					Position newPos(gameObject->GetPositionX() + physics->GetVelocity().x * dt, gameObject->GetPositionY() + physics->GetVelocity().y * dt, gameObject->GetPositionZ() + physics->GetVelocity().z * dt);
-					bool colliding = true;
-					for (int i = 0; i < 5; i++) // if after 5 attempts to get the obj out of other colliders and still fail, just dont move it.
+					bool colliding = false;
+					//for (int i = 0; i < 5; i++) // if after 5 attempts to get the obj out of other colliders and still fail, just dont move it.
 					{
-						GameObject* hit = CheckCollision(newPos, gameObject->GetCollider()->GetSize(), gameObject->GetCollider());
-						if (hit == nullptr || hit->GetCollider()->GetIsTrigger())
+						Collider RefCollider;
+						RefCollider.SetTransform(gameObject->GetCollider()->GetTransform());
+						RefCollider.GetTransform().position = newPos;
+						Collide hit = CheckCollision(RefCollider, gameObject->GetCollider());
+						if (hit.gameObject == nullptr || hit.gameObject->GetCollider()->GetIsTrigger())
 						{
 							colliding = false;
-							break;
-						}
+							//break;
+						}else
 						//if (hit->GetCollider()->GetPhysics() == nullptr)
 						{
-							float xDif = (gameObject->GetCollider()->GetSize().x + hit->GetCollider()->GetSize().x) * .5f - abs(newPos.x - hit->GetPositionX());
-							float yDif = (gameObject->GetCollider()->GetSize().y + hit->GetCollider()->GetSize().y) * .5f - abs(newPos.y - hit->GetPositionY());
-							float zDif = (gameObject->GetCollider()->GetSize().z + hit->GetCollider()->GetSize().z) * .5f - abs(newPos.z - hit->GetPositionZ());
-							if (xDif < yDif && xDif < zDif)
-							{
-								newPos.x += newPos.x > hit->GetPositionX() ? xDif : -xDif;
-								physics->SetVelocity(Vector3(0, physics->GetVelocity().y, physics->GetVelocity().z));
-							}
-							else if (yDif < zDif)
-							{
-								newPos.y += newPos.y > hit->GetPositionY() ? yDif : -yDif;
-								physics->SetVelocity(Vector3(physics->GetVelocity().x, 0, physics->GetVelocity().z));
-							}
-							else
-							{
-								newPos.z += newPos.z > hit->GetPositionZ() ? zDif : -zDif;
-								physics->SetVelocity(Vector3(physics->GetVelocity().x, physics->GetVelocity().y, 0));
-							}
+							float posGO, pos2;
+							Vector3 axis = hit.axis.Normalize();
+							posGO = Vector3(newPos.x, newPos.y, newPos.z).Dot(axis);
+							pos2 = Vector3(hit.gameObject->GetPositionX(), hit.gameObject->GetPositionY(), hit.gameObject->GetPositionZ()).Dot(axis);
+							axis *= hit.distance * (posGO > pos2 ? 1 : -1);
+							Vector3 translatePos(newPos.x, newPos.y, newPos.z);
+							translatePos += axis;
+							newPos.Set(translatePos.x, translatePos.y, translatePos.z);
+							axis = hit.axis.Normalize();
+							physics->AddVelocity(axis * -physics->GetVelocity().Dot(axis));
 						}
 						//else
 						//{
@@ -334,3 +424,4 @@ void GameObject::GameObjectUpdateManager(double dt)
 		}
 	}
 }
+#pragma optimize("", on)

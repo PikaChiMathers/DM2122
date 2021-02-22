@@ -379,8 +379,7 @@ void SceneTrivia::Update(double dt)
 		if (dialogue->getCurrentLine() < dialogue->getTotalLines())
 			std::cout << dialogue->Update() << std::endl;
 
-
-	std::string coinC = (GameObject::CheckCollision(coin.GetCollider()) == nullptr ? "false" : "true");
+	std::string coinC = (GameObject::CheckCollision(coin.GetCollider()).gameObject == nullptr ? "false" : "true");
 
 
 	if (coinC == "true")
