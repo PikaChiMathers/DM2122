@@ -104,6 +104,7 @@ void SceneTester::Init()
 
 	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("goose", "OBJ//goose.obj", Color(1 ,1, 1));
 	meshList[GEO_PASSPORT] = MeshBuilder::GenerateOBJMTL("passport", "OBJ//passport.obj", "OBJ//passport.mtl");
+	//meshList[GEO_MALL] = MeshBuilder::GenerateOBJMTL("mall", "OBJ//mall.obj", "OBJ//mall.obj");
 
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
@@ -219,9 +220,8 @@ void SceneTester::Init()
 	box.SetPosition(Position(10, 0, 10));
 	box.SetScale(Scale(2, 1, 1));
 	//box.GetCollider()->SetIsTrigger(true);
-	coin.AddCollider();
-	coin.SetPosition(Position(5, 0, 0));
-	coin.GetCollider()->SetIsTrigger(true);
+	//coin.AddCollider();
+	//coin.GetCollider()->SetIsTrigger(true);
 	passport.AddCollider();
 	passport.SetPosition(Position(10, 0, 0));
 }
@@ -380,17 +380,14 @@ void SceneTester::Update(double dt)
 			std::cout << dialogue->Update() << std::endl;
 
 
-	std::string coinC = (GameObject::CheckCollision(coin.GetCollider()) == nullptr ? "false" : "true");
 
 	
-	if (coinC == "true")
-	{
-		money.IncreaseMoney(100);
-		coin_collect = true;
-		coin.SetPositionY(-10);
-	}
+
 	
-	score.setScore(0, money.getMoney());
+
+	//	money.IncreaseMoney(100);
+	//	coin.SetPositionY(-10);
+	//score.setScore(0, money.getMoney());
 }
 
 void SceneTester::Render() //My Own Pattern
@@ -481,7 +478,7 @@ void SceneTester::Render() //My Own Pattern
 	if (coin_collect == false)
 	{
 		modelStack.PushMatrix();
-		modelStack.Translate(coin.GetPositionX(), coin.GetPositionY(), coin.GetPositionZ());
+		modelStack.Translate(5, 0, 0);
 		RenderMesh(meshList[GEO_COIN], true);
 		modelStack.PopMatrix();
 	}
@@ -495,6 +492,11 @@ void SceneTester::Render() //My Own Pattern
 	modelStack.Translate(passport.GetPositionX(), passport.GetPositionY(), passport.GetPositionZ());
 	RenderMesh(meshList[GEO_PASSPORT], true);
 	modelStack.PopMatrix();
+
+	//modelStack.PushMatrix();
+	//modelStack.Translate(0, 0, 10);
+	//RenderMesh(meshList[GEO_MALL], true);
+	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(box.GetPositionX(), box.GetPositionY(), box.GetPositionZ());
