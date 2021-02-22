@@ -107,8 +107,8 @@ public:
 	static Collide CheckCollision(Collider* col);
 	static Collide CheckCollision(Collider refCol, Collider* exclude = nullptr);
 	//return all gameobjects found within a collider box
-	static std::vector<GameObject*> CheckCollisions(Collider* col);
-	static std::vector<GameObject*> CheckCollisions(Position pos, Size size = 1, Collider* exclude = nullptr);
+	static std::vector<Collide> CheckCollisions(Collider* col);
+	static std::vector<Collide> CheckCollisions(Collider refCol, Collider* exclude = nullptr);
 
 	// run every update in Scene::Update
 	static void GameObjectUpdateManager(double dt); 

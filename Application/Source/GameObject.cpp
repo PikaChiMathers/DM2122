@@ -245,8 +245,6 @@ Collide GameObject::CheckCollision(Collider refCol, Collider* exclude)
 			axes.push_back(axes[2].Cross(axes[3]));
 			axes.push_back(axes[2].Cross(axes[4]));
 			axes.push_back(axes[2].Cross(axes[5]));
-			//for (std::vector<Vector3>::iterator it_axis = axes.begin(); it_axis != axes.end(); it_axis++) if ((*it_axis).IsZero()) axes.erase(it_axis);
-
 			int shortestAxisVec = 0; // stores the iteration of the axis vector that has shortest overlap dist 
 			float shortestDist = 100000000;
 			shortestDist = GameObject::SATcalculation(axes[0].Normalize(), refColData.Points, Col2Data.Points); // stores the shortest overlap distance
@@ -272,25 +270,59 @@ Collide GameObject::CheckCollision(Collider refCol, Collider* exclude)
 	return Collide();
 }
 
-std::vector<GameObject*> GameObject::CheckCollisions(Collider* obj)
+std::vector<Collide> GameObject::CheckCollisions(Collider* obj)
 {
-	if (obj == nullptr) return std::vector<GameObject*>();
-	return CheckCollisions(obj->GetPosition(), obj->GetSize(), obj);
+	if (obj == nullptr) return std::vector<Collide>();
+	return CheckCollisions(*obj, obj);
 }
 
-std::vector<GameObject*> GameObject::CheckCollisions(Position pos, Size size, Collider* exclude)
+std::vector<Collide> GameObject::CheckCollisions(Collider refCol, Collider* exclude)
 {
-	std::vector<GameObject*>GameObjectsInCollider;
+	std::vector<Collide>GameObjectsInCollider;
 	for (std::vector<GameObject*>::iterator it = ColliderList.begin(); it != ColliderList.end(); it++)
 	{
 		if ((*it)->GetCollider() != exclude)
 		{
-			if (abs((*it)->GetCollider()->GetPosition().x - pos.x) < ((*it)->GetCollider()->GetSize().x + size.x) * 0.5f &&
+			/*if (abs((*it)->GetCollider()->GetPosition().x - pos.x) < ((*it)->GetCollider()->GetSize().x + size.x) * 0.5f &&
 				abs((*it)->GetCollider()->GetPosition().y - pos.y) < ((*it)->GetCollider()->GetSize().y + size.y) * 0.5f &&
 				abs((*it)->GetCollider()->GetPosition().z - pos.z) < ((*it)->GetCollider()->GetSize().z + size.z) * 0.5f)
 			{
 				GameObjectsInCollider.push_back((*it));
+			}*/
+			OBB refColData = refCol.GetOBBData();
+			OBB Col2Data = (*it)->GetCollider()->GetOBBData();
+			std::vector<Vector3>axes;
+			for (std::vector<Vector3>::iterator obbIt = refColData.Axes.begin(); obbIt != refColData.Axes.end(); obbIt++) axes.push_back((*obbIt));
+			for (std::vector<Vector3>::iterator obbIt = Col2Data.Axes.begin(); obbIt != Col2Data.Axes.end(); obbIt++) axes.push_back((*obbIt));
+			axes.push_back(axes[0].Cross(axes[3]));
+			axes.push_back(axes[0].Cross(axes[4]));
+			axes.push_back(axes[0].Cross(axes[5]));
+			axes.push_back(axes[1].Cross(axes[3]));
+			axes.push_back(axes[1].Cross(axes[4]));
+			axes.push_back(axes[1].Cross(axes[5]));
+			axes.push_back(axes[2].Cross(axes[3]));
+			axes.push_back(axes[2].Cross(axes[4]));
+			axes.push_back(axes[2].Cross(axes[5]));
+			int shortestAxisVec = 0; // stores the iteration of the axis vector that has shortest overlap dist 
+			float shortestDist = 100000000;
+			shortestDist = GameObject::SATcalculation(axes[0].Normalize(), refColData.Points, Col2Data.Points); // stores the shortest overlap distance
+			for (int i = 1; i < axes.size(); i++)
+			{
+				if (axes[i].IsZero()) continue;
+				float dist = GameObject::SATcalculation(axes[i].Normalize(), refColData.Points, Col2Data.Points);
+				if (dist < shortestDist)
+				{
+					shortestDist = dist;
+					shortestAxisVec = i;
+				}
+				if (dist == -1) break;
 			}
+			if (shortestDist == -1) continue; // 1 of the axis vectors has no overlap == no collision
+			Collide collide;
+			collide.gameObject = (*it);
+			collide.axis = axes[shortestAxisVec];
+			collide.distance = shortestDist;
+			GameObjectsInCollider.push_back(collide);
 		}
 	}
 	return GameObjectsInCollider;
@@ -307,15 +339,15 @@ void GameObject::GameObjectUpdateManager(double dt)
 			GameObject* gameObject = (*it);
 			if (gameObject->GetCollider()->GetIsTrigger()) // Check for Trigger Collider Objects
 			{
-				std::vector<GameObject*>CheckTrigger = CheckCollisions(gameObject->GetCollider());
+				std::vector<Collide>CheckTrigger = CheckCollisions(gameObject->GetCollider());
 				for (std::vector<GameObject*>::iterator it = gameObject->InTrigger.begin(); it != gameObject->InTrigger.end(); it++)
 				{
 					bool notMatched = true;
-					for (std::vector<GameObject*>::iterator itNew = CheckTrigger.begin(); itNew != CheckTrigger.end(); itNew++)
+					for (std::vector<Collide>::iterator itNew = CheckTrigger.begin(); itNew != CheckTrigger.end(); itNew++)
 					{
-						if ((*it) == (*itNew))
+						if ((*it) == (*itNew).gameObject)
 						{
-							gameObject->OnTriggerStay((*itNew));
+							gameObject->OnTriggerStay((*itNew).gameObject);
 							CheckTrigger.erase(itNew);
 							notMatched = false;
 							break;
@@ -327,9 +359,9 @@ void GameObject::GameObjectUpdateManager(double dt)
 						gameObject->InTrigger.erase(it);
 					}
 				}
-				for (std::vector<GameObject*>::iterator it = CheckTrigger.begin(); it != CheckTrigger.end(); it++)
+				for (std::vector<Collide>::iterator it = CheckTrigger.begin(); it != CheckTrigger.end(); it++)
 				{
-					gameObject->OnTriggerEnter((*it));
+					gameObject->OnTriggerEnter((*it).gameObject);
 				}
 			}
 			if (gameObject->GetPhysics() != nullptr && !gameObject->GetCollider()->GetIsTrigger()) // check for collision
