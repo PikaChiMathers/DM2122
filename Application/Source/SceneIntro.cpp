@@ -101,7 +101,7 @@
 //	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("goose", "OBJ//goose.obj", Color(1, 1, 1));
 //
 //
-//	glDisable(GL_CULL_FACE);
+//	glEnable(GL_CULL_FACE);
 //	glEnable(GL_BLEND);
 //	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 //
@@ -581,14 +581,14 @@
 //
 //	modelStack.PushMatrix();
 //	modelStack.Translate(0, -499, 0);
-//	modelStack.Rotate(90, 1, 0, 0);
+//	modelStack.Rotate(-90, 1, 0, 0);
 //	modelStack.Scale(1000, 1000, 1000);
 //	RenderMesh(meshList[GEO_BOTTOM], false);
 //	modelStack.PopMatrix();
 //
 //	modelStack.PushMatrix();
 //	modelStack.Translate(0, 499, 0);
-//	modelStack.Rotate(-90, 1, 0, 0);
+//	modelStack.Rotate(90, 1, 0, 0);
 //	modelStack.Scale(1000, 1000, 1000);
 //	RenderMesh(meshList[GEO_TOP], false);
 //	modelStack.PopMatrix();

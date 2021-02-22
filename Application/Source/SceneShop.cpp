@@ -25,6 +25,8 @@ void SceneShop::Init()
 {
 	camera.Init(Vector3(40, 2, 30), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
+	map.Set(Maps::SKYBOX_TYPE::SB_SHOP);
+
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
@@ -462,14 +464,14 @@ void SceneShop::RenderSkybox()
 	
 	modelStack.PushMatrix();
 	modelStack.Translate(0, -499, 0);
-	modelStack.Rotate(90, 1, 0, 0);
+	modelStack.Rotate(-90, 1, 0, 0);
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_BOTTOM], false);
 	modelStack.PopMatrix();
 	
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 499, 0);
-	modelStack.Rotate(-90, 1, 0, 0);
+	modelStack.Rotate(90, 1, 0, 0);
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_TOP], false);
 	modelStack.PopMatrix();
