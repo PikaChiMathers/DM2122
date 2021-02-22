@@ -1,5 +1,4 @@
 #pragma once
-#include "Money.h"
 
 class Score
 {
@@ -10,7 +9,6 @@ private:
 public:
 	Score();
 
-	Money money;
 	void saveScore(int);
 	void increaseScore(int, int);
 	void resetScore(int);
