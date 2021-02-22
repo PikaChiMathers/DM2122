@@ -64,7 +64,7 @@ void SceneTester::Init()
 
 	moonshade.Set(0.93f, 0.93f, 0.88f);
 
-	meshList[GEO_TEST] = MeshBuilder::GenerateOBJ("test", "OBJ//bus.obj", Color(1, 1, 1));
+	meshList[GEO_TEST] = MeshBuilder::GenerateOBJMTL("test", "OBJ//bus.obj", "OBJ//bus.mtl");
 
 	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("Rsphere", red, 30, 30, 1);
 	meshList[GEO_SPHERE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
@@ -217,6 +217,7 @@ void SceneTester::Init()
 	box.AddCollider();
 	//box.GetCollider()->AddPhysics();
 	box.SetPosition(Position(10, 0, 10));
+	box.SetScale(Scale(2, 1, 1));
 	//box.GetCollider()->SetIsTrigger(true);
 	coin.AddCollider();
 	coin.SetPosition(Position(5, 0, 0));
@@ -470,7 +471,10 @@ void SceneTester::Render() //My Own Pattern
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(gameObject.GetPositionX(), gameObject.GetPositionY(), gameObject.GetPositionZ());
+		modelStack.Translate(gameObject.GetPositionX(), gameObject.GetPositionY(), gameObject.GetPositionZ());
+		modelStack.Rotate(gameObject.GetRotateX(), 1, 0, 0);
+		modelStack.Rotate(gameObject.GetRotateY(), 0, 1, 0);
+		modelStack.Rotate(gameObject.GetRotateZ(), 0, 0, 1);
 	RenderMesh(meshList[GEO_CUBE], false);
 	modelStack.PopMatrix();
 
@@ -487,15 +491,16 @@ void SceneTester::Render() //My Own Pattern
 	modelStack.Scale(0.8, 0, 0);
 	modelStack.PopMatrix();
 
-	/*modelStack.PushMatrix();
+	modelStack.PushMatrix();
 	modelStack.Translate(passport.GetPositionX(), passport.GetPositionY(), passport.GetPositionZ());
 	RenderMesh(meshList[GEO_PASSPORT], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(box.GetPositionX(), box.GetPositionY(), box.GetPositionZ());
+	modelStack.Scale(box.GetScaleX(), box.GetScaleY(), box.GetScaleZ());
 	RenderMesh(meshList[GEO_CUBE], false);
-	modelStack.PopMatrix();*/
+	modelStack.PopMatrix();
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
@@ -514,7 +519,7 @@ void SceneTester::Render() //My Own Pattern
 	RenderTextOnScreen(meshList[GEO_TEXT], "Collide Count: " + std::to_string(colCount), Color(0, 1, 0), 4, 0, 0);
 	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(box.GetCollider()->GetPosition().x) + ", " + std::to_string(box.GetCollider()->GetPosition().y) + ", " + std::to_string(box.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 8);
 	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetCollider()->GetPosition().x) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().y) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 10);
-	//RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(box.GetCollider()->GetPhysics()->GetVelocity().x) + ", " + std::to_string(box.GetCollider()->GetPhysics()->GetVelocity().y) + ", " + std::to_string(box.GetCollider()->GetPhysics()->GetVelocity().z), Color(0, 1, 0), 2, 0, 12);
+	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetFoward().x) + ", " + std::to_string(gameObject.GetFoward().y) + ", " + std::to_string(gameObject.GetFoward().z), Color(0, 1, 0), 2, 0, 12);
 	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetPhysics()->GetVelocity().x) + ", " + std::to_string(gameObject.GetPhysics()->GetVelocity().y) + ", " + std::to_string(gameObject.GetPhysics()->GetVelocity().z), Color(0, 1, 0), 2, 0, 14);
 
 	std::ostringstream mn;

@@ -3,6 +3,7 @@
 #define COLLIDER_H
 
 #include "Vertex.h"
+#include "Transform.h"
 #include <vector>
 
 struct Size
@@ -22,15 +23,19 @@ struct Size
 class Collider
 {
 	Position position;
+	Rotation rotation;
 	Size size;
-	bool isTrigger; // allows objects to pass thru
+	bool isTrigger; // allows objects to pass thru. use OnTriggerEnter, Stay or exit (from gameobject class) to get gameobjects inside.
+
 public:
 	Collider();
 	Collider(Position position, Size size);
 	~Collider();
 	void SetPosition(Position pos);
+	void SetRotation(Rotation rot);
 	void SetSize(Size size);
 	Position GetPosition();
+	Rotation GetRotation();
 	Size GetSize();
 	void SetIsTrigger(bool isTrigger);
 	bool GetIsTrigger();
