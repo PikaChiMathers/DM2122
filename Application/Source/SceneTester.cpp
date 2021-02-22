@@ -216,6 +216,7 @@ void SceneTester::Init()
 
 	box.AddCollider();
 	//box.GetCollider()->AddPhysics();
+	gameObject.SetPosition(Position(10, 0, 5));
 	box.SetPosition(Position(10, 0, 10));
 	box.SetScale(Scale(2, 1, 1));
 	//box.GetCollider()->SetIsTrigger(true);
@@ -380,7 +381,7 @@ void SceneTester::Update(double dt)
 			std::cout << dialogue->Update() << std::endl;
 
 
-	std::string coinC = (GameObject::CheckCollision(coin.GetCollider()) == nullptr ? "false" : "true");
+	std::string coinC = (GameObject::CheckCollision(coin.GetCollider()).gameObject == nullptr ? "false" : "true");
 
 	
 	if (coinC == "true")
@@ -506,12 +507,12 @@ void SceneTester::Render() //My Own Pattern
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, Application::GetWindowHeight() * .1f);
 
-	if (GameObject::CheckCollision(gameObject.GetCollider()) != nullptr && !colEnter)
+	if (GameObject::CheckCollision(gameObject.GetCollider()).gameObject != nullptr && !colEnter)
 	{
 		colEnter = true;
 		colCount++; 
 	}
-	if (colEnter && (GameObject::CheckCollision(gameObject.GetCollider()) == nullptr))
+	if (colEnter && (GameObject::CheckCollision(gameObject.GetCollider()).gameObject == nullptr))
 	{ 
 		colEnter = false;
 	}

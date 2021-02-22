@@ -395,7 +395,7 @@ void SceneMapping::Update(double dt)
 		gameObject.GetPhysics()->AddVelocity(Vector3(1, 0, 0) * 3 * dt);
 	}
 
-	std::string coinC = (GameObject::CheckCollision(coin.GetCollider()) == nullptr ? "false" : "true");
+	std::string coinC = (GameObject::CheckCollision(coin.GetCollider()).gameObject == nullptr ? "false" : "true");
 
 	
 	if (coinC == "true")
@@ -507,17 +507,17 @@ void SceneMapping::Render() //My Own Pattern
 	RenderMesh(meshList[GEO_CUBE], false);
 	modelStack.PopMatrix();
 
-	std::string col = (GameObject::CheckCollision(gameObject.GetCollider()) == nullptr ? "false" : "true");
-	if (GameObject::CheckCollision(gameObject.GetCollider()) != nullptr && !colEnter)
-	{
-		colEnter = true;
-		colCount++;
-	}
-	if (colEnter && (GameObject::CheckCollision(gameObject.GetCollider()) == nullptr))
-	{ 
-		colEnter = false;
-	}
-	
+	//std::string col = (GameObject::CheckCollision(gameObject.GetCollider()) == nullptr ? "false" : "true");
+	//if (GameObject::CheckCollision(gameObject.GetCollider()) != nullptr && !colEnter)
+	//{
+	//	colEnter = true;
+	//	colCount++;
+	//}
+	//if (colEnter && (GameObject::CheckCollision(gameObject.GetCollider()) == nullptr))
+	//{ 
+	//	colEnter = false;
+	//}
+	//
 
 
 	{ //Text on screen
@@ -526,7 +526,7 @@ void SceneMapping::Render() //My Own Pattern
 		ss << "FPS: " << fps;
 		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, Application::GetWindowHeight() * .1f);
 
-		RenderTextOnScreen(meshList[GEO_TEXT], "Collide: " + col, Color(0, 1, 0), 4, 0, 4);
+		//RenderTextOnScreen(meshList[GEO_TEXT], "Collide: " + col, Color(0, 1, 0), 4, 0, 4);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Collide Count: " + std::to_string(colCount), Color(0, 1, 0), 4, 0, 0);
 		RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(box.GetCollider()->GetPosition().x) + ", " + std::to_string(box.GetCollider()->GetPosition().y) + ", " + std::to_string(box.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 8);
 		RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetCollider()->GetPosition().x) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().y) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 10);

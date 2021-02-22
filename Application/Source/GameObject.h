@@ -7,6 +7,21 @@
 #include"Collider.h"
 #include"BasicPhysics.h"
 #include"Application.h"
+
+class GameObject;
+
+struct Collide
+{
+	GameObject* gameObject;
+	Vector3 axis;
+	float distance;
+	Collide()
+	{
+		gameObject = nullptr;
+		distance = -1;
+	}
+};
+
 class GameObject // use this as the base class for objects
 {
 	Transform transform;
@@ -78,13 +93,19 @@ private:
 	static std::vector<GameObject*>GameObjectList; 
 	// GameObjects with Colliders
 	static std::vector<GameObject*>ColliderList;
+
+	/**
+	* Used for OBB collision detection.
+	* returns value of -1 if theres no overlap
+	*/
+	static float SATcalculation(Vector3 axis, std::vector<Vector3>points1, std::vector<Vector3>points2);
 public:
 	static bool ListContains(GameObject* col);
 	static void PushCollider(GameObject* col);
 	static void EraseCollider(GameObject* col);
 	//returns first gameobject found that is within a collider box
-	static GameObject* CheckCollision(Collider* col);
-	static GameObject* CheckCollision(Position pos, Size size = 1, Collider* exclude = nullptr);
+	static Collide CheckCollision(Collider* col);
+	static Collide CheckCollision(Collider refCol, Collider* exclude = nullptr);
 	//return all gameobjects found within a collider box
 	static std::vector<GameObject*> CheckCollisions(Collider* col);
 	static std::vector<GameObject*> CheckCollisions(Position pos, Size size = 1, Collider* exclude = nullptr);

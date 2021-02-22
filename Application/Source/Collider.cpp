@@ -5,11 +5,6 @@ Collider::Collider()
 	isTrigger = false;
 }
 
-Collider::Collider(Position position, Size size) : position(position), size(size)
-{
-	isTrigger = false;
-}
-
 Collider::~Collider()
 {
 	//Nothing. 
@@ -17,12 +12,17 @@ Collider::~Collider()
 
 void Collider::SetPosition(Position pos)
 {
-	position = pos;
+	transform.position = pos;
 }
 
 void Collider::SetRotation(Rotation rot)
 {
-	rotation = rot;
+	transform.rotation = rot;
+}
+
+void Collider::SetTransform(Transform transform)
+{
+	this->transform = transform;
 }
 
 void Collider::SetSize(Size size)
@@ -32,12 +32,17 @@ void Collider::SetSize(Size size)
 
 Position Collider::GetPosition()
 {
-	return position;
+	return transform.position;
 }
 
 Rotation Collider::GetRotation()
 {
-	return rotation;
+	return transform.rotation;
+}
+
+Transform Collider::GetTransform()
+{
+	return transform;
 }
 
 Size Collider::GetSize()
@@ -53,4 +58,47 @@ void Collider::SetIsTrigger(bool IsTrigger)
 bool Collider::GetIsTrigger()
 {
 	return isTrigger;
+}
+
+OBB Collider::GetOBBData()
+{
+    OBB data;
+    Vector3 Center(GetPosition().x, GetPosition().y, GetPosition().z);
+
+    ///**
+    //* bottom corner 0 0 0
+    //* top corner 1 1 -1
+    //*/
+    //data.Points.push_back(Center += -GetTransform().foward * (GetSize().z * 0.5f) - GetTransform().up * (GetSize().y * 0.5f) - GetTransform().right * (GetSize().x * 0.5f));
+    //data.Points.push_back(Center += GetTransform().foward * (GetSize().z * 0.5f) + GetTransform().up * (GetSize().y * 0.5f) + GetTransform().right * (GetSize().x * 0.5f));
+
+    /**
+    * 0 0 0,
+    * 0 0 1,
+    * 0 1 0,
+    * 1 0 0,
+    * 1 0 1,
+    * 1 1 1,
+    * 0 1 1,
+    * 1 1 0,
+    */
+    data.Points.push_back(Center - GetTransform().foward * (GetSize().z * 0.5f) - GetTransform().up * (GetSize().y * 0.5f) - GetTransform().right * (GetSize().x * 0.5f));
+    data.Points.push_back(Center + GetTransform().foward * (GetSize().z * 0.5f) - GetTransform().up * (GetSize().y * 0.5f) - GetTransform().right * (GetSize().x * 0.5f));
+    data.Points.push_back(Center - GetTransform().foward * (GetSize().z * 0.5f) + GetTransform().up * (GetSize().y * 0.5f) - GetTransform().right * (GetSize().x * 0.5f));
+    data.Points.push_back(Center - GetTransform().foward * (GetSize().z * 0.5f) - GetTransform().up * (GetSize().y * 0.5f) + GetTransform().right * (GetSize().x * 0.5f));
+    data.Points.push_back(Center + GetTransform().foward * (GetSize().z * 0.5f) - GetTransform().up * (GetSize().y * 0.5f) + GetTransform().right * (GetSize().x * 0.5f));
+    data.Points.push_back(Center + GetTransform().foward * (GetSize().z * 0.5f) + GetTransform().up * (GetSize().y * 0.5f) + GetTransform().right * (GetSize().x * 0.5f));
+    data.Points.push_back(Center + GetTransform().foward * (GetSize().z * 0.5f) + GetTransform().up * (GetSize().y * 0.5f) - GetTransform().right * (GetSize().x * 0.5f));
+    data.Points.push_back(Center - GetTransform().foward * (GetSize().z * 0.5f) + GetTransform().up * (GetSize().y * 0.5f) + GetTransform().right * (GetSize().x * 0.5f));
+
+    /**
+    * Foward axis -Z
+    * Up axis +Y
+    * Right axis +X
+    */
+    data.Axes.push_back(GetTransform().foward);
+    data.Axes.push_back(GetTransform().up);
+    data.Axes.push_back(GetTransform().right);
+
+    return data;
 }
