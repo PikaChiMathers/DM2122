@@ -1,5 +1,10 @@
 #pragma once
-class Collectibles
+#ifndef COLLECTIBLE_H
+#define COLLECTIBLE_H
+
+#include "GameObject.h"
+
+class Collectibles : public GameObject
 {
 private:
 	int data;
@@ -11,4 +16,4 @@ public:
 	int getCollectbleAmt();
 
 };
-
+#endif
