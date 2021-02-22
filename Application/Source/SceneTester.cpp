@@ -106,7 +106,7 @@ void SceneTester::Init()
 	meshList[GEO_PASSPORT] = MeshBuilder::GenerateOBJMTL("passport", "OBJ//passport.obj", "OBJ//passport.mtl");
 	//meshList[GEO_MALL] = MeshBuilder::GenerateOBJMTL("mall", "OBJ//mall.obj", "OBJ//mall.obj");
 
-	glDisable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -217,6 +217,7 @@ void SceneTester::Init()
 
 	box.AddCollider();
 	//box.GetCollider()->AddPhysics();
+	gameObject.SetPosition(Position(10, 0, 5));
 	box.SetPosition(Position(10, 0, 10));
 	box.SetScale(Scale(2, 1, 1));
 	//box.GetCollider()->SetIsTrigger(true);
@@ -508,12 +509,12 @@ void SceneTester::Render() //My Own Pattern
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, Application::GetWindowHeight() * .1f);
 
-	if (GameObject::CheckCollision(gameObject.GetCollider()) != nullptr && !colEnter)
+	if (GameObject::CheckCollision(gameObject.GetCollider()).gameObject != nullptr && !colEnter)
 	{
 		colEnter = true;
 		colCount++; 
 	}
-	if (colEnter && (GameObject::CheckCollision(gameObject.GetCollider()) == nullptr))
+	if (colEnter && (GameObject::CheckCollision(gameObject.GetCollider()).gameObject == nullptr))
 	{ 
 		colEnter = false;
 	}
@@ -531,7 +532,7 @@ void SceneTester::Render() //My Own Pattern
 	std::ostringstream sc;
 	sc << "Score:" << score.getScore(0);
 	RenderTextOnScreen(meshList[GEO_TEXT], sc.str(), Color(1, 0, 0), 3, 130, 87);
-
+	RenderTextOnScreen(meshList[GEO_TEXT], "F1:SceneTester. F2:SceneShop.", Color(1, 0, 0), 4, 0, 85);
 }
 
 void SceneTester::Exit()
@@ -621,14 +622,14 @@ void SceneTester::RenderSkybox()
 	
 	modelStack.PushMatrix();
 	modelStack.Translate(0, -499, 0);
-	modelStack.Rotate(90, 1, 0, 0);
+	modelStack.Rotate(-90, 1, 0, 0);
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_BOTTOM], false);
 	modelStack.PopMatrix();
 	
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 499, 0);
-	modelStack.Rotate(-90, 1, 0, 0);
+	modelStack.Rotate(90, 1, 0, 0);
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_TOP], false);
 	modelStack.PopMatrix();

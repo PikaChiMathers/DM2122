@@ -31,8 +31,8 @@ struct Transform
 	void UpdateDirectionVectors()
 	{
 		//foward(cos(pitch)cos(yaw), cos(pitch)sin(yaw), sin(pitch))
-		foward = Vector3(sin(-rotation.y * RAD), cos(rotation.y * RAD) * sin(rotation.x * RAD), -(cos(rotation.y * RAD) * cos(rotation.x * RAD)));
-		right = foward.Cross(up);
+		foward = Vector3(sin(-rotation.y * RAD), cos(rotation.y * RAD) * sin(rotation.x * RAD), -(cos(rotation.y * RAD) * cos(rotation.x * RAD))).Normalize();
+		right = foward.Cross(up).Normalize();
 	}
 };
 
