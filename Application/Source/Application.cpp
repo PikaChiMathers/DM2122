@@ -13,6 +13,7 @@
 
 
 #include "SceneShop.h"
+#include "SceneTester.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
@@ -133,8 +134,10 @@ void Application::Run()
 	/*Scene *scene = new Assignment2();*/
 
 	Scene* scene1 = new SceneShop();
-	Scene* scene = scene1;
+	Scene* scene2 = new SceneTester();
+	Scene* scene = scene2;
 	scene1->Init();
+	scene2->Init();
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
@@ -142,7 +145,7 @@ void Application::Run()
 		if (IsKeyPressed(VK_F1))
 			scene = scene1;
 		else if (IsKeyPressed(VK_F2))
-			scene = scene1;
+			scene = scene2;
 		scene->Update(m_timer.getElapsedTime());
 		scene->Render();
 		//Swap buffers

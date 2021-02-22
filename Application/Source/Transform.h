@@ -2,6 +2,8 @@
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
 
+#define RAD 3.1415926 / 180
+
 #include "Vertex.h"
 
 struct Rotation
@@ -26,10 +28,12 @@ struct Transform
 	Vector3 up = Vector3(0, 1, 0);
 	Vector3 right = Vector3(1, 0, 0);
 	Vector3 foward = Vector3(0, 0, -1);
-	/*void UpdateDirectionVectors()
+	void UpdateDirectionVectors()
 	{
-		
-	}*/
+		//foward(cos(pitch)cos(yaw), cos(pitch)sin(yaw), sin(pitch))
+		foward = Vector3(sin(-rotation.y * RAD), cos(rotation.y * RAD) * sin(rotation.x * RAD), -(cos(rotation.y * RAD) * cos(rotation.x * RAD)));
+		right = foward.Cross(up);
+	}
 };
 
 #endif

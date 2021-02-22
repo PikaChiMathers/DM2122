@@ -25,7 +25,7 @@ class Collider
 	Position position;
 	Rotation rotation;
 	Size size;
-	bool isTrigger; // allows objects to pass thru
+	bool isTrigger; // allows objects to pass thru. use OnTriggerEnter, Stay or exit (from gameobject class) to get gameobjects inside.
 
 public:
 	Collider();

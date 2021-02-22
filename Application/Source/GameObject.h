@@ -44,6 +44,9 @@ public:
 	float GetScaleY();
 	float GetScaleZ();
 	Scale GetScale();
+	Vector3 GetFoward();
+	Vector3 GetUp();
+	Vector3 GetRight();
 
 	void AddCollider();
 	void RemoveCollider();
