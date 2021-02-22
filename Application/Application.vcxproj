@@ -164,6 +164,7 @@
     <ClCompile Include="Source\Collider.cpp" />
     <ClCompile Include="Source\Dialogue.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
+    <ClCompile Include="Source\GameObjectManager.cpp" />
     <ClCompile Include="Source\LoadOBJ.cpp" />
     <ClCompile Include="Source\LoadTGA.cpp" />
     <ClCompile Include="Source\main.cpp" />
@@ -195,6 +196,7 @@
     <ClInclude Include="Source\Collider.h" />
     <ClInclude Include="Source\Dialogue.h" />
     <ClInclude Include="Source\GameObject.h" />
+    <ClInclude Include="Source\GameObjectManager.h" />
     <ClInclude Include="Source\LoadOBJ.h" />
     <ClInclude Include="Source\LoadTGA.h" />
     <ClInclude Include="Source\Maps.h" />
