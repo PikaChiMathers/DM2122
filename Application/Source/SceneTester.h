@@ -63,6 +63,7 @@ public:
 		GEO_COIN,
 		GEO_PASSPORT,
 		GEO_GOOSE,
+		GEO_MALL,
 
 		GEO_LIGHTBALL,
 		GEO_SPHERE,
@@ -150,9 +151,11 @@ private: //added (Step 2)
 	//GameObject gameObject;
 	Bus gameObject;
 	GameObject box;
-	GameObject coin;
+	GameObject* coin;
 	GameObject passport;
 	GameObject goose;
+
+
 
 	unsigned m_vertexArrayID;
 	/*unsigned m_vertexBuffer[NUM_GEOMETRY];

@@ -67,7 +67,7 @@ void SceneShop::Init()
 	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left", Color(1, 1, 1), 1.f, 1.f);
 	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", Color(1, 1, 1), 1.f, 1.f);
 
-	meshList[GEO_BUS] = MeshBuilder::GenerateOBJ("test", "OBJ//bus.obj", Color(0, 1, 1));
+	meshList[GEO_BUS] = MeshBuilder::GenerateOBJ("bus", "OBJ//bus.obj", Color(0, 1, 1));
 
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("ground", Color(0, 1, 0), 1.f, 1.f);
 	meshList[GEO_QUAD]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
@@ -78,7 +78,7 @@ void SceneShop::Init()
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//trebuchet.tga");
 
-	glDisable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -365,20 +365,14 @@ void SceneShop::Render() //My Own Pattern
 	RenderSkybox();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);
-	modelStack.Rotate(90, 1, 0, 0);
-	modelStack.Scale(200, 200, 200);
-	RenderMesh(meshList[GEO_QUAD], lights[0].isOn);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
+	modelStack.Scale(1, 1, 1);
 	RenderMesh(meshList[GEO_BUS], lights[0].isOn);
 	modelStack.PopMatrix();
 
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, Application::GetWindowHeight() * .1f);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 87);
 }
 
 void SceneShop::Exit()

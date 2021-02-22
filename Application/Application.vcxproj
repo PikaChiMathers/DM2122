@@ -151,7 +151,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Collectibles.cpp" />
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\BasicPhysics.cpp" />
     <ClCompile Include="Source\BoxCollider.cpp" />
@@ -161,6 +160,7 @@
     <ClCompile Include="Source\Camera2.cpp" />
     <ClCompile Include="Source\Camera3.cpp" />
     <ClCompile Include="Source\Camera4.cpp" />
+    <ClCompile Include="Source\Collectibles.cpp" />
     <ClCompile Include="Source\Collider.cpp" />
     <ClCompile Include="Source\Dialogue.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
@@ -172,7 +172,7 @@
     <ClCompile Include="Source\MiniGames.cpp" />
     <ClCompile Include="Source\Money.cpp" />
     <ClCompile Include="Source\Person.cpp" />
-    <ClCompile Include="Source\SceneMapping.cpp" />
+    <ClCompile Include="Source\SceneIntro.cpp" />
     <ClCompile Include="Source\SceneShop.cpp" />
     <ClCompile Include="Source\SceneTester.cpp" />
     <ClCompile Include="Source\Score.cpp" />
@@ -182,7 +182,6 @@
     <ClCompile Include="Source\Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Collectibles.h" />
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\BasicPhysics.h" />
     <ClInclude Include="Source\BoxCollider.h" />
@@ -192,6 +191,7 @@
     <ClInclude Include="Source\Camera2.h" />
     <ClInclude Include="Source\Camera3.h" />
     <ClInclude Include="Source\Camera4.h" />
+    <ClInclude Include="Source\Collectibles.h" />
     <ClInclude Include="Source\Collider.h" />
     <ClInclude Include="Source\Dialogue.h" />
     <ClInclude Include="Source\GameObject.h" />
@@ -203,7 +203,7 @@
     <ClInclude Include="Source\MiniGames.h" />
     <ClInclude Include="Source\Money.h" />
     <ClInclude Include="Source\Person.h" />
-    <ClInclude Include="Source\SceneMapping.h" />
+    <ClInclude Include="Source\SceneIntro.h" />
     <ClInclude Include="Source\SceneShop.h" />
     <ClInclude Include="Source\SceneTester.h" />
     <ClInclude Include="Source\Score.h" />
