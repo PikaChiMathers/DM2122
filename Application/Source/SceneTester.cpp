@@ -104,6 +104,7 @@ void SceneTester::Init()
 
 	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("goose", "OBJ//goose.obj", Color(1 ,1, 1));
 	meshList[GEO_PASSPORT] = MeshBuilder::GenerateOBJMTL("passport", "OBJ//passport.obj", "OBJ//passport.mtl");
+	//meshList[GEO_MALL] = MeshBuilder::GenerateOBJMTL("mall", "OBJ//mall.obj", "OBJ//mall.obj");
 
 	glDisable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
@@ -491,6 +492,11 @@ void SceneTester::Render() //My Own Pattern
 	modelStack.Translate(passport.GetPositionX(), passport.GetPositionY(), passport.GetPositionZ());
 	RenderMesh(meshList[GEO_PASSPORT], true);
 	modelStack.PopMatrix();
+
+	//modelStack.PushMatrix();
+	//modelStack.Translate(0, 0, 10);
+	//RenderMesh(meshList[GEO_MALL], true);
+	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(box.GetPositionX(), box.GetPositionY(), box.GetPositionZ());
