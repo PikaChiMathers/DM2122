@@ -111,10 +111,7 @@
     <ClCompile Include="Source\GameObjectManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SceneTrivia.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Objects.cpp">
+    <ClCompile Include="Source\SceneSearch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -230,10 +227,7 @@
     <ClInclude Include="Source\GameObjectManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SceneTrivia.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Objects.h">
+    <ClInclude Include="Source\SceneSearch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

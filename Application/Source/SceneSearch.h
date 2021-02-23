@@ -1,26 +1,30 @@
-#ifndef SCENE_TEST
-#define SCENE_TEST
+#ifndef SCENE_SEARCH
+#define SCENE_SEARCH
 
 #include "Scene.h"
-#include "Camera4.h"
+#include "Camera2.h"
+#include "Camera3.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Vertex.h"
 #include "Light.h"
 
 #include "GameObject.h"
+#include "Bus.h"
+#include "Person.h"
+#include "Money.h"
 #include "Maps.h"
-
+#include "Score.h"
 
 #include "Dialogue.h"
 
 #include <sstream>
 
-class SceneIntro : public Scene
+class SceneSearch : public Scene
 {
 public:
-	SceneIntro();
-	~SceneIntro();
+	SceneSearch();
+	~SceneSearch();
 
 	virtual void Init();
 	virtual void Update(double dt);
@@ -40,6 +44,7 @@ public:
 	Color red, blue, green, pink, Lblue, purple, orange, yellow, cyan, magenta, moonshade;
 
 	bool scene_change;
+	bool coin_collect; // To stop rendering of coin after collected
 
 	int UI_height, UI_width;
 
@@ -52,8 +57,16 @@ public:
 		GEO_AXES = 0,
 
 		GEO_QUAD,
+
 		GEO_CUBE,
+
+		GEO_COIN,
+		GEO_PASSPORT,
 		GEO_GOOSE,
+		GEO_MALL,
+		GEO_BUILDING1,
+		GEO_BUILDING2,
+		GEO_BUILDING3,
 
 		GEO_LIGHTBALL,
 		GEO_SPHERE,
@@ -65,6 +78,7 @@ public:
 		GEO_BOTTOM,
 		GEO_FRONT,
 		GEO_BACK,
+		GEO_FLOOR,
 
 		GEO_TEXT,
 
@@ -129,14 +143,23 @@ public:
 
 
 private: //added (Step 2)
-	Camera4 camera;
+	Camera3 camera;
 	Light lights[NUM_LIGHTS];
+	Person person;
+	Money money;
 	Maps map;
+	Score score;
 
 	Dialogue* dialogue;
 
 	//GameObject gameObject;
+	Bus gameObject;
+	GameObject box;
+	GameObject* coin;
+	GameObject passport;
 	GameObject goose;
+
+
 
 	unsigned m_vertexArrayID;
 	/*unsigned m_vertexBuffer[NUM_GEOMETRY];
@@ -157,7 +180,7 @@ private: //added (Step 2)
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 
 	void RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int sizey);
-
+		
 	unsigned m_parameters[U_TOTAL];
 	unsigned m_programID;
 };

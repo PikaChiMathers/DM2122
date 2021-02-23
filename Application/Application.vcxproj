@@ -175,6 +175,7 @@
     <ClCompile Include="Source\Objects.cpp" />
     <ClCompile Include="Source\Person.cpp" />
     <ClCompile Include="Source\SceneIntro.cpp" />
+    <ClCompile Include="Source\SceneSearch.cpp" />
     <ClCompile Include="Source\SceneShop.cpp" />
     <ClCompile Include="Source\SceneTester.cpp" />
     <ClCompile Include="Source\SceneTrivia.cpp" />
@@ -209,6 +210,7 @@
     <ClInclude Include="Source\Objects.h" />
     <ClInclude Include="Source\Person.h" />
     <ClInclude Include="Source\SceneIntro.h" />
+    <ClInclude Include="Source\SceneSearch.h" />
     <ClInclude Include="Source\SceneShop.h" />
     <ClInclude Include="Source\SceneTester.h" />
     <ClInclude Include="Source\SceneTrivia.h" />
