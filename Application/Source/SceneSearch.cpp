@@ -70,7 +70,7 @@ void SceneSearch::Init()
 
 	moonshade.Set(0.93f, 0.93f, 0.88f);
 
-	meshList[GEO_TEST] = MeshBuilder::GenerateOBJMTL("test", "OBJ//bus.obj", "OBJ//bus.mtl");
+	meshList[GEO_TEST] = MeshBuilder::GenerateOBJ("test", "OBJ//bus.obj", Color(1,1,1));
 
 	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("Rsphere", red, 30, 30, 1);
 	meshList[GEO_SPHERE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
@@ -110,9 +110,18 @@ void SceneSearch::Init()
 	meshList[GEO_COIN] = MeshBuilder::GenerateOBJMTL("coin", "OBJ//coin.obj", "OBJ//coin.mtl");
 	meshList[GEO_COIN]->textureID = LoadTGA("Image//coin.tga");
 
-	meshList[GEO_BUILDING1] = MeshBuilder::GenerateOBJ("building1", "OBJ//short_apartment.obj", Color(0.5,0.5,0.5));
+	meshList[GEO_BUILDING1] = MeshBuilder::GenerateOBJMTL("building1", "OBJ//short_apartment.obj", "OBJ//short_apartment.mtl");
+	meshList[GEO_BUILDING1]->textureID = LoadTGA("Image//apartment.tga");
 	meshList[GEO_BUILDING2] = MeshBuilder::GenerateOBJMTL("building2", "OBJ//med_apartment.obj", "OBJ//med_apartment.mtl");
+	meshList[GEO_BUILDING2]->textureID = LoadTGA("Image//apartment.tga");
 	meshList[GEO_BUILDING3] = MeshBuilder::GenerateOBJMTL("building3", "OBJ//tall_apartment.obj", "OBJ//tall_apartment.mtl");
+	meshList[GEO_BUILDING3]->textureID = LoadTGA("Image//apartment.tga");
+	meshList[GEO_BUSSTOP] = MeshBuilder::GenerateOBJMTL("busstop", "OBJ//BusStop.obj", "OBJ//BusStop.mtl");
+	meshList[GEO_BUILDING4] = MeshBuilder::GenerateOBJMTL("house2", "OBJ//house_type2.obj", "OBJ//house_type2.mtl");
+	meshList[GEO_BUILDING5] = MeshBuilder::GenerateOBJMTL("house5", "OBJ//house_type5.obj", "OBJ//house_type5.mtl");
+	meshList[GEO_BUILDING6] = MeshBuilder::GenerateOBJMTL("house8", "OBJ//house_type8.obj", "OBJ//house_type8.mtl");
+	meshList[GEO_BUILDING7] = MeshBuilder::GenerateOBJMTL("house10", "OBJ//house_type10.obj", "OBJ//house_type10.mtl");
+	meshList[GEO_BUILDING8] = MeshBuilder::GenerateOBJMTL("house12", "OBJ//house_type12.obj", "OBJ//house_type12.mtl");
 
 	/*meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("goose", "OBJ//goose.obj", Color(1 ,1, 1));
 	meshList[GEO_PASSPORT] = MeshBuilder::GenerateOBJMTL("passport", "OBJ//passport.obj", "OBJ//passport.mtl");*/
@@ -465,7 +474,11 @@ void SceneSearch::Render() //My Own Pattern
 
 	RenderMesh(meshList[GEO_AXES], false);
 
+	modelStack.PushMatrix();
+	modelStack.Scale(0.2, 0.2, 0.2);
 	RenderMesh(meshList[GEO_TEST], lights[0].isOn);
+	modelStack.PopMatrix();
+
 
 	modelStack.PushMatrix();
 	modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
@@ -526,6 +539,20 @@ void SceneSearch::Render() //My Own Pattern
 	modelStack.Scale(4, 4, 4);
 	RenderMesh(meshList[GEO_BUILDING2], false);
 	modelStack.PopMatrix();
+
+	//modelStack.PushMatrix();
+	//modelStack.Translate(-50, 0, 425);
+	//modelStack.Rotate(-180, 0, 1, 0);
+	//modelStack.Scale(4, 4, 4);
+	//RenderMesh(meshList[GEO_BUILDING4], false);
+	//modelStack.PopMatrix();
+
+	//modelStack.PushMatrix();
+	//modelStack.Translate(0, 0, 425);
+	//modelStack.Rotate(-180, 0, 1, 0);
+	//modelStack.Scale(4, 4, 4);
+	//RenderMesh(meshList[GEO_BUSSTOP], false);
+	//modelStack.PopMatrix();
 
 	//modelStack.PushMatrix();
 	//	modelStack.Translate(gameObject.GetPositionX(), gameObject.GetPositionY(), gameObject.GetPositionZ());
@@ -672,23 +699,23 @@ void SceneSearch::RenderSkybox()
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_LEFT], false);
 	modelStack.PopMatrix();
-	
+
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0, -499);
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_RIGHT], false);
 	modelStack.PopMatrix();
-	
+
 	modelStack.PushMatrix();
 	modelStack.Translate(0, -499, 0);
-	modelStack.Rotate(-90, 1, 0, 0);
+	modelStack.Rotate(90, 1, 0, 0);
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_BOTTOM], false);
 	modelStack.PopMatrix();
-	
+
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 499, 0);
-	modelStack.Rotate(90, 1, 0, 0);
+	modelStack.Rotate(-90, 1, 0, 0);
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_TOP], false);
 	modelStack.PopMatrix();
