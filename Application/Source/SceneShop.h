@@ -27,8 +27,6 @@ public:
 
 	float fps;
 
-	float x_value, y_value, z_value;
-
 	int translateXDir, translateYDir, rotateDir, scaleDir;
 
 	Color red, blue, green, pink, Lblue, purple, orange, yellow, cyan, magenta, moonshade;
