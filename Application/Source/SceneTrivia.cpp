@@ -198,8 +198,6 @@ void SceneTrivia::Init()
 
 void SceneTrivia::Update(double dt)
 {
-	GameObject::GameObjectUpdateManager(dt);
-
 	person.Update(dt);
 
 	fps = 1.0f / dt;
