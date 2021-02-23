@@ -35,6 +35,10 @@ void Bus::GameObjectUpdate(double dt)
 	{
 		if (!velocity.IsZero()) rotation -= 90 * dt;
 	}
+	if (Application::IsKeyPressed('Z'))
+	{
+		Delete();
+	}
 	float turnVelMag = 0;
 	if (rotation > 0) turnVelMag = (GetPhysics()->GetVelocity() * grip).Length();
 	GetPhysics()->AddVelocity(-turnVelMag * GetFoward());
