@@ -115,7 +115,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\SceneTrivia.cpp">
-     <ClCompile Include="Source\Objects.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\Camera4.cpp">
@@ -238,7 +237,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneTrivia.h">
-     <ClInclude Include="Source\Objects.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Camera4.h">
