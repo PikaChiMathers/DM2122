@@ -186,20 +186,6 @@ void SceneShop::Init()
 
 void SceneShop::Update(double dt)
 {
-	if (camera.position.x >= -9.5 && camera.position.x <= 9.5 && camera.position.z >= -6 && camera.position.z <= 6)
-		camera.changeTarget();
-	else
-	{
-		if (camera.position.x < -9.5)
-			camera.position.x = -9.5;
-		else if (camera.position.x > 9.5)
-			camera.position.x = 9.5;
-		if (camera.position.z < -6)
-			camera.position.z = -6;
-		else if (camera.position.z > 6)
-			camera.position.z = 6;
-	}
-		
 	camera.Update(dt);
 
 	fps = 1.0f / dt;

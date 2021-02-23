@@ -2,7 +2,7 @@
 #define SCENE_SHOP
 
 #include "Scene.h"
-#include "Camera4.h"
+#include "Camera2.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Vertex.h"
@@ -109,7 +109,7 @@ public:
 
 
 private: //added (Step 2)
-	Camera4 camera;
+	Camera2 camera;
 	Light lights[NUM_LIGHTS];
 
 	Maps map;

@@ -1,16 +1,16 @@
-#include "Camera4.h"
+#include "Camera2.h"
 #include "Application.h"
 #include "Mtx44.h"
 
-Camera4::Camera4()
+Camera2::Camera2()
 {
 }
 
-Camera4::~Camera4()
+Camera2::~Camera2()
 {
 }
 
-void Camera4::Init(const Vector3& pos, const Vector3& target, const Vector3& up)
+void Camera2::Init(const Vector3& pos, const Vector3& target, const Vector3& up)
 {
 	this->position = defaultPosition = pos;
 	this->target = defaultTarget = target;
@@ -21,78 +21,27 @@ void Camera4::Init(const Vector3& pos, const Vector3& target, const Vector3& up)
 	this->up = defaultUp = right.Cross(view).Normalized();
 }
 
-void Camera4::Update(double dt)
+void Camera2::Update(double dt)
 {
 	static const float CAMERA_SPEED = 45.f;
-	static const float ZOOM_SPEED = 10.f;
-
-	if (Application::IsKeyPressed('A'))
-	{
-		Vector3 view = (target - position).Normalized();
-		Mtx44 left;
-		left.SetToRotation(90, 0, 1, 0);
-		position += left * view * ZOOM_SPEED * static_cast<float>(dt);
-		position.y = 2;
-		tempTarget = position + view;
-	}
-	else if (Application::IsKeyPressed('D'))
-	{
-		Vector3 view = (target - position).Normalized();
-		Mtx44 right;
-		right.SetToRotation(-90, 0, 1, 0);
-		position += right * view * ZOOM_SPEED * static_cast<float>(dt);
-		position.y = 2;
-		tempTarget = position + view;
-	}
-	if (Application::IsKeyPressed('W'))
-	{
-		Vector3 view = (target - position).Normalized();
-		position += view * ZOOM_SPEED * static_cast<float>(dt);
-		position.y = 2;
-		tempTarget = position + view;
-	}
-	else if (Application::IsKeyPressed('S'))
-	{
-		Vector3 view = (target - position).Normalized();
-		position -= view * ZOOM_SPEED * static_cast<float>(dt);
-		position.y = 2;
-		tempTarget = position + view;
-	}
-
-	if (Application::IsKeyPressed('J'))
-	{
-		float yaw = CAMERA_SPEED * static_cast<float>(dt);
-		Vector3 view = (target - position).Normalized();
-		Mtx44 rotation;
-		rotation.SetToRotation(yaw, 0, 1, 0);
-		view = rotation * view;
-		tempTarget = position + view;
-		up = rotation * up;
-	}
-	else if (Application::IsKeyPressed('L'))
+	static const float ZOOM_SPEED = 20.f;
+	if(Application::IsKeyPressed(VK_LEFT))
 	{
 		float yaw = -CAMERA_SPEED * static_cast<float>(dt);
-		Vector3 view = (target - position).Normalized();
 		Mtx44 rotation;
 		rotation.SetToRotation(yaw, 0, 1, 0);
-		view = rotation * view;
-		tempTarget = position + view;
+		position = rotation * position;
 		up = rotation * up;
 	}
-	if (Application::IsKeyPressed('I'))
+	if(Application::IsKeyPressed(VK_RIGHT))
 	{
-		float pitch = CAMERA_SPEED * static_cast<float>(dt);
-		Vector3 view = (target - position).Normalized();
-		Vector3 right = view.Cross(up);
-		right.y = 0;
-		right.Normalize();
-		up = right.Cross(view).Normalized();
+		float yaw = CAMERA_SPEED * static_cast<float>(dt);
 		Mtx44 rotation;
-		rotation.SetToRotation(pitch, right.x, right.y, right.z);
-		view = rotation * view;
-		tempTarget = position + view;
+		rotation.SetToRotation(yaw, 0, 1, 0);
+		position = rotation * position;
+		up = rotation * up;
 	}
-	else if (Application::IsKeyPressed('K'))
+	if(Application::IsKeyPressed(VK_UP))
 	{
 		float pitch = -CAMERA_SPEED * static_cast<float>(dt);
 		Vector3 view = (target - position).Normalized();
@@ -102,24 +51,43 @@ void Camera4::Update(double dt)
 		up = right.Cross(view).Normalized();
 		Mtx44 rotation;
 		rotation.SetToRotation(pitch, right.x, right.y, right.z);
-		view = rotation * view;
-		tempTarget = position + view;
+		position = rotation * position;
 	}
-
+	if(Application::IsKeyPressed(VK_DOWN))
+	{
+		float pitch = CAMERA_SPEED * static_cast<float>(dt);
+		Vector3 view = (target - position).Normalized();
+		Vector3 right = view.Cross(up);
+		right.y = 0;
+		right.Normalize();
+		up = right.Cross(view).Normalized();
+		Mtx44 rotation;
+		rotation.SetToRotation(pitch, right.x, right.y, right.z);
+		position = rotation * position;
+	}
+	if(Application::IsKeyPressed('N'))
+	{
+		Vector3 view = target - position;
+		if(view.Length() > 5) //Prevent the camera from touching the origin
+		{
+			view.Normalize();
+			position += view * ZOOM_SPEED * dt;
+		}
+	}
+	if(Application::IsKeyPressed('M'))
+	{
+		Vector3 view = (target - position).Normalized();
+		position -= view * ZOOM_SPEED * dt;
+	}
 	if(Application::IsKeyPressed('R'))
 	{
 		Reset();
 	}
 }
 
-void Camera4::Reset()
+void Camera2::Reset()
 {
 	position = defaultPosition;
 	target = defaultTarget;
 	up = defaultUp;
-}
-
-void Camera4::changeTarget()
-{
-	target = tempTarget;
 }
