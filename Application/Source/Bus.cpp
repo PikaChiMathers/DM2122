@@ -4,8 +4,10 @@ Bus::Bus()
 {
 	acceleration = 50;
 	brakePower = 5;
+	grip = 1;
 	AddCollider();
 	AddPhysics();
+	GetPhysics()->SetMass(300);
 }
 
 Bus::~Bus()
@@ -14,33 +16,30 @@ Bus::~Bus()
 
 void Bus::GameObjectUpdate(double dt)
 {
-	float xVelocity = 0, zVelocity = 0;
-	Vector3 velocity(xVelocity, 0, zVelocity);
+	Vector3 velocity(0, 0, 0);
+	float rotation = 0;
 	GetPhysics()->SetDrag(1);
 	if (Application::IsKeyPressed('T'))
 	{
-		//zVelocity -= acceleration * dt;
-		//GetPhysics()->AddVelocity(GetFoward() * acceleration * dt);
 		velocity += GetFoward() * acceleration * dt;
 	}
 	if (Application::IsKeyPressed('G'))
 	{
-		//zVelocity += acceleration * dt;
-		//GetPhysics()->AddVelocity(GetFoward() * -acceleration * dt);
 		velocity -= GetFoward() * acceleration * dt;
 	}
 	if (Application::IsKeyPressed('F'))
 	{
-		//xVelocity -= acceleration * dt;
-		//GetPhysics()->AddVelocity(GetRight() * -acceleration * dt);
-		/*if (velocity.Length() != 0)*/ SetRotateY(GetRotateY() + 90 * dt);
+		if (!velocity.IsZero()) rotation += 90 * dt;
 	}
 	if (Application::IsKeyPressed('H'))
 	{
-		//xVelocity += acceleration * dt;
-		//GetPhysics()->AddVelocity(GetRight() * acceleration * dt);
-		/*if (velocity.Length() != 0)*/ SetRotateY(GetRotateY() - 90 * dt);
+		if (!velocity.IsZero()) rotation -= 90 * dt;
 	}
+	float turnVelMag = 0;
+	if (rotation > 0) turnVelMag = (GetPhysics()->GetVelocity() * grip).Length();
+	GetPhysics()->AddVelocity(-turnVelMag * GetFoward());
+	SetRotateY(GetRotateY() + rotation);
+	GetPhysics()->AddVelocity(turnVelMag * GetFoward());
 	if (velocity.Length() > acceleration) velocity *= (50 / velocity.Length());
 	GetPhysics()->AddVelocity(velocity);
 	if (velocity.Length() == 0) GetPhysics()->SetDrag(brakePower);

@@ -6,13 +6,13 @@
 
 class Bus : public GameObject
 {
-	float acceleration, brakePower;
+	float acceleration, brakePower, grip;
 public:
 	Bus();
 	~Bus();
 	void setAccel(float accel);
 	void setBrakePower(float brake);
-
+	void setGrip(float grip);
 	void GameObjectUpdate(double dt);
 	std::string Type();
 };
