@@ -172,11 +172,13 @@
     <ClCompile Include="Source\MeshBuilder.cpp" />
     <ClCompile Include="Source\MiniGames.cpp" />
     <ClCompile Include="Source\Money.cpp" />
+    <ClCompile Include="Source\Objects.cpp" />
     <ClCompile Include="Source\Person.cpp" />
     <ClCompile Include="Source\SceneIntro.cpp" />
     <ClCompile Include="Source\SceneSearch.cpp" />
     <ClCompile Include="Source\SceneShop.cpp" />
     <ClCompile Include="Source\SceneTester.cpp" />
+    <ClCompile Include="Source\SceneTrivia.cpp" />
     <ClCompile Include="Source\Score.cpp" />
     <ClCompile Include="Source\shader.cpp" />
     <ClCompile Include="Source\Shop.cpp" />
@@ -205,11 +207,13 @@
     <ClInclude Include="Source\Light.h" />
     <ClInclude Include="Source\MiniGames.h" />
     <ClInclude Include="Source\Money.h" />
+    <ClInclude Include="Source\Objects.h" />
     <ClInclude Include="Source\Person.h" />
     <ClInclude Include="Source\SceneIntro.h" />
     <ClInclude Include="Source\SceneSearch.h" />
     <ClInclude Include="Source\SceneShop.h" />
     <ClInclude Include="Source\SceneTester.h" />
+    <ClInclude Include="Source\SceneTrivia.h" />
     <ClInclude Include="Source\Score.h" />
     <ClInclude Include="Source\Shop.h" />
     <ClInclude Include="Source\Sound.h" />

@@ -2,13 +2,14 @@
 #define SCENE_SHOP
 
 #include "Scene.h"
-#include "Camera4.h"
+#include "Camera2.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Vertex.h"
 #include "Light.h"
 #include "Maps.h"
 #include <sstream>
+#include "Bus.h"
 
 class SceneShop : public Scene
 {
@@ -26,8 +27,6 @@ public:
 	float scaleAll;
 
 	float fps;
-
-	float x_value, y_value, z_value;
 
 	int translateXDir, translateYDir, rotateDir, scaleDir;
 
@@ -110,10 +109,12 @@ public:
 
 
 private: //added (Step 2)
-	Camera4 camera;
+	Camera2 camera;
 	Light lights[NUM_LIGHTS];
 
 	Maps map;
+
+	Bus bus;
 
 	bool scene_change;
 

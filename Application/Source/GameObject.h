@@ -29,6 +29,8 @@ class GameObject // use this as the base class for objects
 	BasicPhysics* physics; // add this if you want the object to stop moving when colliding with other colliders. Use the add/set velocity function to move
 	std::string tag;
 
+	//set to true to delete. dont use "delete" to delete any gameObjects.
+	bool deleteThis;
 public:
 	//Used to store GameObjects that are inside a trigger box of the current GameObject.
 	std::vector<GameObject*>InTrigger;
@@ -75,6 +77,11 @@ public:
 	void SetTag(std::string tag);
 	std::string GetTag();
 
+	// Use this to delete gameObjects. DO NOT use "delete" to delete gameObjects
+	void Delete();
+	//this is for manager to delete the game object
+	bool GetDelete();
+
 	// this runs every update in the Scene's update function.
 	virtual void GameObjectUpdate(double dt); 
 
@@ -88,30 +95,30 @@ public:
 	//Return GameObject that exits the trigger collision box and runs the function
 	virtual void OnTriggerExit(GameObject* gameObject);
 
-private:
-	// all GameObjects
-	static std::vector<GameObject*>GameObjectList; 
-	// GameObjects with Colliders
-	static std::vector<GameObject*>ColliderList;
-
-	/**
-	* Used for OBB collision detection.
-	* returns value of -1 if theres no overlap
-	*/
-	static float SATcalculation(Vector3 axis, std::vector<Vector3>points1, std::vector<Vector3>points2);
-public:
-	static bool ListContains(GameObject* col);
-	static void PushCollider(GameObject* col);
-	static void EraseCollider(GameObject* col);
-	//returns first gameobject found that is within a collider box
-	static Collide CheckCollision(Collider* col);
-	static Collide CheckCollision(Collider refCol, Collider* exclude = nullptr);
-	//return all gameobjects found within a collider box
-	static std::vector<Collide> CheckCollisions(Collider* col);
-	static std::vector<Collide> CheckCollisions(Collider refCol, Collider* exclude = nullptr);
-
-	// run every update in Scene::Update
-	static void GameObjectUpdateManager(double dt); 
+//private:
+//	// all GameObjects
+//	static std::vector<GameObject*>GameObjectList; 
+//	// GameObjects with Colliders
+//	static std::vector<GameObject*>ColliderList;
+//
+//	/**
+//	* Used for OBB collision detection.
+//	* returns value of -1 if theres no overlap
+//	*/
+//	static float SATcalculation(Vector3 axis, std::vector<Vector3>points1, std::vector<Vector3>points2);
+//public:
+//	static bool ListContains(GameObject* col);
+//	static void PushCollider(GameObject* col);
+//	static void EraseCollider(GameObject* col);
+//	//returns first gameobject found that is within a collider box
+//	static Collide CheckCollision(Collider* col);
+//	static Collide CheckCollision(Collider refCol, Collider* exclude = nullptr);
+//	//return all gameobjects found within a collider box
+//	static std::vector<Collide> CheckCollisions(Collider* col);
+//	static std::vector<Collide> CheckCollisions(Collider refCol, Collider* exclude = nullptr);
+//
+//	// run every update in Scene::Update
+//	static void GameObjectUpdateManager(double dt); 
 };
 
 #endif
