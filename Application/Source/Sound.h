@@ -15,5 +15,6 @@ private:
 
 public:
 	Sound();
+	~Sound();
 	ISoundEngine* Engine();
 };

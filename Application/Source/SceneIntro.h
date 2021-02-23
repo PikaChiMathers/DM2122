@@ -47,6 +47,8 @@ public:
 	int colCount = 0;
 	bool colEnter = false;
 
+	int honk_count;
+	bool honkerdonker = false;
 	Sound sound;
 
 

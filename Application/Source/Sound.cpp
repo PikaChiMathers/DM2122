@@ -3,7 +3,10 @@
 Sound::Sound()
 {
 	engine = createIrrKlangDevice();
-	active = false;
+}
+
+Sound::~Sound()
+{
 }
 
 

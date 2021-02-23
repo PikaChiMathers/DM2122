@@ -9,12 +9,14 @@
 #include "Utility.h"
 #include "LoadTGA.h"
 #include "Sound.h"
+#include "irrKlang.h"
 
 #include "Application.h"
 
 
 SceneIntro::SceneIntro()
 {
+	honk_count = 1;
 }
 
 SceneIntro::~SceneIntro()
@@ -325,10 +327,45 @@ void SceneIntro::Update(double dt)
 		std::cout << "RBUTTON UP" << std::endl;
 	}
 
-	/*if (Application::IsKeyPressed('0'))
+
+	if (Application::IsKeyPressed(VK_SPACE) && honk_count == 1 && !honkerdonker)
 	{
-		sound.engine->play2D("bell.wav");
-	}*/
+		honkerdonker = true;
+		sound.Engine()->play2D("media/honk_1.wav");
+		honk_count++;
+	}	
+
+	else if (Application::IsKeyPressed(VK_SPACE) && honk_count == 2 && !honkerdonker)
+	{
+		honkerdonker = true;
+		sound.Engine()->play2D("media/honk_2.wav");
+		honk_count++;
+	}
+
+	else if (Application::IsKeyPressed(VK_SPACE) && honk_count == 3 && !honkerdonker)
+	{
+		honkerdonker = true;
+		sound.Engine()->play2D("media/honk_3.wav");
+		honk_count++;
+	}
+
+	else if (Application::IsKeyPressed(VK_SPACE) && honk_count == 4 && !honkerdonker)
+	{
+		honkerdonker = true;
+		sound.Engine()->play2D("media/honk_4.wav");
+		honk_count++;
+	}
+
+	else if (Application::IsKeyPressed(VK_SPACE) && honk_count == 5 && !honkerdonker)
+	{
+		honkerdonker = true;
+		sound.Engine()->play2D("media/honk_5.wav");
+		honk_count = 1;
+	}
+	else if (!Application::IsKeyPressed(VK_SPACE) && honkerdonker)
+	{
+		honkerdonker = false;
+	}
 
 	if (Application::IsKeyPressed('5'))
 	{
