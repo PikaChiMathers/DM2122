@@ -9,7 +9,7 @@
 #include "Vertex.h"
 #include "Light.h"
 
-#include "GameObject.h"
+#include "GameObjectManager.h"
 #include "Bus.h"
 #include "Person.h"
 #include "Money.h"
@@ -145,6 +145,7 @@ public:
 private: //added (Step 2)
 	Camera3 camera;
 	Light lights[NUM_LIGHTS];
+	GameObjectManager manager;
 	Person person;
 	Money money;
 	Maps map;
@@ -155,7 +156,7 @@ private: //added (Step 2)
 	//GameObject gameObject;
 	Bus gameObject;
 	GameObject box;
-	GameObject* coin;
+	GameObject coin;
 	GameObject passport;
 	GameObject goose;
 
