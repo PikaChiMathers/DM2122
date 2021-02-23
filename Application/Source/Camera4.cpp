@@ -26,37 +26,37 @@ void Camera4::Update(double dt)
 	static const float CAMERA_SPEED = 45.f;
 	static const float ZOOM_SPEED = 10.f;
 
-	if(Application::IsKeyPressed('A'))
+	if (Application::IsKeyPressed('A'))
 	{
 		Vector3 view = (target - position).Normalized();
 		Mtx44 left;
 		left.SetToRotation(90, 0, 1, 0);
 		position += left * view * ZOOM_SPEED * static_cast<float>(dt);
 		position.y = 2;
-		target = position + view;
+		tempTarget = position + view;
 	}
-	else if(Application::IsKeyPressed('D'))
+	else if (Application::IsKeyPressed('D'))
 	{
 		Vector3 view = (target - position).Normalized();
 		Mtx44 right;
 		right.SetToRotation(-90, 0, 1, 0);
 		position += right * view * ZOOM_SPEED * static_cast<float>(dt);
 		position.y = 2;
-		target = position + view;
+		tempTarget = position + view;
 	}
-	if(Application::IsKeyPressed('W'))
+	if (Application::IsKeyPressed('W'))
 	{
 		Vector3 view = (target - position).Normalized();
 		position += view * ZOOM_SPEED * static_cast<float>(dt);
 		position.y = 2;
-		target = position + view;
+		tempTarget = position + view;
 	}
-	else if(Application::IsKeyPressed('S'))
+	else if (Application::IsKeyPressed('S'))
 	{
 		Vector3 view = (target - position).Normalized();
 		position -= view * ZOOM_SPEED * static_cast<float>(dt);
 		position.y = 2;
-		target = position + view;
+		tempTarget = position + view;
 	}
 
 	if (Application::IsKeyPressed('J'))
@@ -66,7 +66,7 @@ void Camera4::Update(double dt)
 		Mtx44 rotation;
 		rotation.SetToRotation(yaw, 0, 1, 0);
 		view = rotation * view;
-		target = position + view;
+		tempTarget = position + view;
 		up = rotation * up;
 	}
 	else if (Application::IsKeyPressed('L'))
@@ -76,7 +76,7 @@ void Camera4::Update(double dt)
 		Mtx44 rotation;
 		rotation.SetToRotation(yaw, 0, 1, 0);
 		view = rotation * view;
-		target = position + view;
+		tempTarget = position + view;
 		up = rotation * up;
 	}
 	if (Application::IsKeyPressed('I'))
@@ -90,7 +90,7 @@ void Camera4::Update(double dt)
 		Mtx44 rotation;
 		rotation.SetToRotation(pitch, right.x, right.y, right.z);
 		view = rotation * view;
-		target = position + view;
+		tempTarget = position + view;
 	}
 	else if (Application::IsKeyPressed('K'))
 	{
@@ -103,7 +103,7 @@ void Camera4::Update(double dt)
 		Mtx44 rotation;
 		rotation.SetToRotation(pitch, right.x, right.y, right.z);
 		view = rotation * view;
-		target = position + view;
+		tempTarget = position + view;
 	}
 
 	if(Application::IsKeyPressed('R'))
@@ -117,4 +117,9 @@ void Camera4::Reset()
 	position = defaultPosition;
 	target = defaultTarget;
 	up = defaultUp;
+}
+
+void Camera4::changeTarget()
+{
+	target = tempTarget;
 }
