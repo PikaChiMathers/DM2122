@@ -223,7 +223,7 @@ void SceneIntro::Init()
 
 void SceneIntro::Update(double dt)
 {
-	GameObject::GameObjectUpdateManager(dt);
+	
 	camera.Update(dt);
 
 

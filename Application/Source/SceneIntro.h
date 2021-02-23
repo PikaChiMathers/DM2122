@@ -2,7 +2,7 @@
 #define SCENE_INTRO
 
 #include "Scene.h"
-#include "Camera4.h"
+#include "Camera3.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Vertex.h"
@@ -134,7 +134,7 @@ public:
 
 
 private: //added (Step 2)
-	Camera4 camera;
+	Camera3 camera;
 	Light lights[NUM_LIGHTS];
 	Maps map;
 

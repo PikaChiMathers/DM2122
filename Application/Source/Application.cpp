@@ -141,7 +141,7 @@ void Application::Run()
 	Scene* scene2 = new SceneShop();
 	Scene* scene3 = new SceneSearch();
 	Scene* scene4 = new SceneIntro();
-	Scene* scene = scene4;
+	Scene* scene = scene3;
 	scene1->Init();
 	scene2->Init();
 	scene3->Init();
