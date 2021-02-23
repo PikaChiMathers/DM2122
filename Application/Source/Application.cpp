@@ -135,20 +135,12 @@ void Application::Run()
 	//Main Loop
 	/*Scene *scene = new Assignment2();*/
 
-	Scene* scene1 = new SceneTester();
-	Scene* scene2 = new SceneShop();
-	Scene* scene3 = new SceneSearch();
-	Scene* scene = scene3;
-	scene1->Init();
-	scene2->Init();
-	scene3->Init();
+	Scene* scene = new SceneShop();
+	scene->Init();
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
 	{
-		if (IsKeyPressed(VK_F1)) scene = scene1;
-		if (IsKeyPressed(VK_F2)) scene = scene2;
-		if (IsKeyPressed(VK_F3)) scene = scene3;
 		scene->Update(m_timer.getElapsedTime());
 		scene->Render();
 		//Swap buffers
@@ -158,9 +150,7 @@ void Application::Run()
         m_timer.waitUntil(frameTime);       // Frame rate limiter. Limits each frame to a specified time in ms.   
 
 	} //Check if the ESC key had been pressed or if the window had been closed
-	scene1->Exit();
-	scene2->Exit();
-	scene3->Exit();
+	scene->Exit();
 	delete scene;
 }
 
@@ -171,3 +161,5 @@ void Application::Exit()
 	//Finalize and clean up GLFW
 	glfwTerminate();
 }
+
+//check

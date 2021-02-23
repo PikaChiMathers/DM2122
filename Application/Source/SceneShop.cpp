@@ -45,7 +45,6 @@ void SceneShop::Init()
 	UI_width = 160;
 	UI_height = 90;
 
-	x_value = y_value = z_value = 0;
 	red.Set(1, 0, 0);
 	green.Set(0, 1, 0);
 	blue.Set(0, 0, 1);
@@ -187,15 +186,21 @@ void SceneShop::Init()
 
 void SceneShop::Update(double dt)
 {
+	if (camera.position.x >= -9.5 && camera.position.x <= 9.5 && camera.position.z >= -6 && camera.position.z <= 6)
+		camera.changeTarget();
+	else
+	{
+		if (camera.position.x < -9.5)
+			camera.position.x = -9.5;
+		else if (camera.position.x > 9.5)
+			camera.position.x = 9.5;
+		if (camera.position.z < -6)
+			camera.position.z = -6;
+		else if (camera.position.z > 6)
+			camera.position.z = 6;
+	}
+		
 	camera.Update(dt);
-	if (camera.position.x < -9.5)
-		camera.position.x = -9.5;
-	if (camera.position.x > 9.5)
-		camera.position.x = 9.5;
-	if (camera.position.z < -6)
-		camera.position.z = -6;
-	if (camera.position.z > 6)
-		camera.position.z = 6;
 
 	fps = 1.0f / dt;
 
