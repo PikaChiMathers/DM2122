@@ -104,9 +104,12 @@ void SceneSearch::Init()
 	meshList[GEO_COIN] = MeshBuilder::GenerateOBJMTL("coin", "OBJ//coin.obj", "OBJ//coin.mtl");
 	meshList[GEO_COIN]->textureID = LoadTGA("Image//coin.tga");
 
-	meshList[GEO_BUILDING1] = MeshBuilder::GenerateOBJ("building1", "OBJ//short_apartment.obj", Color(0.5,0.5,0.5));
+	meshList[GEO_BUILDING1] = MeshBuilder::GenerateOBJMTL("building1", "OBJ//short_apartment.obj", "OBJ//short_apartment.mtl");
+	meshList[GEO_BUILDING1]->textureID = LoadTGA("Image//apartment.tga");
 	meshList[GEO_BUILDING2] = MeshBuilder::GenerateOBJMTL("building2", "OBJ//med_apartment.obj", "OBJ//med_apartment.mtl");
+	meshList[GEO_BUILDING2]->textureID = LoadTGA("Image//apartment.tga");
 	meshList[GEO_BUILDING3] = MeshBuilder::GenerateOBJMTL("building3", "OBJ//tall_apartment.obj", "OBJ//tall_apartment.mtl");
+	meshList[GEO_BUILDING3]->textureID = LoadTGA("Image//apartment.tga");
 
 	/*meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("goose", "OBJ//goose.obj", Color(1 ,1, 1));
 	meshList[GEO_PASSPORT] = MeshBuilder::GenerateOBJMTL("passport", "OBJ//passport.obj", "OBJ//passport.mtl");*/
