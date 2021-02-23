@@ -9,8 +9,11 @@ using namespace irrklang;
 
 class Sound
 {
-public:
+private:
 	ISoundEngine* engine;
+	bool active;
+
+public:
 	Sound();
+	ISoundEngine* Engine();
 };
-           

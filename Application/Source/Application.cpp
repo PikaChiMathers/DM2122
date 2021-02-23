@@ -16,6 +16,7 @@
 #include "SceneTester.h"
 #include "SceneTrivia.h"
 #include "SceneSearch.h"
+#include "SceneIntro.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
@@ -138,10 +139,12 @@ void Application::Run()
 	Scene* scene1 = new SceneTester();
 	Scene* scene2 = new SceneShop();
 	Scene* scene3 = new SceneSearch();
-	Scene* scene = scene3;
+	Scene* scene4 = new SceneIntro();
+	Scene* scene = scene4;
 	scene1->Init();
 	scene2->Init();
 	scene3->Init();
+	scene4->Init();
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
@@ -161,6 +164,7 @@ void Application::Run()
 	scene1->Exit();
 	scene2->Exit();
 	scene3->Exit();
+	scene4->Exit();
 	delete scene;
 }
 
