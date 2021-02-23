@@ -15,6 +15,7 @@
 #include "Money.h"
 #include "Maps.h"
 #include "Score.h"
+#include "Objects.h"
 
 #include "Dialogue.h"
 
@@ -39,13 +40,6 @@ public:
 
 	float x_value, y_value, z_value;
 
-	int translateXDir, translateYDir, rotateDir, scaleDir;
-
-	Color red, blue, green, pink, Lblue, purple, orange, yellow, cyan, magenta, moonshade;
-
-	bool scene_change;
-	bool coin_collect; // To stop rendering of coin after collected
-
 	int UI_height, UI_width;
 
 	int colCount = 0;
@@ -55,14 +49,16 @@ public:
 	enum GEOMETRY_TYPE //added (Step 1)
 	{
 		GEO_AXES = 0,
-
 		GEO_QUAD,
 
 		GEO_CUBE,
 
-		GEO_COIN,
-		GEO_PASSPORT,
 		GEO_GOOSE,
+
+		GEO_TV,
+		GEO_PODIUM_A,
+		GEO_PODIUM_B,
+		GEO_PODIUM_C,
 
 		GEO_LIGHTBALL,
 		GEO_SPHERE,
@@ -76,8 +72,6 @@ public:
 		GEO_BACK,
 
 		GEO_TEXT,
-
-		GEO_TEST,
 
 		NUM_GEOMETRY,
 	};

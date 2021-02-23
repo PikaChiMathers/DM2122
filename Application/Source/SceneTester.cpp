@@ -29,6 +29,12 @@ void SceneTester::Init()
 
 	dialogue = new Dialogue("Dialogue//D1.txt");
 
+	manager.CreateGameObject(&gameObject);
+	manager.CreateGameObject(&box);
+	manager.CreateGameObject(&coin);
+	manager.CreateGameObject(&passport);
+	manager.CreateGameObject(&goose);
+
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
@@ -229,7 +235,7 @@ void SceneTester::Init()
 
 void SceneTester::Update(double dt)
 {
-	GameObject::GameObjectUpdateManager(dt);
+	manager.GameObjectManagerUpdate(dt);
 	camera.Update(dt);
 
 	person.Update(dt);
@@ -509,12 +515,12 @@ void SceneTester::Render() //My Own Pattern
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, Application::GetWindowHeight() * .1f);
 
-	if (GameObject::CheckCollision(gameObject.GetCollider()).gameObject != nullptr && !colEnter)
+	if (manager.CheckCollision(gameObject.GetCollider()).gameObject != nullptr && !colEnter)
 	{
 		colEnter = true;
 		colCount++; 
 	}
-	if (colEnter && (GameObject::CheckCollision(gameObject.GetCollider()).gameObject == nullptr))
+	if (colEnter && (manager.CheckCollision(gameObject.GetCollider()).gameObject == nullptr))
 	{ 
 		colEnter = false;
 	}
