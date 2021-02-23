@@ -198,7 +198,7 @@ void SceneTrivia::Init()
 
 void SceneTrivia::Update(double dt)
 {
-	//GameObject::GameObjectUpdateManager(dt);
+	GameObject::GameObjectUpdateManager(dt);
 
 	person.Update(dt);
 
