@@ -23,7 +23,7 @@ SceneShop::~SceneShop()
 
 void SceneShop::Init()
 {
-	camera.Init(Vector3(40, 2, 30), Vector3(0, 0, 0), Vector3(0, 1, 0));
+	camera.Init(Vector3(8, 2, 6), Vector3(0, 2, 0), Vector3(0, 1, 0));
 
 	map.Set(Maps::SKYBOX_TYPE::SB_SHOP);
 
@@ -188,6 +188,14 @@ void SceneShop::Init()
 void SceneShop::Update(double dt)
 {
 	camera.Update(dt);
+	if (camera.position.x < -9.5)
+		camera.position.x = -9.5;
+	if (camera.position.x > 9.5)
+		camera.position.x = 9.5;
+	if (camera.position.z < -6)
+		camera.position.z = -6;
+	if (camera.position.z > 6)
+		camera.position.z = 6;
 
 	fps = 1.0f / dt;
 
@@ -367,7 +375,8 @@ void SceneShop::Render() //My Own Pattern
 	RenderSkybox();
 
 	modelStack.PushMatrix();
-	modelStack.Scale(1, 1, 1);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Scale(3, 3, 3);
 	RenderMesh(meshList[GEO_BUS], lights[0].isOn);
 	modelStack.PopMatrix();
 
@@ -436,43 +445,43 @@ void SceneShop::RenderMesh(Mesh* mesh, bool enableLight)
 void SceneShop::RenderSkybox()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(499, 0, 0);
+	modelStack.Translate(9.99, 5, 0);
 	modelStack.Rotate(-90, 0, 1, 0);
-	modelStack.Scale(1000, 1000, 1000);
+	modelStack.Scale(13, 10, 20);
 	RenderMesh(meshList[GEO_FRONT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-499, 0, 0);
+	modelStack.Translate(-9.99, 5, 0);
 	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(1000, 1000, 1000);
+	modelStack.Scale(13, 10, 20);
 	RenderMesh(meshList[GEO_BACK], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 499);
+	modelStack.Translate(0, 5, 6.49);
 	modelStack.Rotate(180, 0, 1, 0);
-	modelStack.Scale(1000, 1000, 1000);
+	modelStack.Scale(20, 10, 13);
 	RenderMesh(meshList[GEO_LEFT], false);
 	modelStack.PopMatrix();
 	
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, -499);
-	modelStack.Scale(1000, 1000, 1000);
+	modelStack.Translate(0, 5, -6.49);
+	modelStack.Scale(20, 10, 13);
 	RenderMesh(meshList[GEO_RIGHT], false);
 	modelStack.PopMatrix();
 	
 	modelStack.PushMatrix();
-	modelStack.Translate(0, -499, 0);
+	modelStack.Translate(0, 0.01, 0);
 	modelStack.Rotate(-90, 1, 0, 0);
-	modelStack.Scale(1000, 1000, 1000);
+	modelStack.Scale(20, 13, 20);
 	RenderMesh(meshList[GEO_BOTTOM], false);
 	modelStack.PopMatrix();
 	
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 499, 0);
+	modelStack.Translate(0, 9.99, 0);
 	modelStack.Rotate(90, 1, 0, 0);
-	modelStack.Scale(1000, 1000, 1000);
+	modelStack.Scale(20, 13, 20);
 	RenderMesh(meshList[GEO_TOP], false);
 	modelStack.PopMatrix();
 }
