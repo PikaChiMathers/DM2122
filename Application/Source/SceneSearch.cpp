@@ -29,6 +29,12 @@ void SceneSearch::Init()
 
 	dialogue = new Dialogue("Dialogue//D1.txt");
 
+	manager.CreateGameObject(&gameObject);
+	manager.CreateGameObject(&box);
+	manager.CreateGameObject(&coin);
+	manager.CreateGameObject(&passport);
+	manager.CreateGameObject(&goose);
+
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
@@ -104,9 +110,13 @@ void SceneSearch::Init()
 	meshList[GEO_COIN] = MeshBuilder::GenerateOBJMTL("coin", "OBJ//coin.obj", "OBJ//coin.mtl");
 	meshList[GEO_COIN]->textureID = LoadTGA("Image//coin.tga");
 
-	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("goose", "OBJ//goose.obj", Color(1 ,1, 1));
-	meshList[GEO_PASSPORT] = MeshBuilder::GenerateOBJMTL("passport", "OBJ//passport.obj", "OBJ//passport.mtl");
-	//meshList[GEO_MALL] = MeshBuilder::GenerateOBJMTL("mall", "OBJ//mall.obj", "OBJ//mall.obj");
+	meshList[GEO_BUILDING1] = MeshBuilder::GenerateOBJ("building1", "OBJ//short_apartment.obj", Color(0.5,0.5,0.5));
+	meshList[GEO_BUILDING2] = MeshBuilder::GenerateOBJMTL("building2", "OBJ//med_apartment.obj", "OBJ//med_apartment.mtl");
+	meshList[GEO_BUILDING3] = MeshBuilder::GenerateOBJMTL("building3", "OBJ//tall_apartment.obj", "OBJ//tall_apartment.mtl");
+
+	/*meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("goose", "OBJ//goose.obj", Color(1 ,1, 1));
+	meshList[GEO_PASSPORT] = MeshBuilder::GenerateOBJMTL("passport", "OBJ//passport.obj", "OBJ//passport.mtl");*/
+	/*meshList[GEO_MALL] = MeshBuilder::GenerateOBJ("mall", "OBJ//mall.obj", Color(1, 1, 1));*/
 
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
@@ -231,7 +241,7 @@ void SceneSearch::Init()
 
 void SceneSearch::Update(double dt)
 {
-	GameObject::GameObjectUpdateManager(dt);
+	manager.GameObjectManagerUpdate(dt);
 	camera.Update(dt);
 
 	person.Update(dt);
@@ -470,11 +480,51 @@ void SceneSearch::Render() //My Own Pattern
 	RenderMesh(meshList[GEO_QUAD], lights[0].isOn);
 	modelStack.PopMatrix();
 
+	//modelStack.PushMatrix();
+	//modelStack.Translate(10, 0, 0);
+	//RenderMesh(meshList[GEO_MALL], false);
+	//modelStack.PopMatrix();
+
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0, 0);
 	modelStack.Rotate(-90, 1, 0, 0);
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_FLOOR], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(350, 0, 425);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(4, 4, 4);
+	RenderMesh(meshList[GEO_BUILDING1], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(200, 0, 252);
+	modelStack.Rotate(-270, 0, 1, 0);
+	modelStack.Scale(4, 4, 4);
+	RenderMesh(meshList[GEO_BUILDING1], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(350, 0, 260);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(4, 4, 4);
+	RenderMesh(meshList[GEO_BUILDING2], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(175, 0, 425);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(4, 4, 4);
+	RenderMesh(meshList[GEO_BUILDING3], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(50, 0, 425);
+	modelStack.Rotate(-180, 0, 1, 0);
+	modelStack.Scale(4, 4, 4);
+	RenderMesh(meshList[GEO_BUILDING2], false);
 	modelStack.PopMatrix();
 
 	//modelStack.PushMatrix();
@@ -518,12 +568,12 @@ void SceneSearch::Render() //My Own Pattern
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, Application::GetWindowHeight() * .1f);
 
-	if (GameObject::CheckCollision(gameObject.GetCollider()).gameObject != nullptr && !colEnter)
+	if (manager.CheckCollision(gameObject.GetCollider()).gameObject != nullptr && !colEnter)
 	{
 		colEnter = true;
 		colCount++; 
 	}
-	if (colEnter && (GameObject::CheckCollision(gameObject.GetCollider()).gameObject == nullptr))
+	if (colEnter && (manager.CheckCollision(gameObject.GetCollider()).gameObject == nullptr))
 	{ 
 		colEnter = false;
 	}

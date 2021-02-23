@@ -9,7 +9,7 @@
 #include "Vertex.h"
 #include "Light.h"
 
-#include "GameObject.h"
+#include "GameObjectManager.h"
 #include "Bus.h"
 #include "Person.h"
 #include "Money.h"
@@ -64,6 +64,9 @@ public:
 		GEO_PASSPORT,
 		GEO_GOOSE,
 		GEO_MALL,
+		GEO_BUILDING1,
+		GEO_BUILDING2,
+		GEO_BUILDING3,
 
 		GEO_LIGHTBALL,
 		GEO_SPHERE,
@@ -142,6 +145,7 @@ public:
 private: //added (Step 2)
 	Camera3 camera;
 	Light lights[NUM_LIGHTS];
+	GameObjectManager manager;
 	Person person;
 	Money money;
 	Maps map;
@@ -152,7 +156,7 @@ private: //added (Step 2)
 	//GameObject gameObject;
 	Bus gameObject;
 	GameObject box;
-	GameObject* coin;
+	GameObject coin;
 	GameObject passport;
 	GameObject goose;
 
