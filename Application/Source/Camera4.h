@@ -1,11 +1,10 @@
-#ifndef CAMERA_2_H
-#define CAMERA_2_H
+#ifndef CAMERA_4_H
+#define CAMERA_4_H
 
 #include "Camera.h"
 
-class Camera2 : public Camera
+class Camera4 : public Camera
 {
-	int cameraMode; // 0 = azimuth, 1 = first person
 public:
 	//Vector3 position;
 	//Vector3 target;
@@ -14,18 +13,17 @@ public:
 	Vector3 defaultPosition;
 	Vector3 defaultTarget;
 	Vector3 defaultUp;
-	Vector3 view, right;
-	
-	float yaw, pitch;
 
-	double delay;
+	Vector3 lowerBound;
+	Vector3 upperBound;
 
-	Camera2();
-	~Camera2();
-	void CycleMode();
+	Camera4();
+	~Camera4();
 	virtual void Init(const Vector3& pos, const Vector3& target, const Vector3& up);
 	virtual void Update(double dt);
 	virtual void Reset();
+
+	void setBound(Vector3 botPosition, Vector3 topPosition);
 };
 
 #endif

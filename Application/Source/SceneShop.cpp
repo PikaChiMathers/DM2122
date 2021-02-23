@@ -23,7 +23,7 @@ SceneShop::~SceneShop()
 
 void SceneShop::Init()
 {
-	camera.Init(Vector3(8, 2, 6), Vector3(0, 2, 0), Vector3(0, 1, 0));
+	camera.Init(Vector3(9.5, 13, 6), Vector3(0, 2, 0), Vector3(0, 1, 0));
 
 	map.Set(Maps::SKYBOX_TYPE::SB_SHOP);
 

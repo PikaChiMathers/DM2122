@@ -109,7 +109,7 @@ public:
 
 
 private: //added (Step 2)
-	Camera2 camera;
+	Camera4 camera;
 	Light lights[NUM_LIGHTS];
 
 	Maps map;
