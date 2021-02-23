@@ -2,7 +2,7 @@
 #define SCENE_SHOP
 
 #include "Scene.h"
-#include "Camera4.h"
+#include "Camera2.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Vertex.h"

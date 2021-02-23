@@ -6,9 +6,6 @@
 
 #include"GameObject.h"
 #include"Application.h"
-
-class GameObject;
-
 //struct Collide
 //{
 //	GameObject* gameObject;

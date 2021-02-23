@@ -23,7 +23,7 @@ SceneShop::~SceneShop()
 
 void SceneShop::Init()
 {
-	camera.Init(Vector3(8, 2, 6), Vector3(0, 2, 0), Vector3(0, 1, 0));
+	camera.Init(Vector3(9.5, 13, 6), Vector3(0, 2, 0), Vector3(0, 1, 0));
 
 	map.Set(Maps::SKYBOX_TYPE::SB_SHOP);
 
@@ -186,20 +186,6 @@ void SceneShop::Init()
 
 void SceneShop::Update(double dt)
 {
-	if (camera.position.x >= -9.5 && camera.position.x <= 9.5 && camera.position.z >= -6 && camera.position.z <= 6)
-		camera.changeTarget();
-	else
-	{
-		if (camera.position.x < -9.5)
-			camera.position.x = -9.5;
-		else if (camera.position.x > 9.5)
-			camera.position.x = 9.5;
-		if (camera.position.z < -6)
-			camera.position.z = -6;
-		else if (camera.position.z > 6)
-			camera.position.z = 6;
-	}
-		
 	camera.Update(dt);
 
 	fps = 1.0f / dt;
