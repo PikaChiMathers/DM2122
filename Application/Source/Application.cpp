@@ -136,9 +136,11 @@ void Application::Run()
 
 	Scene* scene1 = new SceneTester();
 	Scene* scene2 = new SceneShop();
-	Scene* scene = scene1;
+	Scene* scene3 = new SceneTrivia();
+	Scene* scene = scene3;
 	scene1->Init();
 	scene2->Init();
+	scene3->Init();
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
