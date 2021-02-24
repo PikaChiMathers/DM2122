@@ -12,7 +12,6 @@
 #include "GameObjectManager.h"
 #include "TriggerCollider.h"
 #include "Bus.h"
-#include "Person.h"
 #include "Money.h"
 #include "Maps.h"
 #include "Score.h"
@@ -42,9 +41,6 @@ public:
 
 	int UI_height, UI_width;
 
-	int colCount = 0;
-	bool colEnter = false;
-
 
 	enum GEOMETRY_TYPE //added (Step 1)
 	{
@@ -56,6 +52,7 @@ public:
 		GEO_GOOSE,
 
 		GEO_TV,
+		GEO_LOGO,
 		GEO_PODIUM_A,
 		GEO_PODIUM_B,
 		GEO_PODIUM_C,
@@ -98,19 +95,6 @@ public:
 		U_LIGHT0_EXPONENT,
 
 
-		U_LIGHT1_POSITION,
-		U_LIGHT1_COLOR,
-		U_LIGHT1_POWER,
-		U_LIGHT1_KC,
-		U_LIGHT1_KL,
-		U_LIGHT1_KQ,
-		U_LIGHT1_TYPE,
-		U_LIGHT1_SPOTDIRECTION,
-		U_LIGHT1_COSCUTOFF,
-		U_LIGHT1_COSINNER,
-		U_LIGHT1_EXPONENT,
-
-
 		U_LIGHTENABLED,
 		U_NUMLIGHTS,
 
@@ -126,7 +110,6 @@ public:
 	enum LIGHT_TYPES
 	{
 		LIGHT1 = 0,
-		LIGHT2,
 		NUM_LIGHTS,
 	};
 
@@ -143,13 +126,14 @@ private: //added (Step 2)
 	Camera3 camera;
 	Light lights[NUM_LIGHTS];
 	
-	Person person;
 	Maps map;
 	Score score;
 
 	Dialogue* Qn;
+	std::string Qn_Choices;
 
 	int qn_num;
+	bool is_correct;
 	ANS_TYPE answer;
 
 	GameObjectManager OBJmanager;
@@ -166,6 +150,7 @@ private: //added (Step 2)
 
 	MS modelStack, viewStack, projectionStack;
 
+	bool Check_Answer();
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
 

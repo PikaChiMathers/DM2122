@@ -12,7 +12,7 @@
 #include "Application.h"
 
 
-SceneTrivia::SceneTrivia() : person(Vector3(0, 0, 0))
+SceneTrivia::SceneTrivia()
 {
 }
 
@@ -46,16 +46,19 @@ void SceneTrivia::Init()
 
 	map.Set(Maps::SKYBOX_TYPE::SB_DAY);
 
-	Qn = new Dialogue("Trivia.txt");
+	is_correct = false;
+	qn_num = 0;
+	Qn = new Dialogue("Dialogue//Trivia.txt", Dialogue::TRIVIA);
+	Qn_Choices = "";
 
 	answer = ANS_TYPE::Blank;
 
 
-	manager.CreateGameObject(&gameObject);
+	/*manager.CreateGameObject(&gameObject);
 	manager.CreateGameObject(&box);
 	manager.CreateGameObject(&coin);
 	manager.CreateGameObject(&passport);
-	manager.CreateGameObject(&goose);
+	manager.CreateGameObject(&goose);*/
 
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
@@ -87,6 +90,13 @@ void SceneTrivia::Init()
 	meshList[GEO_TV]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
 	meshList[GEO_TV]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
 	meshList[GEO_TV]->material.kShininess = 1.f;
+
+	meshList[GEO_LOGO] = MeshBuilder::GenerateQuad("logo", Color(1, 1, 1), 1, 1);
+	meshList[GEO_LOGO]->textureID = LoadTGA("Image//trivia_logo.tga");
+	meshList[GEO_LOGO]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	meshList[GEO_LOGO]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
+	meshList[GEO_LOGO]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
+	meshList[GEO_LOGO]->material.kShininess = 1.f;
 
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1000, 1000, 1000);
 
@@ -148,18 +158,6 @@ void SceneTrivia::Init()
 	m_parameters[U_LIGHT0_COSINNER] = glGetUniformLocation(m_programID, "lights[0].cosInner");
 	m_parameters[U_LIGHT0_EXPONENT] = glGetUniformLocation(m_programID, "lights[0].exponent");
 
-	m_parameters[U_LIGHT1_POSITION] = glGetUniformLocation(m_programID, "lights[1].position_cameraspace");
-	m_parameters[U_LIGHT1_COLOR] = glGetUniformLocation(m_programID, "lights[1].color");
-	m_parameters[U_LIGHT1_POWER] = glGetUniformLocation(m_programID, "lights[1].power");
-	m_parameters[U_LIGHT1_KC] = glGetUniformLocation(m_programID, "lights[1].kC");
-	m_parameters[U_LIGHT1_KL] = glGetUniformLocation(m_programID, "lights[1].kL");
-	m_parameters[U_LIGHT1_KQ] = glGetUniformLocation(m_programID, "lights[1].kQ");
-	m_parameters[U_LIGHT1_TYPE] = glGetUniformLocation(m_programID, "lights[1].type");
-	m_parameters[U_LIGHT1_SPOTDIRECTION] = glGetUniformLocation(m_programID, "lights[1].spotDirection");
-	m_parameters[U_LIGHT1_COSCUTOFF] = glGetUniformLocation(m_programID, "lights[1].cosCutoff");
-	m_parameters[U_LIGHT1_COSINNER] = glGetUniformLocation(m_programID, "lights[1].cosInner");
-	m_parameters[U_LIGHT1_EXPONENT] = glGetUniformLocation(m_programID, "lights[1].exponent");
-
 	m_parameters[U_LIGHTENABLED] = glGetUniformLocation(m_programID, "lightEnabled");
 	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
 
@@ -176,7 +174,7 @@ void SceneTrivia::Init()
 	lights[0].type = Light::LIGHT_POINT;
 	lights[0].position.Set(0, 20, 0);
 	lights[0].color.Set(1, 1, 1);
-	lights[0].power = 5;
+	lights[0].power = 10;
 	lights[0].kC = 1.f;
 	lights[0].kL = 0.01f;
 	lights[0].kQ = 0.001f;
@@ -184,18 +182,6 @@ void SceneTrivia::Init()
 	lights[0].cosInner = cos(Math::DegreeToRadian(30));
 	lights[0].exponent = 3.f;
 	lights[0].spotDirection.Set(0.f, 1.f, 0.f);
-
-	lights[1].type = Light::LIGHT_SPOT;
-	lights[1].position.Set(0, 20, 0);
-	lights[1].color.Set(1, 1, 1);
-	lights[1].power = 1;
-	lights[1].kC = 1.f;
-	lights[1].kL = 0.01f;
-	lights[1].kQ = 0.001f;
-	lights[1].cosCutoff = cos(Math::DegreeToRadian(45));
-	lights[1].cosInner = cos(Math::DegreeToRadian(30));
-	lights[1].exponent = 3.f;
-	lights[1].spotDirection.Set(0.f, 0.5f, 0.f);
 
 
 	glUniform1i(m_parameters[U_NUMLIGHTS], 1);
@@ -209,26 +195,12 @@ void SceneTrivia::Init()
 	glUniform1f(m_parameters[U_LIGHT0_COSINNER], lights[0].cosInner);
 	glUniform1f(m_parameters[U_LIGHT0_EXPONENT], lights[0].exponent);
 
-
-
-
-	glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
-	glUniform3fv(m_parameters[U_LIGHT1_COLOR], 1, &lights[1].color.r);
-	glUniform1f(m_parameters[U_LIGHT1_POWER], lights[1].power);
-	glUniform1f(m_parameters[U_LIGHT1_KC], lights[1].kC);
-	glUniform1f(m_parameters[U_LIGHT1_KL], lights[1].kL);
-	glUniform1f(m_parameters[U_LIGHT1_KQ], lights[1].kQ);
-	glUniform1f(m_parameters[U_LIGHT1_COSCUTOFF], lights[1].cosCutoff);
-	glUniform1f(m_parameters[U_LIGHT1_COSINNER], lights[1].cosInner);
-	glUniform1f(m_parameters[U_LIGHT1_EXPONENT], lights[1].exponent);
-
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 }
 
 void SceneTrivia::Update(double dt)
 {
-	person.Update(dt);
 	OBJmanager.GameObjectManagerUpdate(dt);
 
 	//editor controls
@@ -281,33 +253,6 @@ void SceneTrivia::Update(double dt)
 		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
 	}
 
-	if (Application::IsKeyPressed('5'))
-	{
-		lights[1].type = Light::LIGHT_POINT;
-		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
-	}
-	else if (Application::IsKeyPressed('6'))
-	{
-		lights[1].type = Light::LIGHT_DIRECTIONAL;
-		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
-	}
-	else if (Application::IsKeyPressed('7'))
-	{
-		lights[1].type = Light::LIGHT_SPOT;
-		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
-	}
-	else if (Application::IsKeyPressed('8'))
-	{
-		lights[1].type = Light::LIGHT_MULTIPLE;
-		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
-	}
-
-
-
-
-	if (T_A.IsTriggered())
-		std::cout << "OK";
-
 	if (Application::IsKeyPressed(VK_SPACE))
 	{
 		if ((goose.GetPosition().x >= P_A.GetPosition().x - 2) && (goose.GetPosition().x <= P_A.GetPosition().x + 2) &&
@@ -315,21 +260,18 @@ void SceneTrivia::Update(double dt)
 			(goose.GetPosition().z >= P_A.GetPosition().z - 2) && (goose.GetPosition().z <= P_A.GetPosition().z + 2))
 		{
 			answer = ANS_TYPE::A;
-			std::cout << "Podium A\n";
 		}
 		else if ((goose.GetPosition().x >= P_B.GetPosition().x - 2) && (goose.GetPosition().x <= P_B.GetPosition().x + 2) &&
 				 (goose.GetPosition().y >= P_B.GetPosition().y - 2) && (goose.GetPosition().y <= P_B.GetPosition().y + 2) &&
 				 (goose.GetPosition().z >= P_B.GetPosition().z - 2) && (goose.GetPosition().z <= P_B.GetPosition().z + 2))
 		{
 			answer = ANS_TYPE::B;
-			std::cout << "Podium B\n";
 		}
 		else if ((goose.GetPosition().x >= P_C.GetPosition().x - 2) && (goose.GetPosition().x <= P_C.GetPosition().x + 2) &&
 				 (goose.GetPosition().y >= P_C.GetPosition().y - 2) && (goose.GetPosition().y <= P_C.GetPosition().y + 2) &&
 				 (goose.GetPosition().z >= P_C.GetPosition().z - 2) && (goose.GetPosition().z <= P_C.GetPosition().z + 2))
 		{
 			answer = ANS_TYPE::C;
-			std::cout << "Podium C\n";
 		}
 	}
 }
@@ -372,25 +314,6 @@ void SceneTrivia::Render() //My Own Pattern
 		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
 	}
 
-	if (lights[1].type == Light::LIGHT_DIRECTIONAL)
-	{
-		Vector3 lightDir(lights[1].position.x, lights[1].position.y, lights[1].position.z);
-		Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
-		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightDirection_cameraspace.x);
-	}
-	else if (lights[1].type == Light::LIGHT_SPOT)
-	{
-		Position lightPosition_cameraspace = viewStack.Top() * lights[1].position;
-		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightPosition_cameraspace.x);
-		Vector3 spotDirection_cameraspace = viewStack.Top() * lights[1].spotDirection;
-		glUniform3fv(m_parameters[U_LIGHT1_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
-	}
-	else
-	{
-		Position lightPosition_cameraspace = viewStack.Top() * lights[1].position;
-		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightPosition_cameraspace.x);
-	}
-
 	Mtx44 mvp = projectionStack.Top() * viewStack.Top() * modelStack.Top();
 	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &mvp.a[0]); //update the shader with new MVP
 
@@ -409,6 +332,7 @@ void SceneTrivia::Render() //My Own Pattern
 
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 14.6f, 23.8f);
+	modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Rotate(180, 0, 0, 1);
 	modelStack.Scale(40, 20, 20);
 	RenderMesh(meshList[GEO_TV], false);
@@ -420,11 +344,11 @@ void SceneTrivia::Render() //My Own Pattern
 	RenderMesh(meshList[GEO_PODIUM_A], true);
 	modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
-	modelStack.Translate(T_A.GetPositionX(), T_A.GetPositionY(), T_A.GetPositionZ());
-	modelStack.Scale(T_A.GetScaleX(), T_A.GetScaleY(), T_A.GetScaleZ());
-	RenderMesh(meshList[GEO_CUBE], false);
-	modelStack.PopMatrix();
+	//modelStack.PushMatrix();
+	//modelStack.Translate(T_A.GetPositionX(), T_A.GetPositionY(), T_A.GetPositionZ());
+	//modelStack.Scale(T_A.GetScaleX(), T_A.GetScaleY(), T_A.GetScaleZ());
+	//RenderMesh(meshList[GEO_CUBE], false);
+	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(5.44f, 2.55f, 3.4f);
@@ -456,7 +380,19 @@ void SceneTrivia::Render() //My Own Pattern
 	RenderText(meshList[GEO_TEXT], "C", Color(1, 1, 1));
 	modelStack.PopMatrix();
 
+	modelStack.PushMatrix();
+	modelStack.Translate(-17, 13.4f, 23.3f);
+	modelStack.Rotate(180, 1, 0, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[GEO_LOGO], true);
+	modelStack.PopMatrix();
 
+	modelStack.PushMatrix();
+	modelStack.Translate(17, 13.4f, 23.3f);
+	modelStack.Rotate(180, 1, 0, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[GEO_LOGO], true);
+	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(goose.GetPositionX(), goose.GetPositionY(), goose.GetPositionZ());
@@ -464,7 +400,6 @@ void SceneTrivia::Render() //My Own Pattern
 	modelStack.Rotate(goose.GetRotateY(), 0, 1, 0);
 	modelStack.Rotate(goose.GetRotateZ(), 0, 0, 1);
 	RenderMesh(meshList[GEO_GOOSE], true);
-	RenderMesh(meshList[GEO_CUBE], false);
 	modelStack.PopMatrix();
 }
 
@@ -479,6 +414,27 @@ void SceneTrivia::Exit()
 	//Step 6c
 	glDeleteProgram(m_programID);
 
+}
+
+bool SceneTrivia::Check_Answer()
+{
+	is_correct = false;
+
+	switch (qn_num)
+	{
+	case 1:
+		if (answer == ANS_TYPE::C)
+			is_correct = true;
+		break;
+	case 2:
+		if (answer == ANS_TYPE::A)
+			is_correct = true;
+		break;
+	default:
+		break;
+	}
+	answer = ANS_TYPE::Blank;
+	return is_correct;
 }
 
 void SceneTrivia::RenderMesh(Mesh* mesh, bool enableLight)
