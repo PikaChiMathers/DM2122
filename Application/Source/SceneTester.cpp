@@ -479,6 +479,7 @@ void SceneTester::Render() //My Own Pattern
 		modelStack.Rotate(gameObject.GetRotateX(), 1, 0, 0);
 		modelStack.Rotate(gameObject.GetRotateY(), 0, 1, 0);
 		modelStack.Rotate(gameObject.GetRotateZ(), 0, 0, 1);
+		modelStack.Scale(gameObject.GetScaleX(), gameObject.GetScaleY(), gameObject.GetScaleZ());
 	RenderMesh(meshList[GEO_CUBE], false);
 	modelStack.PopMatrix();
 

@@ -225,6 +225,8 @@ Mesh* MeshBuilder::GenerateCube(const std::string& meshName, Color color, float 
 	v.pos.Set(0.5f * lengthX, -0.5f * lengthY, 0.5f * lengthZ); v.color = color; v.normal = N;   v.texCoord.Set(0, 1);
 	vertex_buffer_data.push_back(v);
 
+
+
 	for (int i = 0; i < 36; i++)
 		index_buffer_data.push_back(i);
 

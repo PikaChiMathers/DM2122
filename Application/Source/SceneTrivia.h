@@ -142,6 +142,7 @@ public:
 private: //added (Step 2)
 	Camera3 camera;
 	Light lights[NUM_LIGHTS];
+	
 	Person person;
 	Maps map;
 	Score score;

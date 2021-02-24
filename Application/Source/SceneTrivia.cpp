@@ -50,6 +50,13 @@ void SceneTrivia::Init()
 
 	answer = ANS_TYPE::Blank;
 
+
+	manager.CreateGameObject(&gameObject);
+	manager.CreateGameObject(&box);
+	manager.CreateGameObject(&coin);
+	manager.CreateGameObject(&passport);
+	manager.CreateGameObject(&goose);
+
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
