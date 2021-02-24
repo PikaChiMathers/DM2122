@@ -46,7 +46,9 @@ void SceneTrivia::Init()
 
 	map.Set(Maps::SKYBOX_TYPE::SB_DAY);
 
-	dialogue = new Dialogue("Dialogue//D1.txt");
+	Qn = new Dialogue("Trivia.txt");
+
+	answer = ANS_TYPE::Blank;
 
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
@@ -222,22 +224,25 @@ void SceneTrivia::Update(double dt)
 	person.Update(dt);
 	OBJmanager.GameObjectManagerUpdate(dt);
 
-	if (Application::IsKeyPressed('I'))
-		z_value -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('K'))
-		z_value += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('J'))
-		x_value -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('L'))
-		x_value += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('O'))
-		y_value -= (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('U'))
-		y_value += (float)(LSPEED * dt);
-	if (Application::IsKeyPressed('T'))
-		lights[0].isOn = false;
-	if (Application::IsKeyPressed('Y'))
-		lights[0].isOn = true;
+	//editor controls
+	{
+		if (Application::IsKeyPressed('I'))
+			z_value -= (float)(LSPEED * dt);
+		if (Application::IsKeyPressed('K'))
+			z_value += (float)(LSPEED * dt);
+		if (Application::IsKeyPressed('J'))
+			x_value -= (float)(LSPEED * dt);
+		if (Application::IsKeyPressed('L'))
+			x_value += (float)(LSPEED * dt);
+		if (Application::IsKeyPressed('O'))
+			y_value -= (float)(LSPEED * dt);
+		if (Application::IsKeyPressed('U'))
+			y_value += (float)(LSPEED * dt);
+		if (Application::IsKeyPressed('T'))
+			lights[0].isOn = false;
+		if (Application::IsKeyPressed('Y'))
+			lights[0].isOn = true;
+	}
 
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
@@ -290,8 +295,36 @@ void SceneTrivia::Update(double dt)
 		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
 	}
 
+
+
+
 	if (T_A.IsTriggered())
 		std::cout << "OK";
+
+	if (Application::IsKeyPressed(VK_SPACE))
+	{
+		if ((goose.GetPosition().x >= P_A.GetPosition().x - 2) && (goose.GetPosition().x <= P_A.GetPosition().x + 2) &&
+			(goose.GetPosition().y >= P_A.GetPosition().y - 2) && (goose.GetPosition().y <= P_A.GetPosition().y + 2) &&
+			(goose.GetPosition().z >= P_A.GetPosition().z - 2) && (goose.GetPosition().z <= P_A.GetPosition().z + 2))
+		{
+			answer = ANS_TYPE::A;
+			std::cout << "Podium A\n";
+		}
+		else if ((goose.GetPosition().x >= P_B.GetPosition().x - 2) && (goose.GetPosition().x <= P_B.GetPosition().x + 2) &&
+				 (goose.GetPosition().y >= P_B.GetPosition().y - 2) && (goose.GetPosition().y <= P_B.GetPosition().y + 2) &&
+				 (goose.GetPosition().z >= P_B.GetPosition().z - 2) && (goose.GetPosition().z <= P_B.GetPosition().z + 2))
+		{
+			answer = ANS_TYPE::B;
+			std::cout << "Podium B\n";
+		}
+		else if ((goose.GetPosition().x >= P_C.GetPosition().x - 2) && (goose.GetPosition().x <= P_C.GetPosition().x + 2) &&
+				 (goose.GetPosition().y >= P_C.GetPosition().y - 2) && (goose.GetPosition().y <= P_C.GetPosition().y + 2) &&
+				 (goose.GetPosition().z >= P_C.GetPosition().z - 2) && (goose.GetPosition().z <= P_C.GetPosition().z + 2))
+		{
+			answer = ANS_TYPE::C;
+			std::cout << "Podium C\n";
+		}
+	}
 }
 
 void SceneTrivia::Render() //My Own Pattern
@@ -416,6 +449,8 @@ void SceneTrivia::Render() //My Own Pattern
 	RenderText(meshList[GEO_TEXT], "C", Color(1, 1, 1));
 	modelStack.PopMatrix();
 
+
+
 	modelStack.PushMatrix();
 	modelStack.Translate(goose.GetPositionX(), goose.GetPositionY(), goose.GetPositionZ());
 	modelStack.Rotate(goose.GetRotateX(), 1, 0, 0);
@@ -424,12 +459,13 @@ void SceneTrivia::Render() //My Own Pattern
 	RenderMesh(meshList[GEO_GOOSE], true);
 	RenderMesh(meshList[GEO_CUBE], false);
 	modelStack.PopMatrix();
-
 }
 
 void SceneTrivia::Exit()
 {
 	// Cleanup VBO here
+
+	delete Qn;
 
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 
