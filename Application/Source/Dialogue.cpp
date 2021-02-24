@@ -59,8 +59,6 @@ std::string Dialogue::Update()
 	}
 	else if (mode == TRIVIA)
 	{
-		++currentLine;
-
 		std::string line;
 		std::getline(file, line);
 
@@ -70,6 +68,8 @@ std::string Dialogue::Update()
 			std::getline(file, choice);
 			this->choice[i] = choice;
 		}
+
+		currentLine += 4;
 
 		return line;
 	}
