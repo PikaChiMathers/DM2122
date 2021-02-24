@@ -12,6 +12,7 @@
 #include "GameObjectManager.h"
 #include "GameObject.h"
 #include "Bus.h"
+#include "Test.h"
 #include "Person.h"
 #include "Money.h"
 #include "Maps.h"
@@ -152,6 +153,7 @@ private: //added (Step 2)
 
 	//GameObject gameObject;
 	Bus gameObject;
+	Test test;
 	GameObject box;
 	GameObject coin;
 	GameObject passport;

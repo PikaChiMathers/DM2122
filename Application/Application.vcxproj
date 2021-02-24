@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\BasicPhysics.cpp" />
+    <ClCompile Include="Source\Test.cpp" />
     <ClCompile Include="Source\TriggerCollider.cpp" />
     <ClCompile Include="Source\Bus.cpp" />
     <ClCompile Include="Source\BusStop.cpp" />
@@ -189,6 +190,7 @@
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\BasicPhysics.h" />
+    <ClInclude Include="Source\Test.h" />
     <ClInclude Include="Source\TriggerCollider.h" />
     <ClInclude Include="Source\Bus.h" />
     <ClInclude Include="Source\BusStop.h" />

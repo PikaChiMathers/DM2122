@@ -27,14 +27,16 @@ void SceneTester::Init()
 
 	map.Set(Maps::SKYBOX_TYPE::SB_DAY);
 
-	dialogue = new Dialogue("Dialogue//D1.txt");
+	dialogue = new Dialogue("Dialogue//D1.txt", Dialogue::DIALOGUE);
 
 	manager.CreateGameObject(&gameObject);
 	manager.CreateGameObject(&box);
 	manager.CreateGameObject(&coin);
 	manager.CreateGameObject(&passport);
 	manager.CreateGameObject(&goose);
+	manager.CreateGameObject(&test);
 
+	test.SetPosition(Position(10, 0, -10));
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
@@ -480,7 +482,16 @@ void SceneTester::Render() //My Own Pattern
 		modelStack.Rotate(gameObject.GetRotateY(), 0, 1, 0);
 		modelStack.Rotate(gameObject.GetRotateZ(), 0, 0, 1);
 		modelStack.Scale(gameObject.GetScaleX(), gameObject.GetScaleY(), gameObject.GetScaleZ());
-	RenderMesh(meshList[GEO_CUBE], false);
+		RenderMesh(meshList[GEO_CUBE], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+		modelStack.Translate(test.GetPositionX(), test.GetPositionY(), test.GetPositionZ());
+		modelStack.Rotate(test.GetRotateX(), 1, 0, 0);
+		modelStack.Rotate(test.GetRotateY(), 0, 1, 0);
+		modelStack.Rotate(test.GetRotateZ(), 0, 0, 1);
+		modelStack.Scale(test.GetScaleX(), test.GetScaleY(), test.GetScaleZ());
+		RenderMesh(meshList[GEO_CUBE], false);
 	modelStack.PopMatrix();
 
 	if (coin_collect == false)

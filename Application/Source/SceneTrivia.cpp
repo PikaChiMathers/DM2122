@@ -46,7 +46,7 @@ void SceneTrivia::Init()
 
 	map.Set(Maps::SKYBOX_TYPE::SB_DAY);
 
-	Qn = new Dialogue("Trivia.txt");
+	Qn = new Dialogue("Trivia.txt", Dialogue::DIALOGUE);
 
 	answer = ANS_TYPE::Blank;
 

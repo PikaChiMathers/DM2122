@@ -9,13 +9,13 @@ GameObjectManager::~GameObjectManager()
 {
 
 }
-
+//#pragma optimize ("", off)
 void GameObjectManager::CreateGameObject(GameObject* gameObject)
 {
 	GameObjectList.push_back(gameObject);
 	if (gameObject->GetCollider() != nullptr) ColliderList.push_back(gameObject);
 }
-//#pragma optimize("", off)
+
 float GameObjectManager::SATcalculation(Vector3 axis, std::vector<Vector3> points1, std::vector<Vector3> points2)
 {
 	axis.Normalize();
@@ -212,12 +212,13 @@ void GameObjectManager::GameObjectManagerUpdate(double dt)
 					if (notMatched)
 					{
 						gameObject->OnTriggerExit((*it));
-						gameObject->InTrigger.erase(it);
+						gameObject->InTrigger.erase(it--);
 					}
 				}
 				for (std::vector<Collide>::iterator it = CheckTrigger.begin(); it != CheckTrigger.end(); it++)
 				{
 					gameObject->OnTriggerEnter((*it).gameObject);
+					gameObject->InTrigger.push_back((*it).gameObject);
 				}
 			}
 			if (gameObject->GetPhysics() != nullptr && !gameObject->GetCollider()->GetIsTrigger()) // check for collision
@@ -268,4 +269,4 @@ void GameObjectManager::GameObjectManagerUpdate(double dt)
 		}
 	}
 }
-#pragma optimize("", on)
+#pragma optimize ("", on)

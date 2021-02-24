@@ -7,6 +7,7 @@ GameObject::GameObject()
 	collider = nullptr;
 	physics = nullptr;
 	deleteThis = false;
+	InTrigger.begin();
 	//GameObjectList.push_back(this);
 }
 
