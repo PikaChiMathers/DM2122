@@ -102,8 +102,7 @@ Collide GameObjectManager::CheckCollision(Collider refCol, Collider* exclude)
 			axes.push_back(axes[2].Cross(axes[4]));
 			axes.push_back(axes[2].Cross(axes[5]));
 			int shortestAxisVec = 0; // stores the iteration of the axis vector that has shortest overlap dist 
-			float shortestDist = 100000000;
-			shortestDist = SATcalculation(axes[0].Normalize(), refColData.Points, Col2Data.Points); // stores the shortest overlap distance
+			float shortestDist = SATcalculation(axes[0].Normalize(), refColData.Points, Col2Data.Points); // stores the shortest overlap distance
 			for (int i = 1; i < axes.size(); i++)
 			{
 				if (axes[i].IsZero()) continue;
@@ -154,8 +153,7 @@ std::vector<Collide> GameObjectManager::CheckCollisions(Collider refCol, Collide
 			axes.push_back(axes[2].Cross(axes[4]));
 			axes.push_back(axes[2].Cross(axes[5]));
 			int shortestAxisVec = 0; // stores the iteration of the axis vector that has shortest overlap dist 
-			float shortestDist = 100000000;
-			shortestDist = SATcalculation(axes[0].Normalize(), refColData.Points, Col2Data.Points); // stores the shortest overlap distance
+			float shortestDist = SATcalculation(axes[0].Normalize(), refColData.Points, Col2Data.Points); // stores the shortest overlap distance
 			for (int i = 1; i < axes.size(); i++)
 			{
 				if (axes[i].IsZero()) continue;

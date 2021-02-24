@@ -29,6 +29,13 @@ void SceneTrivia::Init()
 
 	dialogue = new Dialogue("Dialogue//D1.txt");
 
+
+	manager.CreateGameObject(&gameObject);
+	manager.CreateGameObject(&box);
+	manager.CreateGameObject(&coin);
+	manager.CreateGameObject(&passport);
+	manager.CreateGameObject(&goose);
+
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
@@ -198,7 +205,7 @@ void SceneTrivia::Init()
 
 void SceneTrivia::Update(double dt)
 {
-	GameObject::GameObjectUpdateManager(dt);
+	manager.GameObjectManagerUpdate(dt);
 
 	person.Update(dt);
 
