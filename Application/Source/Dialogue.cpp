@@ -1,6 +1,6 @@
 #include "Dialogue.h"
 
-Dialogue::Dialogue(std::string fileName) : totalLines(0), personTalking(""), currentLine(0)
+Dialogue::Dialogue(std::string fileName, unsigned mode) : totalLines(0), personTalking(""), currentLine(0), mode(mode)
 {
 	file.open(fileName);
 	if (!file)
@@ -42,16 +42,54 @@ std::string Dialogue::getPersonTalking()
 
 std::string Dialogue::Update()
 {
-	char buf[300];
-	file.getline(buf, 300);
-	if (strncmp("1 ", buf, 2))
-		personTalking = "Player";
-	else if(strncmp("2 ", buf, 2))
-		personTalking = "Boss Goose";
-	else if (strncmp("3 ", buf, 2))
-		personTalking = "Boss Duck";
+	if (mode == DIALOGUE)
+	{
+		char buf[300];
+		file.getline(buf, 300);
+		if (strncmp("1 ", buf, 2))
+			personTalking = "Player";
+		else if (strncmp("2 ", buf, 2))
+			personTalking = "Boss Goose";
+		else if (strncmp("3 ", buf, 2))
+			personTalking = "Boss Duck";
 
-	++currentLine;
+		++currentLine;
 
-	return std::string(buf + 2);
+		return std::string(buf + 2);
+	}
+	else if (mode == TRIVIA)
+	{
+		++currentLine;
+
+		std::string line;
+		std::getline(file, line);
+
+		for (int i = 0; i < 3; ++i)
+		{
+			std::string choice;
+			std::getline(file, choice);
+			this->choice[i] = choice;
+		}
+
+		return line;
+	}
+	else
+	{
+		std::cout << "Mode is not is listed" << std::endl;
+	}
+}
+
+std::string Dialogue::getChoice1()
+{
+	return choice[1];
+}
+
+std::string Dialogue::getChoice2()
+{
+	return choice[2];
+}
+
+std::string Dialogue::getChoice3()
+{
+	return choice[3];
 }
