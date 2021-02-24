@@ -15,7 +15,7 @@ void GameObjectManager::CreateGameObject(GameObject* gameObject)
 	GameObjectList.push_back(gameObject);
 	if (gameObject->GetCollider() != nullptr) ColliderList.push_back(gameObject);
 }
-
+//#pragma optimize("", off)
 float GameObjectManager::SATcalculation(Vector3 axis, std::vector<Vector3> points1, std::vector<Vector3> points2)
 {
 	axis.Normalize();
@@ -229,7 +229,8 @@ void GameObjectManager::GameObjectManagerUpdate(double dt)
 
 					Collider RefCollider;
 					RefCollider.SetTransform(gameObject->GetCollider()->GetTransform());
-					RefCollider.GetTransform().position = newPos;
+					RefCollider.SetSize(gameObject->GetCollider()->GetSize());
+					RefCollider.SetPosition(newPos);
 					Collide hit = CheckCollision(RefCollider, gameObject->GetCollider());
 					if (hit.gameObject != nullptr && !hit.gameObject->GetCollider()->GetIsTrigger())
 					{
@@ -267,3 +268,4 @@ void GameObjectManager::GameObjectManagerUpdate(double dt)
 		}
 	}
 }
+#pragma optimize("", on)
