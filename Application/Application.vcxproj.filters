@@ -103,6 +103,12 @@
     <ClCompile Include="Source\Test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source\SceneDrive.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ColliderObj.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -220,6 +226,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\Test.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneDrive.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ColliderObj.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

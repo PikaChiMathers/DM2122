@@ -8,7 +8,12 @@ Money::Money()
 	GetCollider()->SetIsTrigger(true);
 }
 
-void Money::OnTrigerEnter(GameObject*)
+Money::~Money()
+{
+	//Nothing.
+}
+
+void Money::OnTriggerEnter(GameObject*)
 {
 	IncreaseMoney(100);
 	score.setScore(0, getMoney());

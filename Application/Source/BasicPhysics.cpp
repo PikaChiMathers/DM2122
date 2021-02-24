@@ -60,7 +60,7 @@ void BasicPhysics::PhysicsUpdate(double dt)
 	if (velocity.Length() > 0)
 	{
 		float multiplier = 1.0f - drag * dt;
-		if (multiplier < 0) multiplier = 0;
+		if (multiplier < .001) multiplier = 0;
 		velocity *= multiplier;
 	}
 }

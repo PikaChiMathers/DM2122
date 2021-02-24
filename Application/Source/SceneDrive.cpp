@@ -1,5 +1,5 @@
 #define LSPEED 10.f
-#include "SceneTester.h"
+#include "SceneDrive.h"
 #include "GL\glew.h"
 
 #include "shader.hpp"
@@ -12,38 +12,24 @@
 #include "Application.h"
 
 
-SceneTester::SceneTester() : person(Vector3(0, 0, 0))
+SceneDrive::SceneDrive()
 {
 }
 
-SceneTester::~SceneTester()
+SceneDrive::~SceneDrive()
 {
 }
 
 
-void SceneTester::Init() 
+void SceneDrive::Init() 
 {
 	camera.Init(Vector3(40, 30, 30), Vector3(0, 0, 0), Vector3(0, 1, 0));
 
 	map.Set(Maps::SKYBOX_TYPE::SB_DAY);
 
-	dialogue = new Dialogue("Dialogue//D1.txt", Dialogue::DIALOGUE);
-
-	manager.CreateGameObject(&gameObject);
-	manager.CreateGameObject(&box);
-	manager.CreateGameObject(&coin);
-	//manager.CreateGameObject(&passport);
-	manager.CreateGameObject(&goose);
-	manager.CreateGameObject(&test);
-
-	test.SetPosition(Position(10, 0, -10));
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
-
-	rotateAngle = 0;
-
-	coin_collect = false;
 
 	//Set background color to dark blue (Step 3a)
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
@@ -68,7 +54,6 @@ void SceneTester::Init()
 	yellow.Set(1, 1, 0);
 	cyan.Set(0, 1, 1);
 	magenta.Set(1, 0, 1);
-
 
 	moonshade.Set(0.93f, 0.93f, 0.88f);
 
@@ -170,7 +155,6 @@ void SceneTester::Init()
 
 	glUseProgram(m_programID);
 	
-
 	lights[0].type = Light::LIGHT_POINT;
 	lights[0].position.Set(0, 20, 0);
 	lights[0].color.Set(1, 1, 1);
@@ -195,7 +179,6 @@ void SceneTester::Init()
 	lights[1].exponent = 3.f;
 	lights[1].spotDirection.Set(0.f, 0.5f, 0.f);
 
-
 	glUniform1i(m_parameters[U_NUMLIGHTS], 1);
 	glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
 	glUniform3fv(m_parameters[U_LIGHT0_COLOR], 1, &lights[0].color.r);
@@ -207,9 +190,6 @@ void SceneTester::Init()
 	glUniform1f(m_parameters[U_LIGHT0_COSINNER], lights[0].cosInner);
 	glUniform1f(m_parameters[U_LIGHT0_EXPONENT], lights[0].exponent);
 
-
-
-	
 	glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
 	glUniform3fv(m_parameters[U_LIGHT1_COLOR], 1, &lights[1].color.r);
 	glUniform1f(m_parameters[U_LIGHT1_POWER], lights[1].power);
@@ -223,31 +203,14 @@ void SceneTester::Init()
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 
-	box.AddCollider();
-	//box.GetCollider()->AddPhysics();
-	gameObject.SetPosition(Position(10, 0, 5));
-	box.SetPosition(Position(10, 0, 10));
-	box.SetScale(Scale(2, 1, 1));
-	//box.GetCollider()->SetIsTrigger(true);
-	//coin.AddCollider();
-	//coin.GetCollider()->SetIsTrigger(true);
-	passport.AddCollider();
-	passport.SetPosition(Position(10, 0, 0));
 }
 
-void SceneTester::Update(double dt)
+void SceneDrive::Update(double dt)
 {
 	manager.GameObjectManagerUpdate(dt);
 	camera.Update(dt);
 
-	person.Update(dt);
-
 	fps = 1.0f / dt;
-
-	rotateAngle += (float)( 50 * dt);
-	translateX += (float)(translateXDir * 10 * dt);
-	translateY += (float)(translateYDir * 50 * dt);
-	scaleAll += (float)(scaleDir * 2 * dt);
 
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
@@ -257,23 +220,6 @@ void SceneTester::Update(double dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //default fill mode
 	if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
-
-	//if (Application::IsKeyPressed('I'))
-	//	lights[0].position.z -= (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('K'))
-	//	lights[0].position.z += (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('J'))
-	//	lights[0].position.x -= (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('L'))
-	//	lights[0].position.x += (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('O'))
-	//	lights[0].position.y -= (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('U'))
-	//	lights[0].position.y += (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('T'))
-	//	lights[0].isOn = false;
-	//if (Application::IsKeyPressed('Y'))
-	//	lights[0].isOn = true;
 
 	//for testing purposes
 	if (Application::IsKeyPressed('V'))
@@ -298,48 +244,6 @@ void SceneTester::Update(double dt)
 		meshList[GEO_BOTTOM]->textureID = LoadTGA((map.skybox_loc[5]).std::string::c_str());
 
 		scene_change = false;
-	}
-		//Mouse Inputs
-	static bool bLButtonState = false;
-	if (!bLButtonState && Application::IsMousePressed(0))
-	{
-		bLButtonState = true;
-		std::cout << "LBUTTON DOWN" << std::endl;
-	}
-	else if (bLButtonState && !Application::IsMousePressed(0))
-	{
-		bLButtonState = false;
-		//Converting Viewport space to UI space
-		double x, y;
-		Application::GetCursorPos(&x, &y);
-		int w = Application::GetWindowWidth();
-		int h = Application::GetWindowHeight();
-		float posX = x/10; //convert (0,800) to (0,80)
-		float posY = 60 - (y/10); //convert (600,0) to (0,60)
-		std::cout << "posX:" << posX << " , posY:" << posY <<
-			std::endl;
-		if (posX > 20 && posX < 60 && posY >
-			45 && posY < 15)
-		{
-			std::cout << "Hit!" << std::endl;
-			//trigger user action or function
-		}
-		else
-		{
-			std::cout << "Miss!" << std::endl;
-		}
-		std::cout << "LBUTTON UP" << std::endl;
-	}
-	static bool bRButtonState = false;
-	if (!bRButtonState && Application::IsMousePressed(1))
-	{
-		bRButtonState = true;
-		std::cout << "RBUTTON DOWN" << std::endl;
-	}
-	else if (bRButtonState && !Application::IsMousePressed(1))
-	{
-		bRButtonState = false;
-		std::cout << "RBUTTON UP" << std::endl;
 	}
 
 	if (Application::IsKeyPressed('5'))
@@ -383,35 +287,14 @@ void SceneTester::Update(double dt)
 		lights[1].type = Light::LIGHT_MULTIPLE;
 		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
 	}
-
-	if (Application::IsKeyPressed(VK_SPACE))
-		if (dialogue->getCurrentLine() < dialogue->getTotalLines())
-			std::cout << dialogue->Update() << std::endl;
-
-
-
-	
-
-	
-
-	//	money.IncreaseMoney(100);
-	//	coin.SetPositionY(-10);
-	//score.setScore(0, money.getMoney());
 }
 
-void SceneTester::Render() //My Own Pattern
+void SceneDrive::Render() //My Own Pattern
 {
 	// Render VBO here
 
 	//Clear color & depth buffer every frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	/*Mtx44 translate, rotate, scale;
-	Mtx44 model;
-	Mtx44 model2;*/
-	//Mtx44 view;
-	//Mtx44 projection;
-	//Mtx44 MVP;
-
 	viewStack.LoadIdentity();
 	viewStack.LookAt(camera.position.x, camera.position.y,
 		camera.position.z, camera.target.x, camera.target.y,
@@ -461,93 +344,29 @@ void SceneTester::Render() //My Own Pattern
 
 	RenderMesh(meshList[GEO_AXES], false);
 
-	//RenderMesh(meshList[GEO_TEST], lights[0].isOn);
+	RenderMesh(meshList[GEO_TEST], lights[0].isOn);
 
 	modelStack.PushMatrix();
-	modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
-	RenderMesh(meshList[GEO_LIGHTBALL], false);
-	modelStack.PopMatrix();
+		modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
+		RenderMesh(meshList[GEO_LIGHTBALL], false);
+		modelStack.PopMatrix();
 	RenderSkybox();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(0, -.1f, 0);
-	modelStack.Rotate(90, 1, 0, 0);
-	modelStack.Scale(200, 200, 200);
-	RenderMesh(meshList[GEO_QUAD], lights[0].isOn);
-	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 		modelStack.Translate(gameObject.GetPositionX(), gameObject.GetPositionY(), gameObject.GetPositionZ());
 		modelStack.Rotate(gameObject.GetRotateX(), 1, 0, 0);
 		modelStack.Rotate(gameObject.GetRotateY(), 0, 1, 0);
 		modelStack.Rotate(gameObject.GetRotateZ(), 0, 0, 1);
-		modelStack.PushMatrix();
-			modelStack.Rotate(180, 0, 1, 0);
-			modelStack.Scale(.01f, .01f, .01f);
-			RenderMesh(meshList[GEO_TEST], false);
-		modelStack.PopMatrix();
 		modelStack.Scale(gameObject.GetScaleX(), gameObject.GetScaleY(), gameObject.GetScaleZ());
 		RenderMesh(meshList[GEO_CUBE], false);
 	modelStack.PopMatrix();
 
-	modelStack.PushMatrix();
-		modelStack.Translate(test.GetPositionX(), test.GetPositionY(), test.GetPositionZ());
-		modelStack.Rotate(test.GetRotateX(), 1, 0, 0);
-		modelStack.Rotate(test.GetRotateY(), 0, 1, 0);
-		modelStack.Rotate(test.GetRotateZ(), 0, 0, 1);
-		modelStack.Scale(test.GetScaleX(), test.GetScaleY(), test.GetScaleZ());
-		RenderMesh(meshList[GEO_CUBE], false);
-	modelStack.PopMatrix();
-
-	if (coin_collect == false)
-	{
-		modelStack.PushMatrix();
-		modelStack.Translate(5, 0, 0);
-		RenderMesh(meshList[GEO_COIN], true);
-		modelStack.PopMatrix();
-	}
-
-	modelStack.PushMatrix();
-	RenderMesh(meshList[GEO_GOOSE], true);
-	modelStack.Scale(0.8, 0, 0);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(passport.GetPositionX(), passport.GetPositionY(), passport.GetPositionZ());
-	RenderMesh(meshList[GEO_PASSPORT], true);
-	modelStack.PopMatrix();
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(0, 0, 10);
-	//RenderMesh(meshList[GEO_MALL], true);
-	//modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(box.GetPositionX(), box.GetPositionY(), box.GetPositionZ());
-	modelStack.Scale(box.GetScaleX(), box.GetScaleY(), box.GetScaleZ());
-	RenderMesh(meshList[GEO_CUBE], false);
-	modelStack.PopMatrix();
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, Application::GetWindowHeight() * .1f);
 
-	if (manager.CheckCollision(gameObject.GetCollider()).gameObject != nullptr && !colEnter)
-	{
-		colEnter = true;
-		colCount++; 
-	}
-	if (colEnter && (manager.CheckCollision(gameObject.GetCollider()).gameObject == nullptr))
-	{ 
-		colEnter = false;
-	}
-	RenderTextOnScreen(meshList[GEO_TEXT], "Collide: " + std::to_string(colEnter), Color(0, 1, 0), 4, 0, 4);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Collide Count: " + std::to_string(colCount), Color(0, 1, 0), 4, 0, 0);
-	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(box.GetCollider()->GetPosition().x) + ", " + std::to_string(box.GetCollider()->GetPosition().y) + ", " + std::to_string(box.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 8);
-	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetCollider()->GetPosition().x) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().y) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 10);
-	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetFoward().x) + ", " + std::to_string(gameObject.GetFoward().y) + ", " + std::to_string(gameObject.GetFoward().z), Color(0, 1, 0), 2, 0, 12);
-	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetPhysics()->GetVelocity().x) + ", " + std::to_string(gameObject.GetPhysics()->GetVelocity().y) + ", " + std::to_string(gameObject.GetPhysics()->GetVelocity().z), Color(0, 1, 0), 2, 0, 14);
-
+	
 	std::ostringstream mn;
 	mn << "Money:" << money.getMoney();
 	RenderTextOnScreen(meshList[GEO_TEXT], mn.str(), Color(1, 1, 0), 3, 130, 84);
@@ -555,11 +374,9 @@ void SceneTester::Render() //My Own Pattern
 	std::ostringstream sc;
 	sc << "Score:" << score.getScore(0);
 	RenderTextOnScreen(meshList[GEO_TEXT], sc.str(), Color(1, 0, 0), 3, 130, 87);
-	RenderTextOnScreen(meshList[GEO_TEXT], "F1:Tester. F2:Trivia. F3:Search", Color(1, 0, 0), 3.5f, 0, 85);
-	RenderTextOnScreen(meshList[GEO_TEXT], "F4:Intro. F5: Shop F6: Drive", Color(1, 0, 0), 3.5f, 0, 82);
 }
 
-void SceneTester::Exit()
+void SceneDrive::Exit()
 {
 	// Cleanup VBO here
 
@@ -570,7 +387,7 @@ void SceneTester::Exit()
 
 }
 
-void SceneTester::RenderMesh(Mesh* mesh, bool enableLight)
+void SceneDrive::RenderMesh(Mesh* mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
 
@@ -615,7 +432,7 @@ void SceneTester::RenderMesh(Mesh* mesh, bool enableLight)
 	}
 }
 
-void SceneTester::RenderSkybox()
+void SceneDrive::RenderSkybox()
 {
 	modelStack.PushMatrix();
 	modelStack.Translate(499, 0, 0);
@@ -661,7 +478,7 @@ void SceneTester::RenderSkybox()
 	modelStack.PopMatrix();
 }
 
-void SceneTester::RenderText(Mesh* mesh, std::string text, Color color)
+void SceneDrive::RenderText(Mesh* mesh, std::string text, Color color)
 {
 	// Enable blending
 	glEnable(GL_BLEND);
@@ -692,7 +509,7 @@ void SceneTester::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneTester::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
+void SceneDrive::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
 	// Enable blending
 	glEnable(GL_BLEND);
@@ -737,7 +554,7 @@ void SceneTester::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, 
 	glEnable(GL_DEPTH_TEST);
 }
 
-void SceneTester::RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int sizey)
+void SceneDrive::RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int sizey)
 {
 	glDisable(GL_DEPTH_TEST);
 	Mtx44 ortho;
