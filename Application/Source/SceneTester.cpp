@@ -550,7 +550,8 @@ void SceneTester::Render() //My Own Pattern
 	std::ostringstream sc;
 	sc << "Score:" << score.getScore(0);
 	RenderTextOnScreen(meshList[GEO_TEXT], sc.str(), Color(1, 0, 0), 3, 130, 87);
-	RenderTextOnScreen(meshList[GEO_TEXT], "F1:SceneTester. F2:SceneShop.", Color(1, 0, 0), 4, 0, 85);
+	RenderTextOnScreen(meshList[GEO_TEXT], "F1:SceneTester. F2:SceneTrivia.", Color(1, 0, 0), 3.5f, 0, 85);
+	RenderTextOnScreen(meshList[GEO_TEXT], "F3:Search F4:Intro. F5: Shop", Color(1, 0, 0), 3.5f, 0, 82);
 }
 
 void SceneTester::Exit()

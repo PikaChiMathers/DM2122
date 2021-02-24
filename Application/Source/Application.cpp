@@ -142,7 +142,7 @@ void Application::Run()
 	Scene* scene3 = new SceneSearch();
 	Scene* scene4 = new SceneIntro();
 	Scene* scene5 = new SceneShop();
-	Scene* scene = scene5;
+	Scene* scene = scene1;
 	scene1->Init();
 	scene2->Init();
 	scene3->Init();
@@ -152,7 +152,12 @@ void Application::Run()
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
-	{
+	{ // stop removing this feature
+		if (IsKeyPressed(VK_F1)) scene = scene1;
+		if (IsKeyPressed(VK_F2)) scene = scene2;
+		if (IsKeyPressed(VK_F3)) scene = scene3;
+		if (IsKeyPressed(VK_F4)) scene = scene4;
+		if (IsKeyPressed(VK_F5)) scene = scene5;
 		scene->Update(m_timer.getElapsedTime());
 		scene->Render();
 		//Swap buffers
