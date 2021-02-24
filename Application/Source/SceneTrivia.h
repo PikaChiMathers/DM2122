@@ -130,16 +130,27 @@ public:
 		NUM_LIGHTS,
 	};
 
+	enum class ANS_TYPE //Keeps the different types of answers
+	{
+		Blank,
+		A,
+		B,
+		C
+	};
+
 
 private: //added (Step 2)
 	Camera3 camera;
 	Light lights[NUM_LIGHTS];
+	
 	Person person;
-	Money money;
 	Maps map;
 	Score score;
 
-	Dialogue* dialogue;
+	Dialogue* Qn;
+
+	int qn_num;
+	ANS_TYPE answer;
 
 	GameObjectManager OBJmanager;
 	Goose goose;

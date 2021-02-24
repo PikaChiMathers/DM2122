@@ -5,6 +5,7 @@ Bus::Bus()
 	acceleration = 50;
 	brakePower = 5;
 	grip = 1;
+	SetScale(Scale(1, 1, 1));
 	AddCollider();
 	AddPhysics();
 	GetPhysics()->SetMass(300);
