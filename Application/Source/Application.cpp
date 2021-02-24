@@ -141,11 +141,13 @@ void Application::Run()
 	Scene* scene2 = new SceneTrivia();
 	Scene* scene3 = new SceneSearch();
 	Scene* scene4 = new SceneIntro();
-	Scene* scene = scene1;
+	Scene* scene5 = new SceneShop();
+	Scene* scene = scene5;
 	scene1->Init();
 	scene2->Init();
 	scene3->Init();
 	scene4->Init();
+	scene5->Init();
 
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
@@ -165,6 +167,7 @@ void Application::Run()
 	scene2->Exit();
 	scene3->Exit();
 	scene4->Exit();
+	scene5->Exit();
 
 	delete scene;
 }
