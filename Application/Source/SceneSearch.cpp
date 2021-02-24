@@ -27,7 +27,7 @@ void SceneSearch::Init()
 
 	map.Set(Maps::SKYBOX_TYPE::SB_DAY);
 
-	dialogue = new Dialogue("Dialogue//D1.txt");
+	dialogue = new Dialogue("Dialogue//D1.txt", Dialogue::DIALOGUE);
 
 	manager.CreateGameObject(&gameObject);
 	manager.CreateGameObject(&box);

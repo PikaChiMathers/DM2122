@@ -30,7 +30,7 @@ void SceneIntro::Init()
 
 	//map.Set(Maps::MAP_TYPE::M_CITY, Maps::SKYBOX_TYPE::SB_DAY);
 
-	dialogue = new Dialogue("Dialogue//D1.txt");
+	dialogue = new Dialogue("Dialogue//D1.txt", Dialogue::DIALOGUE);
 
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
