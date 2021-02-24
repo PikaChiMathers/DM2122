@@ -25,6 +25,25 @@ void SceneTrivia::Init()
 {
 	camera.Init(Vector3(0, 9.2f, -23), Vector3(0, 9.15f, -22), Vector3(0, 1, 0.05f));
 
+	OBJmanager.CreateGameObject(&goose);
+
+	OBJmanager.CreateGameObject(&P_A);
+	OBJmanager.CreateGameObject(&P_B);
+	OBJmanager.CreateGameObject(&P_C);
+
+	OBJmanager.CreateGameObject(&T_A);
+	OBJmanager.CreateGameObject(&T_B);
+	OBJmanager.CreateGameObject(&T_C);
+
+	P_A.SetPosition(Position(5, 0, 0));
+	P_B.SetPosition(Position(0, 0, 0));
+	P_C.SetPosition(Position(-5, 0, 0));
+
+	T_A.SetPosition(Position(5, 0, 0));
+	T_B.SetPosition(Position(0, 0, 0));
+	T_C.SetPosition(Position(-5, 0, 0));
+
+
 	map.Set(Maps::SKYBOX_TYPE::SB_DAY);
 
 	dialogue = new Dialogue("Dialogue//D1.txt");
@@ -54,6 +73,8 @@ void SceneTrivia::Init()
 
 	x_value = y_value = z_value = 0;
 
+	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJMTL("Goose", "OBJ//goose.obj", "OBJ//goose.mtl");
+
 	meshList[GEO_PODIUM_A] = MeshBuilder::GenerateOBJ("A", "OBJ//podium.obj", Color(1, 0, 0));
 	meshList[GEO_PODIUM_B] = MeshBuilder::GenerateOBJ("B", "OBJ//podium.obj", Color(0, 1, 0));
 	meshList[GEO_PODIUM_C] = MeshBuilder::GenerateOBJ("C", "OBJ//podium.obj", Color(0, 0, 1));
@@ -65,19 +86,19 @@ void SceneTrivia::Init()
 	meshList[GEO_TV]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
 	meshList[GEO_TV]->material.kShininess = 1.f;
 
-
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1000, 1000, 1000);
 
 	meshList[GEO_LIGHTBALL] = MeshBuilder::GenerateSphere("lightball", lights[0].color, 30, 30, 1);
 
-	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", Color(0.41f, 0.13f, 0.55f), 1.f, 1.f);
-	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom", Color(0.41f, 0.13f, 0.55f), 1.f, 1.f);
-	meshList[GEO_BACK] = MeshBuilder::GenerateQuad("back", Color(0.41f, 0.13f, 0.55f), 1.f, 1.f);
-	meshList[GEO_TOP] = MeshBuilder::GenerateQuad("top", Color(0.41f, 0.13f, 0.55f), 1.f, 1.f);
-	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left", Color(0.41f, 0.13f, 0.55f), 1.f, 1.f);
-	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", Color(0.41f, 0.13f, 0.55f), 1.f, 1.f);
+	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", Color(.04f, .71f, 1), 1.f, 1.f);
+	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom", Color(.04f, .71f, 1), 1.f, 1.f);
+	meshList[GEO_BACK] = MeshBuilder::GenerateQuad("back", Color(.04f, .71f, 1), 1.f, 1.f);
+	meshList[GEO_TOP] = MeshBuilder::GenerateQuad("top", Color(.04f, .71f, 1), 1.f, 1.f);
+	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left", Color(.04f, .71f, 1), 1.f, 1.f);
+	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", Color(.04f, .71f, 1), 1.f, 1.f);
 
 	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("floor", Color(.39f, .39f, .39f), 1.f, 1.f);
+	meshList[GEO_QUAD]->textureID = LoadTGA("Image//carpet.tga");
 	meshList[GEO_QUAD]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
 	meshList[GEO_QUAD]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
 	meshList[GEO_QUAD]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
@@ -153,7 +174,7 @@ void SceneTrivia::Init()
 	lights[0].type = Light::LIGHT_POINT;
 	lights[0].position.Set(0, 20, 0);
 	lights[0].color.Set(1, 1, 1);
-	lights[0].power = 1;
+	lights[0].power = 5;
 	lights[0].kC = 1.f;
 	lights[0].kL = 0.01f;
 	lights[0].kQ = 0.001f;
@@ -205,11 +226,8 @@ void SceneTrivia::Init()
 
 void SceneTrivia::Update(double dt)
 {
-	manager.GameObjectManagerUpdate(dt);
-
 	person.Update(dt);
-
-	fps = 1.0f / dt;
+	OBJmanager.GameObjectManagerUpdate(dt);
 
 	if (Application::IsKeyPressed('I'))
 		z_value -= (float)(LSPEED * dt);
@@ -278,6 +296,9 @@ void SceneTrivia::Update(double dt)
 		lights[1].type = Light::LIGHT_MULTIPLE;
 		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
 	}
+
+	if (T_A.IsTriggered())
+		std::cout << "OK";
 }
 
 void SceneTrivia::Render() //My Own Pattern
@@ -340,8 +361,6 @@ void SceneTrivia::Render() //My Own Pattern
 	Mtx44 mvp = projectionStack.Top() * viewStack.Top() * modelStack.Top();
 	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &mvp.a[0]); //update the shader with new MVP
 
-	RenderMesh(meshList[GEO_AXES], false);
-
 	modelStack.PushMatrix();
 	modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
 	RenderMesh(meshList[GEO_LIGHTBALL], false);
@@ -363,9 +382,15 @@ void SceneTrivia::Render() //My Own Pattern
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(5, 0, 0);
+	modelStack.Translate(P_A.GetPositionX(), P_A.GetPositionY(), P_A.GetPositionZ());
 	modelStack.Scale(1, 1.5f, 1);
 	RenderMesh(meshList[GEO_PODIUM_A], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(T_A.GetPositionX(), T_A.GetPositionY(), T_A.GetPositionZ());
+	modelStack.Scale(T_A.GetScaleX(), T_A.GetScaleY(), T_A.GetScaleZ());
+	RenderMesh(meshList[GEO_CUBE], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -375,7 +400,7 @@ void SceneTrivia::Render() //My Own Pattern
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);
+	modelStack.Translate(P_B.GetPositionX(), P_B.GetPositionY(), P_B.GetPositionZ());
 	modelStack.Scale(1, 1.5f, 1);
 	RenderMesh(meshList[GEO_PODIUM_B], true);
 	modelStack.PopMatrix();
@@ -387,7 +412,7 @@ void SceneTrivia::Render() //My Own Pattern
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-5, 0, 0);
+	modelStack.Translate(P_C.GetPositionX(), P_C.GetPositionY(), P_C.GetPositionZ());
 	modelStack.Scale(1, 1.5f, 1);
 	RenderMesh(meshList[GEO_PODIUM_C], true);
 	modelStack.PopMatrix();
@@ -398,11 +423,14 @@ void SceneTrivia::Render() //My Own Pattern
 	RenderText(meshList[GEO_TEXT], "C", Color(1, 1, 1));
 	modelStack.PopMatrix();
 
-
-	std::ostringstream ss;
-	ss.precision(5);
-	ss << "FPS: " << fps;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, Application::GetWindowHeight() * .1f);
+	modelStack.PushMatrix();
+	modelStack.Translate(goose.GetPositionX(), goose.GetPositionY(), goose.GetPositionZ());
+	modelStack.Rotate(goose.GetRotateX(), 1, 0, 0);
+	modelStack.Rotate(goose.GetRotateY(), 0, 1, 0);
+	modelStack.Rotate(goose.GetRotateZ(), 0, 0, 1);
+	RenderMesh(meshList[GEO_GOOSE], true);
+	RenderMesh(meshList[GEO_CUBE], false);
+	modelStack.PopMatrix();
 
 }
 
@@ -468,41 +496,41 @@ void SceneTrivia::RenderSkybox()
 	modelStack.Translate(24, 0, 0);
 	modelStack.Rotate(-90, 0, 1, 0);
 	modelStack.Scale(50, 50, 50);
-	RenderMesh(meshList[GEO_FRONT], false);
+	RenderMesh(meshList[GEO_FRONT], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(-24, 0, 0);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(50, 50, 50);
-	RenderMesh(meshList[GEO_BACK], false);
+	RenderMesh(meshList[GEO_BACK], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0, 24);
 	modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Scale(50, 50, 50);
-	RenderMesh(meshList[GEO_LEFT], false);
+	RenderMesh(meshList[GEO_LEFT], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0, -24);
 	modelStack.Scale(50, 50, 50);
-	RenderMesh(meshList[GEO_RIGHT], false);
+	RenderMesh(meshList[GEO_RIGHT], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(0, -24, 0);
 	modelStack.Rotate(90, 1, 0, 0);
 	modelStack.Scale(50, 50, 50);
-	RenderMesh(meshList[GEO_BOTTOM], false);
+	RenderMesh(meshList[GEO_BOTTOM], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 24, 0);
 	modelStack.Rotate(-90, 1, 0, 0);
 	modelStack.Scale(50, 50, 50);
-	RenderMesh(meshList[GEO_TOP], false);
+	RenderMesh(meshList[GEO_TOP], true);
 	modelStack.PopMatrix();
 }
 

@@ -107,9 +107,3 @@ void Camera3::Reset()
     target = defaultTarget;
     up = defaultUp;
 }
-
-void Camera3::setBoundary(Vector3 pos_bound, Vector3 neg_bound)
-{
-	this->pos_bound = pos_bound;
-	this->neg_bound = neg_bound;
-}

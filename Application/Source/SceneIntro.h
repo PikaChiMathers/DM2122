@@ -1,12 +1,13 @@
-#ifndef SCENE_TEST
-#define SCENE_TEST
+#ifndef SCENE_INTRO
+#define SCENE_INTRO
 
 #include "Scene.h"
-#include "Camera4.h"
+#include "Camera3.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Vertex.h"
 #include "Light.h"
+#include "Sound.h"
 
 #include "GameObject.h"
 #include "Maps.h"
@@ -45,6 +46,10 @@ public:
 
 	int colCount = 0;
 	bool colEnter = false;
+
+	int honk_count;
+	bool honkerdonker = false;
+	Sound sound;
 
 
 	enum GEOMETRY_TYPE //added (Step 1)
@@ -129,7 +134,7 @@ public:
 
 
 private: //added (Step 2)
-	Camera4 camera;
+	Camera3 camera;
 	Light lights[NUM_LIGHTS];
 	Maps map;
 

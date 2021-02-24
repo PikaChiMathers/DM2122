@@ -16,6 +16,7 @@
 #include "SceneTester.h"
 #include "SceneTrivia.h"
 #include "SceneSearch.h"
+#include "SceneIntro.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
@@ -135,8 +136,17 @@ void Application::Run()
 	//Main Loop
 	/*Scene *scene = new Assignment2();*/
 
-	Scene* scene = new SceneTester();
-	scene->Init();
+
+	Scene* scene1 = new SceneTester();
+	Scene* scene2 = new SceneShop();
+	Scene* scene3 = new SceneSearch();
+	Scene* scene4 = new SceneIntro();
+	Scene* scene = scene3;
+	scene1->Init();
+	scene2->Init();
+	scene3->Init();
+	scene4->Init();
+
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
@@ -150,7 +160,12 @@ void Application::Run()
         m_timer.waitUntil(frameTime);       // Frame rate limiter. Limits each frame to a specified time in ms.   
 
 	} //Check if the ESC key had been pressed or if the window had been closed
-	scene->Exit();
+
+	scene1->Exit();
+	scene2->Exit();
+	scene3->Exit();
+	scene4->Exit();
+
 	delete scene;
 }
 

@@ -10,12 +10,14 @@
 #include "Light.h"
 
 #include "GameObjectManager.h"
+#include "TriggerCollider.h"
 #include "Bus.h"
 #include "Person.h"
 #include "Money.h"
 #include "Maps.h"
 #include "Score.h"
 #include "Objects.h"
+#include "Goose.h"
 
 #include "Dialogue.h"
 
@@ -35,8 +37,6 @@ public:
 	float rotateAngle;
 	float translateX, translateY;
 	float scaleAll;
-
-	float fps;
 
 	float x_value, y_value, z_value;
 
@@ -142,13 +142,10 @@ private: //added (Step 2)
 
 	Dialogue* dialogue;
 
-	GameObjectManager manager;
-	//GameObject gameObject;
-	Bus gameObject;
-	GameObject box;
-	GameObject coin;
-	GameObject passport;
-	GameObject goose;
+	GameObjectManager OBJmanager;
+	Goose goose;
+	Objects P_A, P_B, P_C; //Podium A, B & C
+	TriggerCollider T_A, T_B, T_C;//Trigger A, B & C
 
 	unsigned m_vertexArrayID;
 	/*unsigned m_vertexBuffer[NUM_GEOMETRY];

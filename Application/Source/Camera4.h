@@ -14,7 +14,8 @@ public:
 	Vector3 defaultTarget;
 	Vector3 defaultUp;
 
-	Vector3 tempTarget;
+	Vector3 lowerBound;
+	Vector3 upperBound;
 
 	Camera4();
 	~Camera4();
@@ -22,7 +23,7 @@ public:
 	virtual void Update(double dt);
 	virtual void Reset();
 
-	void changeTarget();
+	void setBound(Vector3 botPosition, Vector3 topPosition);
 };
 
 #endif
