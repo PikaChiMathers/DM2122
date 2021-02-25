@@ -9,7 +9,6 @@ class Money : public GameObject
 {
 private:
 	int money;
-	GameObject* coins;
 	Score score;
 
 public:
