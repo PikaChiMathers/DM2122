@@ -62,18 +62,25 @@ std::string Dialogue::Update()
 		std::string line;
 		std::getline(file, line);
 
-		for (int i = 0; i < 3; ++i)
+		if (currentLine == 0)
 		{
-			std::string choice;
-			std::getline(file, choice);
-			this->choice[i] = choice;
+			++currentLine;
 		}
+		else
+		{
+			for (int i = 0; i < 3; ++i)
+			{
+				std::string choice;
+				std::getline(file, choice);
+				this->choice[i] = choice;
+			}
 
-		char buf[50];
-		file.getline(buf, 50);
-		answer = std::string(buf + 4);
+			char buf[50];
+			file.getline(buf, 50);
+			answer = std::string(buf + 4);
 
-		currentLine += 5;
+			currentLine += 5;
+		}
 
 		return line;
 	}
