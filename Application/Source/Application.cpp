@@ -134,35 +134,28 @@ void Application::Init()
 
 void Application::Run()
 {
-	//Main Loop
-	/*Scene *scene = new Assignment2();*/
-
-
-	Scene* scene1 = new SceneTester();
-	Scene* scene2 = new SceneTrivia();
-	Scene* scene3 = new SceneSearch();
-	Scene* scene4 = new SceneIntro();
-	Scene* scene5 = new SceneShop();
-	Scene* scene6 = new SceneDrive();
-	Scene* scene = scene1;
-	scene1->Init();
-	scene2->Init();
-	scene3->Init();
-	scene4->Init();
-	scene5->Init();
-	scene6->Init();
+	Scene* scene_ptr = new SceneIntro();
+	scene_ptr->Init();
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
 	{ // stop removing this feature
-		if (IsKeyPressed(VK_F1)) scene = scene1;
-		if (IsKeyPressed(VK_F2)) scene = scene2;
-		if (IsKeyPressed(VK_F3)) scene = scene3;
-		if (IsKeyPressed(VK_F4)) scene = scene4;
-		if (IsKeyPressed(VK_F5)) scene = scene5;
-		if (IsKeyPressed(VK_F6)) scene = scene6;
-		scene->Update(m_timer.getElapsedTime());
-		scene->Render();
+		if (IsKeyPressed(VK_F1) || IsKeyPressed(VK_F2) || IsKeyPressed(VK_F3) || IsKeyPressed(VK_F4) || IsKeyPressed(VK_F5) || IsKeyPressed(VK_F6))
+		{
+			scene_ptr->Exit();
+			delete scene_ptr;
+
+			if (IsKeyPressed(VK_F1)) scene_ptr = new SceneTester();
+			if (IsKeyPressed(VK_F2)) scene_ptr = new SceneIntro();
+			if (IsKeyPressed(VK_F3)) scene_ptr = new SceneDrive();
+			if (IsKeyPressed(VK_F4)) scene_ptr = new SceneTrivia();
+			if (IsKeyPressed(VK_F5)) scene_ptr = new SceneSearch();
+			if (IsKeyPressed(VK_F6)) scene_ptr = new SceneShop();
+
+			scene_ptr->Init();
+		}
+		scene_ptr->Update(m_timer.getElapsedTime());
+		scene_ptr->Render();
 		//Swap buffers
 		glfwSwapBuffers(m_window);
 		//Get and organize events, like keyboard and mouse input, window resizing, etc...
@@ -171,14 +164,8 @@ void Application::Run()
 
 	} //Check if the ESC key had been pressed or if the window had been closed
 
-	scene1->Exit();
-	scene2->Exit();
-	scene3->Exit();
-	scene4->Exit();
-	scene5->Exit();
-	scene6->Exit();
-
-	delete scene;
+	scene_ptr->Exit();
+	delete scene_ptr;
 }
 
 void Application::Exit()

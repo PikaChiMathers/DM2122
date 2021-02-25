@@ -81,15 +81,15 @@ std::string Dialogue::Update()
 
 std::string Dialogue::getChoice1()
 {
-	return choice[1];
+	return choice[0];
 }
 
 std::string Dialogue::getChoice2()
 {
-	return choice[2];
+	return choice[1];
 }
 
 std::string Dialogue::getChoice3()
 {
-	return choice[3];
+	return choice[2];
 }

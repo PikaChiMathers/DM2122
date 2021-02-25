@@ -43,13 +43,15 @@ void SceneTrivia::Init()
 	T_B.SetPosition(Position(0, 0, 0));
 	T_C.SetPosition(Position(-5, 0, 0));
 
+	goose.SetRotateY(180);
+	goose.SetPosition(Position(0, 0, -5));
 
 	map.Set(Maps::SKYBOX_TYPE::SB_DAY);
 
 	is_correct = false;
-	qn_num = 0;
+	press_time = qn_num = score = 0;
 	Qn = new Dialogue("Dialogue//Trivia.txt", Dialogue::TRIVIA);
-	Qn_Choices = "";
+	Qn_str = "";
 
 	answer = ANS_TYPE::Blank;
 
@@ -255,25 +257,41 @@ void SceneTrivia::Update(double dt)
 
 	if (Application::IsKeyPressed(VK_SPACE))
 	{
-		if ((goose.GetPosition().x >= P_A.GetPosition().x - 2) && (goose.GetPosition().x <= P_A.GetPosition().x + 2) &&
-			(goose.GetPosition().y >= P_A.GetPosition().y - 2) && (goose.GetPosition().y <= P_A.GetPosition().y + 2) &&
-			(goose.GetPosition().z >= P_A.GetPosition().z - 2) && (goose.GetPosition().z <= P_A.GetPosition().z + 2))
+		press_time++;
+		if (press_time == 1) // To ensure thaat the Spacebar is only pressed once
 		{
-			answer = ANS_TYPE::A;
-		}
-		else if ((goose.GetPosition().x >= P_B.GetPosition().x - 2) && (goose.GetPosition().x <= P_B.GetPosition().x + 2) &&
-				 (goose.GetPosition().y >= P_B.GetPosition().y - 2) && (goose.GetPosition().y <= P_B.GetPosition().y + 2) &&
-				 (goose.GetPosition().z >= P_B.GetPosition().z - 2) && (goose.GetPosition().z <= P_B.GetPosition().z + 2))
-		{
-			answer = ANS_TYPE::B;
-		}
-		else if ((goose.GetPosition().x >= P_C.GetPosition().x - 2) && (goose.GetPosition().x <= P_C.GetPosition().x + 2) &&
-				 (goose.GetPosition().y >= P_C.GetPosition().y - 2) && (goose.GetPosition().y <= P_C.GetPosition().y + 2) &&
-				 (goose.GetPosition().z >= P_C.GetPosition().z - 2) && (goose.GetPosition().z <= P_C.GetPosition().z + 2))
-		{
-			answer = ANS_TYPE::C;
+			
+			if ((goose.GetPosition().x >= P_A.GetPosition().x - 2) && (goose.GetPosition().x <= P_A.GetPosition().x + 2) &&
+				(goose.GetPosition().y >= P_A.GetPosition().y - 2) && (goose.GetPosition().y <= P_A.GetPosition().y + 2) &&
+				(goose.GetPosition().z >= P_A.GetPosition().z - 2) && (goose.GetPosition().z <= P_A.GetPosition().z + 2))
+			{
+				answer = ANS_TYPE::A;
+			}
+			else if ((goose.GetPosition().x >= P_B.GetPosition().x - 2) && (goose.GetPosition().x <= P_B.GetPosition().x + 2) &&
+				(goose.GetPosition().y >= P_B.GetPosition().y - 2) && (goose.GetPosition().y <= P_B.GetPosition().y + 2) &&
+				(goose.GetPosition().z >= P_B.GetPosition().z - 2) && (goose.GetPosition().z <= P_B.GetPosition().z + 2))
+			{
+				answer = ANS_TYPE::B;
+			}
+			else if ((goose.GetPosition().x >= P_C.GetPosition().x - 2) && (goose.GetPosition().x <= P_C.GetPosition().x + 2) &&
+				(goose.GetPosition().y >= P_C.GetPosition().y - 2) && (goose.GetPosition().y <= P_C.GetPosition().y + 2) &&
+				(goose.GetPosition().z >= P_C.GetPosition().z - 2) && (goose.GetPosition().z <= P_C.GetPosition().z + 2))
+			{
+				answer = ANS_TYPE::C;
+			}
+			else
+			{
+				if (qn_num == 0)
+				{
+					qn_num++;
+					Qn_str = Qn->Update();
+				}
+			}
+
+			if (answer != ANS_TYPE::Blank) Check_Answer();
 		}
 	}
+	else press_time = 0;
 }
 
 void SceneTrivia::Render() //My Own Pattern
@@ -380,6 +398,25 @@ void SceneTrivia::Render() //My Own Pattern
 	RenderText(meshList[GEO_TEXT], "C", Color(1, 1, 1));
 	modelStack.PopMatrix();
 
+
+	modelStack.PushMatrix();
+	modelStack.Rotate(180, 0, 1, 0);
+	if (qn_num == 0)
+	{
+		RenderTextOnScreen(meshList[GEO_TEXT], "Trivia", Color(0, 1, 0), 10, 63, 67);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Use WASD to move to A, B or C", Color(0, 1, 0), 2.5f, 57, 59);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Spacebar to select & start", Color(0, 1, 0), 2.5f, 59, 52);
+	}
+	else 
+	{
+		RenderTextOnScreen(meshList[GEO_TEXT], Qn_str, Color(0, 1, 0), 5, x_value, y_value);
+		//RenderTextOnScreen(meshList[GEO_TEXT], ("A:" + Qn->getChoice1()), Color(0, 1, 0), 2.5f, 45, 64);
+		//RenderTextOnScreen(meshList[GEO_TEXT], ("B:" + Qn->getChoice2()), Color(0, 1, 0), 2.5f, 45, 64);
+		//RenderTextOnScreen(meshList[GEO_TEXT], ("C:" + Qn->getChoice3()), Color(0, 1, 0), 2.5f, 45, 64);
+
+	}
+	modelStack.PopMatrix();
+
 	modelStack.PushMatrix();
 	modelStack.Translate(-17, 13.4f, 23.3f);
 	modelStack.Rotate(180, 1, 0, 0);
@@ -407,8 +444,6 @@ void SceneTrivia::Exit()
 {
 	// Cleanup VBO here
 
-	delete Qn;
-
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 
 	//Step 6c
@@ -416,9 +451,12 @@ void SceneTrivia::Exit()
 
 }
 
-bool SceneTrivia::Check_Answer()
+void SceneTrivia::Check_Answer()
 {
 	is_correct = false;
+
+	goose.SetRotateY(180);
+	goose.SetPosition(Position(0, 0, -5));
 
 	switch (qn_num)
 	{
@@ -433,8 +471,11 @@ bool SceneTrivia::Check_Answer()
 	default:
 		break;
 	}
+
 	answer = ANS_TYPE::Blank;
-	return is_correct;
+	Qn_str = Qn->Update();
+	if (is_correct)
+		score++;
 }
 
 void SceneTrivia::RenderMesh(Mesh* mesh, bool enableLight)
@@ -546,7 +587,7 @@ void SceneTrivia::RenderText(Mesh* mesh, std::string text, Color color)
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(i * 1.0f, 0, 0); //1.0f is the spacing of each character, you may change this value
+		characterSpacing.SetToTranslation(i * 0.7f, 0, 0); //1.0f is the spacing of each character, you may change this value
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 
@@ -588,7 +629,7 @@ void SceneTrivia::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, 
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(0.5f + i * 1.0f, 0.5f, 0);
+		characterSpacing.SetToTranslation(i * .7f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 

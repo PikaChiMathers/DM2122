@@ -1,4 +1,12 @@
-Q1: What is this question about I dont know do you know?
-A : This
-B : That
-C : Them
+Q1:What is the term for a group of geese in the air?
+Gander
+Gaggle
+Skein
+Q2:Geese are ______
+Herbivores
+Carnivores
+Omnivores
+Q3:What did the duck say to the man running a stand?
+Got any Lemonade?
+Got any grapes?
+He Quacked
