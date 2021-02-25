@@ -191,7 +191,6 @@ void GameObjectManager::GameObjectManagerUpdate(double dt)
 	{
 		if ((*it)->GetDelete())
 		{
-			delete (*it);
 			GameObjectList.erase(it);
 			continue;
 		}

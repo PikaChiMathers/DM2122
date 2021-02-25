@@ -20,7 +20,6 @@ SceneDrive::~SceneDrive()
 {
 }
 
-
 void SceneDrive::Init() 
 {
 	camera.Init(Vector3(40, 30, 30), Vector3(0, 0, 0), Vector3(0, 1, 0));
@@ -56,7 +55,7 @@ void SceneDrive::Init()
 
 	moonshade.Set(0.93f, 0.93f, 0.88f);
 
-	meshList[GEO_TEST] = MeshBuilder::GenerateOBJMTL("test", "OBJ//bus.obj", "OBJ//bus.mtl");
+	meshList[GEO_TEST] = MeshBuilder::GenerateOBJ("test", "OBJ//bus.obj", Color(1, 0, 0));
 
 	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("Rsphere", red, 30, 30, 1);
 	meshList[GEO_SPHERE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
@@ -392,7 +391,7 @@ void SceneDrive::Render() //My Own Pattern
 
 	RenderMesh(meshList[GEO_AXES], false);
 
-	//RenderMesh(meshList[GEO_TEST], lights[0].isOn);
+//RenderMesh(meshList[GEO_TEST], lights[0].isOn);
 
 	modelStack.PushMatrix();
 		modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
@@ -407,49 +406,50 @@ void SceneDrive::Render() //My Own Pattern
 	modelStack.PopMatrix();
 
 	std::vector<GameObject*>GOList = manager.GetGameObjectList();
-	for (int i = 0; i < GOList.size(); i++)
+	for (std::vector<GameObject*>::iterator it = GOList.begin(); it != GOList.end(); it++)
 	{
+		GameObject* gameObject = (*it);
 		modelStack.PushMatrix();
-			modelStack.Translate(GOList[i]->GetPositionX(), GOList[i]->GetPositionY(), GOList[i]->GetPositionZ());
-			modelStack.Rotate(GOList[i]->GetRotateX(), 1, 0, 0);
-			modelStack.Rotate(GOList[i]->GetRotateY(), 0, 1, 0);
-			modelStack.Rotate(GOList[i]->GetRotateZ(), 0, 0, 1);
+			modelStack.Translate(gameObject->GetPositionX(), gameObject->GetPositionY(), gameObject->GetPositionZ());
+			modelStack.Rotate(gameObject->GetRotateX(), 1, 0, 0);
+			modelStack.Rotate(gameObject->GetRotateY(), 0, 1, 0);
+			modelStack.Rotate(gameObject->GetRotateZ(), 0, 0, 1);
 			modelStack.PushMatrix();
-				if (GOList[i]->Type() == "Bus")
+				if (gameObject->Type() == "Bus")
 				{
 					modelStack.Rotate(180, 0, 1, 0);
 					modelStack.Scale(.01f, .01f, .01f);
 					RenderMesh(meshList[GEO_TEST], false);
 				}
-				else if (GOList[i]->Type() == "ColliderObj")
+				else if (gameObject->Type() == "ColliderObj")
 				{
 
 					modelStack.PushMatrix();
-						modelStack.Scale(GOList[i]->GetScaleX(), GOList[i]->GetScaleY(), GOList[i]->GetScaleZ());
+						modelStack.Scale(gameObject->GetScaleX(), gameObject->GetScaleY(), gameObject->GetScaleZ());
 						RenderMesh(meshList[GEO_CUBE], false);
 					modelStack.PopMatrix();
-					if (GOList[i]->GetTag() == "Type1")
+					if (gameObject->GetTag() == "Type1")
 					{
 						modelStack.PushMatrix();
 							modelStack.Translate(.85f, 0, .6f);
 							RenderMesh(meshList[GEO_BUILDING1], false);
 						modelStack.PopMatrix();
 					}
-					if (GOList[i]->GetTag() == "Type2")
+					if (gameObject->GetTag() == "Type2")
 					{
 						modelStack.PushMatrix();
 							modelStack.Translate(.85f, 0, .6f);
 							RenderMesh(meshList[GEO_BUILDING2], false);
 						modelStack.PopMatrix();
 					}
-					if (GOList[i]->GetTag() == "Type3")
+					if (gameObject->GetTag() == "Type3")
 					{
 						modelStack.PushMatrix();
 							modelStack.Translate(.85f, 0, .6f);
 							RenderMesh(meshList[GEO_BUILDING3], false);
 						modelStack.PopMatrix();
 					}
-					if (GOList[i]->GetTag() == "Type4")
+					if (gameObject->GetTag() == "Type4")
 					{
 						modelStack.PushMatrix();
 							modelStack.Translate(0, 0, 11.5f);
@@ -476,7 +476,7 @@ void SceneDrive::Render() //My Own Pattern
 							modelStack.PopMatrix();
 						modelStack.PopMatrix();
 					}
-					if (GOList[i]->GetTag() == "Type5")
+					if (gameObject->GetTag() == "Type5")
 					{
 						modelStack.PushMatrix();
 							modelStack.Translate(0, 0, 11.5f);
@@ -503,7 +503,7 @@ void SceneDrive::Render() //My Own Pattern
 							modelStack.PopMatrix();
 						modelStack.PopMatrix();
 					}
-					if (GOList[i]->GetTag() == "Type6")
+					if (gameObject->GetTag() == "Type6")
 					{
 						modelStack.PushMatrix();
 							modelStack.Translate(5.75, 0, 0);
@@ -522,7 +522,7 @@ void SceneDrive::Render() //My Own Pattern
 							modelStack.PopMatrix();
 						modelStack.PopMatrix();
 					}
-					if (GOList[i]->GetTag() == "Type7")
+					if (gameObject->GetTag() == "Type7")
 					{
 						modelStack.PushMatrix();
 							modelStack.Translate(5.75, 0, 0);
@@ -541,7 +541,7 @@ void SceneDrive::Render() //My Own Pattern
 							modelStack.PopMatrix();
 						modelStack.PopMatrix();
 					}
-					if (GOList[i]->GetTag() == "Type8")
+					if (gameObject->GetTag() == "Type8")
 					{
 						modelStack.PushMatrix();
 							modelStack.Translate(5.75, 0, 0);
@@ -562,7 +562,7 @@ void SceneDrive::Render() //My Own Pattern
 					}
 				}
 			modelStack.PopMatrix();
-			modelStack.Scale(GOList[i]->GetScaleX(), GOList[i]->GetScaleY(), GOList[i]->GetScaleZ());
+			modelStack.Scale(gameObject->GetScaleX(), gameObject->GetScaleY(), gameObject->GetScaleZ());
 			//RenderMesh(meshList[GEO_CUBE], false); // hitbox
 		modelStack.PopMatrix();
 	}
