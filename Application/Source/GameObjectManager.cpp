@@ -7,13 +7,22 @@ GameObjectManager::GameObjectManager()
 }
 GameObjectManager::~GameObjectManager()
 {
-
+	for (std::vector<GameObject*>::iterator it = GameObjectList.begin(); it != GameObjectList.end(); it++)
+	{
+		delete (*it);
+		GameObjectList.erase(it--);
+	}
 }
 //#pragma optimize ("", off)
 void GameObjectManager::CreateGameObject(GameObject* gameObject)
 {
 	GameObjectList.push_back(gameObject);
 	if (gameObject->GetCollider() != nullptr) ColliderList.push_back(gameObject);
+}
+
+std::vector<GameObject*> GameObjectManager::GetGameObjectList()
+{
+	return GameObjectList;
 }
 
 float GameObjectManager::SATcalculation(Vector3 axis, std::vector<Vector3> points1, std::vector<Vector3> points2)
@@ -175,7 +184,6 @@ std::vector<Collide> GameObjectManager::CheckCollisions(Collider refCol, Collide
 	}
 	return GameObjectsInCollider;
 }
-
 
 void GameObjectManager::GameObjectManagerUpdate(double dt)
 {

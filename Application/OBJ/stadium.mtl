@@ -1,0 +1,13 @@
+# Blender MTL File: 'None'
+# Material Count: 1
+
+newmtl 10093_Wembley_stadion_V1_Diffuse
+Ns 10.000002
+Ka 1.000000 1.000000 1.000000
+Kd 0.588200 0.588200 0.588200
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 1
+map_Kd C:\\Users\\amirr\\Downloads\\Wembley_stadion_V3_L3.123c03de6ad6-86e9-41ff-bff4-654781577365\\Wembley_stadion_V3_L3.123c03de6ad6-86e9-41ff-bff4-654781577365\\10093_Wembley_stadion_V1_Diffuse.jpg

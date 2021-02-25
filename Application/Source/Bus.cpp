@@ -35,13 +35,13 @@ void Bus::GameObjectUpdate(double dt)
 	}
 	if (Application::IsKeyPressed('F'))
 	{
-		if (GetPhysics()->GetVelocity().Dot(GetFoward()) > 0) rotation += 90 * dt;
-		else if (GetPhysics()->GetVelocity().Dot(GetFoward()) < 0) rotation -= 90 * dt;
+		if (GetPhysics()->GetVelocity().Dot(GetFoward()) > 8) rotation += 90 * dt;
+		else if (GetPhysics()->GetVelocity().Dot(GetFoward()) < -8) rotation -= 90 * dt;
 	}
 	if (Application::IsKeyPressed('H'))
 	{
-		if (GetPhysics()->GetVelocity().Dot(GetFoward()) > 0) rotation -= 90 * dt;
-		else if (GetPhysics()->GetVelocity().Dot(GetFoward()) < 0) rotation += 90 * dt;
+		if (GetPhysics()->GetVelocity().Dot(GetFoward()) > 8) rotation -= 90 * dt;
+		else if (GetPhysics()->GetVelocity().Dot(GetFoward()) < -8) rotation += 90 * dt;
 	}
 	if (Application::IsKeyPressed('X'))
 	{
