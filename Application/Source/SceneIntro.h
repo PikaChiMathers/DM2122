@@ -70,7 +70,8 @@ public:
 		GEO_BOTTOM,
 		GEO_FRONT,
 		GEO_BACK,
-
+		GEO_SPLASH,
+		GEO_ROOM,
 		GEO_TEXT,
 
 		GEO_TEST,

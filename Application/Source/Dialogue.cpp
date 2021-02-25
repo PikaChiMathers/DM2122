@@ -62,14 +62,25 @@ std::string Dialogue::Update()
 		std::string line;
 		std::getline(file, line);
 
-		for (int i = 0; i < 3; ++i)
+		if (currentLine == 0)
 		{
-			std::string choice;
-			std::getline(file, choice);
-			this->choice[i] = choice;
+			++currentLine;
 		}
+		else
+		{
+			for (int i = 0; i < 3; ++i)
+			{
+				std::string choice;
+				std::getline(file, choice);
+				this->choice[i] = choice;
+			}
 
-		currentLine += 4;
+			char buf[50];
+			file.getline(buf, 50);
+			answer = std::string(buf + 4);
+
+			currentLine += 5;
+		}
 
 		return line;
 	}
@@ -81,15 +92,38 @@ std::string Dialogue::Update()
 
 std::string Dialogue::getChoice1()
 {
-	return choice[0];
+	if (mode == TRIVIA)
+		return choice[0];
+	else
+	{
+		std::cout << "Not in dialogue mode" << std::endl;
+		return "";
+	}
 }
 
 std::string Dialogue::getChoice2()
 {
-	return choice[1];
+	if (mode == TRIVIA)
+		return choice[1];
+	else
+	{
+		std::cout << "Not in dialogue mode" << std::endl;
+		return "";
+	}
 }
 
 std::string Dialogue::getChoice3()
 {
-	return choice[2];
+	if (mode == TRIVIA)
+		return choice[2];
+	else
+	{
+		std::cout << "Not in dialogue mode" << std::endl;
+		return "";
+	}
+}
+
+std::string Dialogue::getAnswer()
+{
+	return answer;
 }
