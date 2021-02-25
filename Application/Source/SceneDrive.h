@@ -48,12 +48,20 @@ public:
 
 		GEO_QUAD,
 
+		GEO_TEMPLATE,
+
 		GEO_CUBE,
 
 		GEO_COIN,
 		GEO_PASSPORT,
 		GEO_GOOSE,
-		GEO_MALL,
+
+		GEO_BUILDING1,
+		GEO_BUILDING2,
+		GEO_BUILDING3,
+		GEO_BUILDING1B,
+		GEO_BUILDING2B,
+		GEO_BUILDING3B,
 
 		GEO_LIGHTBALL,
 		GEO_SPHERE,
@@ -138,6 +146,10 @@ private: //added (Step 2)
 	ColliderObj cluster2;
 	ColliderObj cluster3;
 	ColliderObj cluster4;
+	ColliderObj cluster5;
+	ColliderObj cluster6;
+	ColliderObj cluster7;
+	ColliderObj cluster8;
 
 	Money money;
 	Score score;

@@ -134,7 +134,7 @@ void Application::Init()
 
 void Application::Run()
 {
-	Scene* scene_ptr = new SceneIntro();
+	Scene* scene_ptr = new SceneDrive();
 	scene_ptr->Init();
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
