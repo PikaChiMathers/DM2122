@@ -35,23 +35,23 @@ void Camera4::Update(double dt)
 	if (Application::IsKeyPressed('W'))
 	{
 		Vector3 newPos = position + view * 0.3f * ZOOM_SPEED * dt;
-		if (InBoundCheck(newPos)) position = newPos;
+		if (InBoundCheckShop(newPos) && InBoundCheckBus(newPos)) position = newPos;
 	}
 	else if (Application::IsKeyPressed('S'))
 	{
 		Vector3 newPos = position - view * 0.3f * ZOOM_SPEED * dt;
-		if (InBoundCheck(newPos)) position = newPos;
+		if (InBoundCheckShop(newPos) && InBoundCheckBus(newPos)) position = newPos;
 	}
 
 	if (Application::IsKeyPressed('A'))
 	{
 		Vector3 newPos = position - right * 0.3f * CAMERA_SPEED * dt;
-		if (InBoundCheck(newPos)) position = newPos;
+		if (InBoundCheckShop(newPos) && InBoundCheckBus(newPos)) position = newPos;
 	}
 	else if (Application::IsKeyPressed('D'))
 	{
 		Vector3 newPos = position + right * 0.3f * CAMERA_SPEED * dt;
-		if (InBoundCheck(newPos)) position = newPos;
+		if (InBoundCheckShop(newPos) && InBoundCheckBus(newPos)) position = newPos;
 	}
 
 	position.y = defaultPosition.y;
@@ -104,13 +104,24 @@ void Camera4::Reset()
 	up = defaultUp;
 }
 
-bool Camera4::InBoundCheck(Vector3 pos)
+bool Camera4::InBoundCheckShop(Vector3 pos)
 {
-	return (pos.x > lowerBound.x && pos.x < upperBound.x&& pos.y > lowerBound.y && pos.y < upperBound.y&& pos.z > lowerBound.z && pos.z < upperBound.z);
+	return (pos.x > shopLowerBound.x && pos.x < shopUpperBound.x && pos.y > shopLowerBound.y && pos.y < shopUpperBound.y && pos.z > shopLowerBound.z && pos.z < shopUpperBound.z);
 }
 
-void Camera4::setBound(Vector3 botPosition, Vector3 topPosition)
+bool Camera4::InBoundCheckBus(Vector3 pos)
 {
-	lowerBound = botPosition;
-	upperBound = topPosition;
+	return !(pos.x > busLowerBound.x && pos.x < busUpperBound.x && pos.y > busLowerBound.y && pos.y < busUpperBound.y && pos.z > busLowerBound.z && pos.z < busUpperBound.z);
+}
+
+void Camera4::setShopBound(Vector3 botPosition, Vector3 topPosition)
+{
+	shopLowerBound = botPosition;
+	shopUpperBound = topPosition;
+}
+
+void Camera4::setBusBound(Vector3 botPosition, Vector3 topPosition)
+{
+	busLowerBound = botPosition;
+	busUpperBound = topPosition;
 }

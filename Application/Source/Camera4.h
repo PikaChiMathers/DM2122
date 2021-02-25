@@ -17,8 +17,10 @@ public:
 
 	float yaw, pitch;
 
-	Vector3 lowerBound;
-	Vector3 upperBound;
+	Vector3 shopLowerBound;
+	Vector3 shopUpperBound;
+	Vector3 busLowerBound;
+	Vector3 busUpperBound;
 
 	Camera4();
 	~Camera4();
@@ -26,8 +28,10 @@ public:
 	virtual void Update(double dt);
 	virtual void Reset();
 
-	bool InBoundCheck(Vector3 pos);
-	void setBound(Vector3 botPosition, Vector3 topPosition);
+	bool InBoundCheckShop(Vector3 pos);
+	bool InBoundCheckBus(Vector3 pos);
+	void setShopBound(Vector3 botPosition, Vector3 topPosition);
+	void setBusBound(Vector3 botPosition, Vector3 topPosition);
 };
 
 #endif
