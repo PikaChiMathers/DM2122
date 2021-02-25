@@ -127,12 +127,11 @@ private: //added (Step 2)
 	Light lights[NUM_LIGHTS];
 	
 	Maps map;
-	Score score;
 
 	Dialogue* Qn;
-	std::string Qn_Choices;
+	std::string Qn_str;
 
-	int qn_num;
+	int press_time, qn_num, score;
 	bool is_correct;
 	ANS_TYPE answer;
 
@@ -150,7 +149,7 @@ private: //added (Step 2)
 
 	MS modelStack, viewStack, projectionStack;
 
-	bool Check_Answer();
+	void Check_Answer();
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
 
