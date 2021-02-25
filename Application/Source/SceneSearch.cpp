@@ -477,6 +477,7 @@ void SceneSearch::Render() //My Own Pattern
 	RenderMesh(meshList[GEO_AXES], false);
 
 	modelStack.PushMatrix();
+	modelStack.Translate(-20,0,-20);
 	modelStack.Scale(0.2, 0.2, 0.2);
 	RenderMesh(meshList[GEO_TEST], lights[0].isOn);
 	modelStack.PopMatrix();

@@ -159,7 +159,7 @@ private: //added (Step 2)
 	GameObject passport;
 	GameObject goose;
 
-
+	Money coin1;
 
 	unsigned m_vertexArrayID;
 	/*unsigned m_vertexBuffer[NUM_GEOMETRY];

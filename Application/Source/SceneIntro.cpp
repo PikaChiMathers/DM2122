@@ -102,7 +102,7 @@ void SceneIntro::Init()
 	meshList[GEO_UI] = MeshBuilder::GenerateQuad("UI", Color(1, 1, 1), 1.f, 1.f);
 
 	meshList[GEO_SPLASH] = MeshBuilder::GenerateQuad("splash", blue, 1, 1);
-	//meshList[GEO_SPLASH]->textureID = LoadImage("Assets//start");
+	meshList[GEO_SPLASH]->textureID = LoadTGA("Assets//start.tga");
 
 	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("goose", "OBJ//goose.obj", Color(1, 1, 1));
 
@@ -580,43 +580,43 @@ void SceneIntro::RenderMesh(Mesh* mesh, bool enableLight)
 void SceneIntro::RenderSkybox()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(499, 500, 0);
+	modelStack.Translate(49, 50, 0);
 	modelStack.Rotate(-90, 0, 1, 0);
-	modelStack.Scale(1000, 1000, 1000);
+	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_FRONT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-499, 500, 0);
+	modelStack.Translate(-49, 50, 0);
 	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(1000, 1000, 1000);
+	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_BACK], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 500, 499);
+	modelStack.Translate(0, 50, 49);
 	modelStack.Rotate(180, 0, 1, 0);
-	modelStack.Scale(1000, 1000, 1000);
+	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_LEFT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 500, -499);
-	modelStack.Scale(1000, 1000, 1000);
+	modelStack.Translate(0, 50, -49);
+	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_RIGHT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0, 0);
 	modelStack.Rotate(-90, 1, 0, 0);
-	modelStack.Scale(1000, 1000, 1000);
+	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_BOTTOM], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 998, 0);
+	modelStack.Translate(0, 98, 0);
 	modelStack.Rotate(90, 1, 0, 0);
-	modelStack.Scale(1000, 1000, 1000);
+	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_TOP], false);
 	modelStack.PopMatrix();
 }
@@ -709,7 +709,6 @@ void SceneIntro::RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int siz
 	modelStack.PushMatrix();
 	modelStack.LoadIdentity();
 	modelStack.Translate(x, y, 0);
-	modelStack.Rotate(180, 1, 0, 0);
 	modelStack.Scale(sizex, sizey, 1);
 	RenderMesh(mesh, false); //UI should not have light
 	projectionStack.PopMatrix();
