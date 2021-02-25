@@ -11,6 +11,7 @@ struct Maps
         SB_DAY = 0,
         SB_NIGHT,
         SB_SHOP,
+        SB_INTRO,
         NUM_SKYBOX,
     };
     SKYBOX_TYPE skybox;
@@ -45,6 +46,9 @@ struct Maps
             break;
         case (SKYBOX_TYPE::SB_SHOP):
             location = "Skybox//Shop//";
+            break;
+        case (SKYBOX_TYPE::SB_INTRO):
+            location = "Skybox//Intro//";  
             break;
         default:
             break;
