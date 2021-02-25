@@ -17,6 +17,7 @@
 #include "Score.h"
 #include "Objects.h"
 #include "Goose.h"
+#include "Sound.h"
 
 #include "Dialogue.h"
 
@@ -113,29 +114,18 @@ public:
 		NUM_LIGHTS,
 	};
 
-	enum class ANS_TYPE //Keeps the different types of answers
-	{
-		Blank,
-		A,
-		B,
-		C
-	};
-
-
 private: //added (Step 2)
 	Camera3 camera;
 	Light lights[NUM_LIGHTS];
-	
-	Maps map;
+	Sound sound;
 
 	Dialogue* Qn;
 	std::string Qn_str;
 
 	int press_time, qn_num, score;
-	bool is_correct;
-	ANS_TYPE answer;
+	std::string answer;
 
-	GameObjectManager OBJmanager;
+	GameObjectManager manager;
 	Goose goose;
 	Objects P_A, P_B, P_C; //Podium A, B & C
 	TriggerCollider T_A, T_B, T_C;//Trigger A, B & C

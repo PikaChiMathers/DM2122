@@ -27,6 +27,7 @@ SceneIntro::~SceneIntro()
 void SceneIntro::Init()
 {
 	camera.Init(Vector3(40, 30, 30), Vector3(0, 0, 0), Vector3(0, 1, 0));
+	map.Set(Maps::SKYBOX_TYPE::SB_INTRO); 
 
 	//map.Set(Maps::MAP_TYPE::M_CITY, Maps::SKYBOX_TYPE::SB_DAY);
 
@@ -65,7 +66,6 @@ void SceneIntro::Init()
 
 	moonshade.Set(0.93f, 0.93f, 0.88f);
 
-	meshList[GEO_TEST] = MeshBuilder::GenerateOBJMTL("test", "OBJ//bus.obj", "OBJ//bus.mtl");
 
 	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("Rsphere", red, 30, 30, 1);
 	meshList[GEO_SPHERE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
@@ -95,11 +95,12 @@ void SceneIntro::Init()
 	meshList[GEO_CUBE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
 	meshList[GEO_CUBE]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
 	meshList[GEO_CUBE]->material.kShininess = 1.f;
-	meshList[GEO_CUBE]->textureID = LoadTGA("Image//muscle_capoo.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//trebuchet.tga");
 
+	meshList[GEO_SPLASH] = MeshBuilder::GenerateQuad("splash", blue, 1, 1);
+	//meshList[GEO_SPLASH]->textureID = LoadImage("Assets//start");
 
 	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("goose", "OBJ//goose.obj", Color(1, 1, 1));
 
@@ -478,8 +479,6 @@ void SceneIntro::Render() //My Own Pattern
 
 	RenderMesh(meshList[GEO_AXES], false);
 
-	RenderMesh(meshList[GEO_TEST], lights[0].isOn);
-
 	modelStack.PushMatrix();
 	modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
 	RenderMesh(meshList[GEO_LIGHTBALL], false);
@@ -493,48 +492,17 @@ void SceneIntro::Render() //My Own Pattern
 	RenderMesh(meshList[GEO_QUAD], lights[0].isOn);
 	modelStack.PopMatrix();
 
-
+	//modelStack.PushMatrix();
+	////modelStack.Scale(0.5, 0.5, 0.5);
+	//RenderMesh(meshList[GEO_ROOM], true);
+	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_GOOSE], true);
 	modelStack.Scale(0.8, 0, 0);
 	modelStack.PopMatrix();
 
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(0, 0, 10);
-	//RenderMesh(meshList[GEO_MALL], true);
-	//modelStack.PopMatrix();
-
-	/*std::ostringstream ss;
-	ss.precision(5);
-	ss << "FPS: " << fps;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, Application::GetWindowHeight() * .1f);
-
-	if (GameObject::CheckCollision(gameObject.GetCollider()) != nullptr && !colEnter)
-	{
-		colEnter = true;
-		colCount++;
-	}
-	if (colEnter && (GameObject::CheckCollision(gameObject.GetCollider()) == nullptr))
-	{
-		colEnter = false;
-	}
-	RenderTextOnScreen(meshList[GEO_TEXT], "Collide: " + std::to_string(colEnter), Color(0, 1, 0), 4, 0, 4);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Collide Count: " + std::to_string(colCount), Color(0, 1, 0), 4, 0, 0);
-	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(box.GetCollider()->GetPosition().x) + ", " + std::to_string(box.GetCollider()->GetPosition().y) + ", " + std::to_string(box.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 8);
-	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetCollider()->GetPosition().x) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().y) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 10);
-	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetFoward().x) + ", " + std::to_string(gameObject.GetFoward().y) + ", " + std::to_string(gameObject.GetFoward().z), Color(0, 1, 0), 2, 0, 12);
-	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetPhysics()->GetVelocity().x) + ", " + std::to_string(gameObject.GetPhysics()->GetVelocity().y) + ", " + std::to_string(gameObject.GetPhysics()->GetVelocity().z), Color(0, 1, 0), 2, 0, 14);
-
-	std::ostringstream mn;
-	mn << "Money:" << money.getMoney();
-	RenderTextOnScreen(meshList[GEO_TEXT], mn.str(), Color(1, 1, 0), 3, 130, 84);
-
-	std::ostringstream sc;
-	sc << "Score:" << score.getScore(0);
-	RenderTextOnScreen(meshList[GEO_TEXT], sc.str(), Color(1, 0, 0), 3, 130, 87);*/
-
+	RenderMeshOnScreen(meshList[GEO_SPLASH], 1, 1, 10, 10);
 }
 
 void SceneIntro::Exit()
@@ -596,41 +564,41 @@ void SceneIntro::RenderMesh(Mesh* mesh, bool enableLight)
 void SceneIntro::RenderSkybox()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(499, 0, 0);
+	modelStack.Translate(499, 500, 0);
 	modelStack.Rotate(-90, 0, 1, 0);
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_FRONT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-499, 0, 0);
+	modelStack.Translate(-499, 500, 0);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_BACK], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 499);
+	modelStack.Translate(0, 500, 499);
 	modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_LEFT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, -499);
+	modelStack.Translate(0, 500, -499);
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_RIGHT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, -499, 0);
+	modelStack.Translate(0, 0, 0);
 	modelStack.Rotate(-90, 1, 0, 0);
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_BOTTOM], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 499, 0);
+	modelStack.Translate(0, 999, 0);
 	modelStack.Rotate(90, 1, 0, 0);
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_TOP], false);
