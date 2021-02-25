@@ -233,6 +233,11 @@ void SceneTester::Init()
 	//coin.GetCollider()->SetIsTrigger(true);
 	passport.AddCollider();
 	passport.SetPosition(Position(10, 0, 0));
+
+	manager.CreateGameObject(&coin1);
+	coin1.SetPosition(Position(5, 0, 0));
+	coin1.SetTag("coin1");
+
 }
 
 void SceneTester::Update(double dt)

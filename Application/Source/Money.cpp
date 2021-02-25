@@ -17,6 +17,7 @@ void Money::OnTriggerEnter(GameObject*)
 	//Coin collected sound
 	IncreaseMoney(15);
 	score.setScore(0, getMoney());
+	Delete();
 }
 
 void Money::IncreaseMoney(int add)
