@@ -11,6 +11,7 @@
 
 #include "GameObjectManager.h"
 #include "Bus.h"
+#include "ColliderObj.h"
 #include "Test.h"
 #include "Person.h"
 #include "Money.h"
@@ -32,25 +33,13 @@ public:
 	virtual void Render();
 	virtual void Exit();
 
-	float rotateAngle;
-	float translateX, translateY;
-	float scaleAll;
-
 	float fps;
-
-	float x_value, y_value, z_value;
-
-	int translateXDir, translateYDir, rotateDir, scaleDir;
 
 	Color red, blue, green, pink, Lblue, purple, orange, yellow, cyan, magenta, moonshade;
 
 	bool scene_change;
-	bool coin_collect; // To stop rendering of coin after collected
 
 	int UI_height, UI_width;
-
-	int colCount = 0;
-	bool colEnter = false;
 
 
 	enum GEOMETRY_TYPE //added (Step 1)
@@ -145,11 +134,15 @@ private: //added (Step 2)
 	Maps map;
 
 	GameObjectManager manager;
+	ColliderObj cluster;
+	ColliderObj cluster2;
+	ColliderObj cluster3;
+	ColliderObj cluster4;
 
 	Money money;
 	Score score;
 
-	Bus gameObject;
+	Bus bus;
 
 	Light lights[NUM_LIGHTS];
 	unsigned m_vertexArrayID;

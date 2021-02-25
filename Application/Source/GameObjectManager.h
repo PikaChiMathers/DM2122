@@ -35,7 +35,8 @@ public:
 	GameObjectManager();
 	~GameObjectManager();
 	void CreateGameObject(GameObject* gameObject);
-	bool ListContains(GameObject* col);
+	std::vector<GameObject*> GetGameObjectList(); // list of gameObjects
+	bool ListContains(GameObject* col); // if GO is in collider list
 	void PushCollider(GameObject* col);
 	void EraseCollider(GameObject* col);
 	//returns first gameobject found that is within a collider box

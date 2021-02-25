@@ -43,7 +43,6 @@ void SceneDrive::Init()
 	UI_width = 160;
 	UI_height = 90;
 
-	x_value = y_value = z_value = 0;
 	red.Set(1, 0, 0);
 	green.Set(0, 1, 0);
 	blue.Set(0, 0, 1);
@@ -203,6 +202,20 @@ void SceneDrive::Init()
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 
+
+	manager.CreateGameObject(&bus);
+	cluster.SetPosition(Position(-20, 0, 20));
+	cluster.SetScale(Scale(20, 1, 20));
+	manager.CreateGameObject(&cluster);
+	cluster2.SetPosition(Position(-20, 0, -20));
+	cluster2.SetScale(Scale(20, 1, 20));
+	manager.CreateGameObject(&cluster2);
+	cluster3.SetPosition(Position(20, 0, 20));
+	cluster3.SetScale(Scale(20, 1, 20));
+	manager.CreateGameObject(&cluster3);
+	cluster4.SetPosition(Position(20, 0, -20));
+	cluster4.SetScale(Scale(20, 1, 20));
+	manager.CreateGameObject(&cluster4);
 }
 
 void SceneDrive::Update(double dt)
@@ -344,7 +357,7 @@ void SceneDrive::Render() //My Own Pattern
 
 	RenderMesh(meshList[GEO_AXES], false);
 
-	RenderMesh(meshList[GEO_TEST], lights[0].isOn);
+	//RenderMesh(meshList[GEO_TEST], lights[0].isOn);
 
 	modelStack.PushMatrix();
 		modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
@@ -352,14 +365,31 @@ void SceneDrive::Render() //My Own Pattern
 		modelStack.PopMatrix();
 	RenderSkybox();
 
-	modelStack.PushMatrix();
-		modelStack.Translate(gameObject.GetPositionX(), gameObject.GetPositionY(), gameObject.GetPositionZ());
-		modelStack.Rotate(gameObject.GetRotateX(), 1, 0, 0);
-		modelStack.Rotate(gameObject.GetRotateY(), 0, 1, 0);
-		modelStack.Rotate(gameObject.GetRotateZ(), 0, 0, 1);
-		modelStack.Scale(gameObject.GetScaleX(), gameObject.GetScaleY(), gameObject.GetScaleZ());
-		RenderMesh(meshList[GEO_CUBE], false);
-	modelStack.PopMatrix();
+	std::vector<GameObject*>GOList = manager.GetGameObjectList();
+	for (int i = 0; i < GOList.size(); i++)
+	{
+		modelStack.PushMatrix();
+			modelStack.Translate(GOList[i]->GetPositionX(), GOList[i]->GetPositionY(), GOList[i]->GetPositionZ());
+			modelStack.Rotate(GOList[i]->GetRotateX(), 1, 0, 0);
+			modelStack.Rotate(GOList[i]->GetRotateY(), 0, 1, 0);
+			modelStack.Rotate(GOList[i]->GetRotateZ(), 0, 0, 1);
+			modelStack.PushMatrix();
+				if (GOList[i]->Type() == "Bus")
+				{
+					modelStack.Rotate(180, 0, 1, 0);
+					modelStack.Scale(.01f, .01f, .01f);
+					RenderMesh(meshList[GEO_TEST], false);
+				}
+				else if (GOList[i]->Type() == "ColliderObj")
+				{
+					modelStack.Scale(GOList[i]->GetScaleX(), GOList[i]->GetScaleY(), GOList[i]->GetScaleZ());
+					RenderMesh(meshList[GEO_CUBE], false);
+				}
+			modelStack.PopMatrix();
+			modelStack.Scale(GOList[i]->GetScaleX(), GOList[i]->GetScaleY(), GOList[i]->GetScaleZ());
+			//RenderMesh(meshList[GEO_CUBE], false); // hitbox
+		modelStack.PopMatrix();
+	}
 
 	std::ostringstream ss;
 	ss.precision(5);
@@ -379,7 +409,6 @@ void SceneDrive::Render() //My Own Pattern
 void SceneDrive::Exit()
 {
 	// Cleanup VBO here
-
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 
 	//Step 6c
