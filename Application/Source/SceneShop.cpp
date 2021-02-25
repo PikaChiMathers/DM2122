@@ -23,8 +23,9 @@ SceneShop::~SceneShop()
 
 void SceneShop::Init()
 {
-	camera.Init(Vector3(9.5, 13, 6), Vector3(0, 2, 0), Vector3(0, 1, 0));
-	camera.setBound(Vector3(-20, -20, -20), Vector3(20, 20, 20));
+	camera.Init(Vector3(9.5, 3, 6), Vector3(0, 3, 0), Vector3(0, 1, 0));
+	camera.setShopBound(Vector3(-18.85, 2, -8.35), Vector3(18.85, 4, 8.35));
+	camera.setBusBound(Vector3(-13.5, 2, -4), Vector3(13.5, 4, 4));
 
 	map.Set(Maps::SKYBOX_TYPE::SB_SHOP);
 
@@ -134,9 +135,8 @@ void SceneShop::Init()
 	m_parameters[U_TEXT_COLOR] = glGetUniformLocation(m_programID, "textColor");
 
 	glUseProgram(m_programID);
-	
 
-	lights[0].type = Light::LIGHT_POINT;
+	lights[0].type = Light::LIGHT_DIRECTIONAL;
 	lights[0].position.Set(0, 10, 0);
 	lights[0].color.Set(1, 1, 1);
 	lights[0].power = 3;
@@ -216,91 +216,6 @@ void SceneShop::Update(double dt)
 
 		scene_change = false;
 	}
-
-	//Mouse Inputs
-	static bool bLButtonState = false;
-	if (!bLButtonState && Application::IsMousePressed(0))
-	{
-		bLButtonState = true;
-		std::cout << "LBUTTON DOWN" << std::endl;
-	}
-	else if (bLButtonState && !Application::IsMousePressed(0))
-	{
-		bLButtonState = false;
-		//Converting Viewport space to UI space
-		double x, y;
-		Application::GetCursorPos(&x, &y);
-		int w = Application::GetWindowWidth();
-		int h = Application::GetWindowHeight();
-		float posX = x/10; //convert (0,800) to (0,80)
-		float posY = 60 - (y/10); //convert (600,0) to (0,60)
-		std::cout << "posX:" << posX << " , posY:" << posY <<
-			std::endl;
-		if (posX > 20 && posX < 60 && posY >
-			45 && posY < 15)
-		{
-			std::cout << "Hit!" << std::endl;
-			//trigger user action or function
-		}
-		else
-		{
-			std::cout << "Miss!" << std::endl;
-		}
-		std::cout << "LBUTTON UP" << std::endl;
-	}
-	static bool bRButtonState = false;
-	if (!bRButtonState && Application::IsMousePressed(1))
-	{
-		bRButtonState = true;
-		std::cout << "RBUTTON DOWN" << std::endl;
-	}
-	else if (bRButtonState && !Application::IsMousePressed(1))
-	{
-		bRButtonState = false;
-		std::cout << "RBUTTON UP" << std::endl;
-	}
-
-	if (Application::IsKeyPressed('5'))
-	{
-		lights[0].type = Light::LIGHT_POINT;
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-	}
-	else if (Application::IsKeyPressed('6'))
-	{
-		lights[0].type = Light::LIGHT_DIRECTIONAL;
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-	}
-	else if (Application::IsKeyPressed('7'))
-	{
-		lights[0].type = Light::LIGHT_SPOT;
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-	}
-	else if (Application::IsKeyPressed('8'))
-	{
-		lights[0].type = Light::LIGHT_MULTIPLE;
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-	}
-
-	if (Application::IsKeyPressed('5'))
-	{
-		lights[1].type = Light::LIGHT_POINT;
-		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
-	}
-	else if (Application::IsKeyPressed('6'))
-	{
-		lights[1].type = Light::LIGHT_DIRECTIONAL;
-		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
-	}
-	else if (Application::IsKeyPressed('7'))
-	{
-		lights[1].type = Light::LIGHT_SPOT;
-		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
-	}
-	else if (Application::IsKeyPressed('8'))
-	{
-		lights[1].type = Light::LIGHT_MULTIPLE;
-		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
-	}
 }
 
 void SceneShop::Render() //My Own Pattern
@@ -368,7 +283,7 @@ void SceneShop::Render() //My Own Pattern
 
 	modelStack.PushMatrix();
 	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(3, 3, 3);
+	modelStack.Scale(0.07, 0.07, 0.07);
 	RenderMesh(meshList[GEO_BUS], lights[0].isOn);
 	modelStack.PopMatrix();
 
@@ -437,43 +352,43 @@ void SceneShop::RenderMesh(Mesh* mesh, bool enableLight)
 void SceneShop::RenderSkybox()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(9.99, 5, 0);
+	modelStack.Translate(18.99, 4.99, 0);
 	modelStack.Rotate(-90, 0, 1, 0);
-	modelStack.Scale(13, 10, 20);
+	modelStack.Scale(17, 10, 20);
 	RenderMesh(meshList[GEO_FRONT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-9.99, 5, 0);
+	modelStack.Translate(-18.99, 4.99, 0);
 	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(13, 10, 20);
+	modelStack.Scale(17, 10, 38);
 	RenderMesh(meshList[GEO_BACK], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 5, 6.49);
+	modelStack.Translate(0, 4.99, 8.49);
 	modelStack.Rotate(180, 0, 1, 0);
-	modelStack.Scale(20, 10, 13);
+	modelStack.Scale(38, 10, 17);
 	RenderMesh(meshList[GEO_LEFT], false);
 	modelStack.PopMatrix();
 	
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 5, -6.49);
-	modelStack.Scale(20, 10, 13);
+	modelStack.Translate(0, 4.99, -8.49);
+	modelStack.Scale(38, 10, 17);
 	RenderMesh(meshList[GEO_RIGHT], false);
 	modelStack.PopMatrix();
 	
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0.01, 0);
+	modelStack.Translate(0, 0, 0);
 	modelStack.Rotate(-90, 1, 0, 0);
-	modelStack.Scale(20, 13, 20);
+	modelStack.Scale(38, 17, 38);
 	RenderMesh(meshList[GEO_BOTTOM], false);
 	modelStack.PopMatrix();
 	
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 9.99, 0);
+	modelStack.Translate(0, 10, 0);
 	modelStack.Rotate(90, 1, 0, 0);
-	modelStack.Scale(20, 13, 20);
+	modelStack.Scale(38, 17, 38);
 	RenderMesh(meshList[GEO_TOP], false);
 	modelStack.PopMatrix();
 }
