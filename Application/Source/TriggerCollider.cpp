@@ -27,7 +27,7 @@ void TriggerCollider::OnTriggerStay(GameObject* gameObject)
 			is_triggered = true;
 		}
 		else
-			is_triggered = true;
+			is_triggered = false;
 	}
 	else
 		is_triggered = false;

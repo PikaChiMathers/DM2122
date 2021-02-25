@@ -25,15 +25,21 @@ void SceneTrivia::Init()
 {
 	camera.Init(Vector3(0, 9.2f, -23), Vector3(0, 9.15f, -22), Vector3(0, 1, 0.05f));
 
-	OBJmanager.CreateGameObject(&goose);
+	manager.CreateGameObject(&goose);
 
-	OBJmanager.CreateGameObject(&P_A);
-	OBJmanager.CreateGameObject(&P_B);
-	OBJmanager.CreateGameObject(&P_C);
+	//Initializes the Podiums A, B & C
+	manager.CreateGameObject(&P_A);
+	manager.CreateGameObject(&P_B);
+	manager.CreateGameObject(&P_C);
 
-	OBJmanager.CreateGameObject(&T_A);
-	OBJmanager.CreateGameObject(&T_B);
-	OBJmanager.CreateGameObject(&T_C);
+	//Initializes Trigger (Checks whether the player presses spacebar in a cerrtain area) of each podium
+	manager.CreateGameObject(&T_A);
+	manager.CreateGameObject(&T_B);
+	manager.CreateGameObject(&T_C);
+
+	//Sets the position of each Object
+	goose.SetRotateY(180);
+	goose.SetPosition(Position(0, -.5f, -5));
 
 	P_A.SetPosition(Position(5, 0, 0));
 	P_B.SetPosition(Position(0, 0, 0));
@@ -43,24 +49,12 @@ void SceneTrivia::Init()
 	T_B.SetPosition(Position(0, 0, 0));
 	T_C.SetPosition(Position(-5, 0, 0));
 
-	goose.SetRotateY(180);
-	goose.SetPosition(Position(0, 0, -5));
-
-	map.Set(Maps::SKYBOX_TYPE::SB_DAY);
-
 	is_correct = false;
 	press_time = qn_num = score = 0;
 	Qn = new Dialogue("Dialogue//Trivia.txt", Dialogue::TRIVIA);
 	Qn_str = "";
 
 	answer = ANS_TYPE::Blank;
-
-
-	//manager.CreateGameObject(&gameObject);
-	//manager.CreateGameObject(&box);
-	//manager.CreateGameObject(&coin);
-	//manager.CreateGameObject(&passport);
-	//manager.CreateGameObject(&goose);
 
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
@@ -203,7 +197,7 @@ void SceneTrivia::Init()
 
 void SceneTrivia::Update(double dt)
 {
-	OBJmanager.GameObjectManagerUpdate(dt);
+	manager.GameObjectManagerUpdate(dt);
 
 	//editor controls
 	{
@@ -258,37 +252,30 @@ void SceneTrivia::Update(double dt)
 	if (Application::IsKeyPressed(VK_SPACE))
 	{
 		press_time++;
-		if (press_time == 1) // To ensure thaat the Spacebar is only pressed once
+		if (press_time == 1) // To ensure that the Spacebar is only pressed once
 		{
-			
-			if ((goose.GetPosition().x >= P_A.GetPosition().x - 2) && (goose.GetPosition().x <= P_A.GetPosition().x + 2) &&
-				(goose.GetPosition().y >= P_A.GetPosition().y - 2) && (goose.GetPosition().y <= P_A.GetPosition().y + 2) &&
-				(goose.GetPosition().z >= P_A.GetPosition().z - 2) && (goose.GetPosition().z <= P_A.GetPosition().z + 2))
+			if (T_A.IsTriggered())
 			{
 				answer = ANS_TYPE::A;
 			}
-			else if ((goose.GetPosition().x >= P_B.GetPosition().x - 2) && (goose.GetPosition().x <= P_B.GetPosition().x + 2) &&
-				(goose.GetPosition().y >= P_B.GetPosition().y - 2) && (goose.GetPosition().y <= P_B.GetPosition().y + 2) &&
-				(goose.GetPosition().z >= P_B.GetPosition().z - 2) && (goose.GetPosition().z <= P_B.GetPosition().z + 2))
+			else if (T_B.IsTriggered())
 			{
 				answer = ANS_TYPE::B;
 			}
-			else if ((goose.GetPosition().x >= P_C.GetPosition().x - 2) && (goose.GetPosition().x <= P_C.GetPosition().x + 2) &&
-				(goose.GetPosition().y >= P_C.GetPosition().y - 2) && (goose.GetPosition().y <= P_C.GetPosition().y + 2) &&
-				(goose.GetPosition().z >= P_C.GetPosition().z - 2) && (goose.GetPosition().z <= P_C.GetPosition().z + 2))
+			else if (T_C.IsTriggered())
 			{
 				answer = ANS_TYPE::C;
 			}
-			else
-			{
-				if (qn_num == 0)
-				{
-					qn_num++;
-					Qn_str = Qn->Update();
-				}
-			}
 
-			if (answer != ANS_TYPE::Blank) Check_Answer();
+			if (answer != ANS_TYPE::Blank && qn_num != 0) Check_Answer();
+
+			if (qn_num == 0)
+			{
+				qn_num++;
+				Qn_str = Qn->Update();
+			}
+			else
+				qn_num++;
 		}
 	}
 	else press_time = 0;
@@ -300,12 +287,6 @@ void SceneTrivia::Render() //My Own Pattern
 
 	//Clear color & depth buffer every frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	/*Mtx44 translate, rotate, scale;
-	Mtx44 model;
-	Mtx44 model2;*/
-	//Mtx44 view;
-	//Mtx44 projection;
-	//Mtx44 MVP;
 
 	viewStack.LoadIdentity();
 	viewStack.LookAt(camera.position.x, camera.position.y,
@@ -349,10 +330,10 @@ void SceneTrivia::Render() //My Own Pattern
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 14.6f, 23.8f);
+	modelStack.Translate(0, 12.6f, 23.8f);
 	modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Rotate(180, 0, 0, 1);
-	modelStack.Scale(40, 20, 20);
+	modelStack.Scale(50, 25, 25);
 	RenderMesh(meshList[GEO_TV], false);
 	modelStack.PopMatrix();
 
@@ -361,12 +342,6 @@ void SceneTrivia::Render() //My Own Pattern
 	modelStack.Scale(1, 1.5f, 1);
 	RenderMesh(meshList[GEO_PODIUM_A], true);
 	modelStack.PopMatrix();
-
-	//modelStack.PushMatrix();
-	//modelStack.Translate(T_A.GetPositionX(), T_A.GetPositionY(), T_A.GetPositionZ());
-	//modelStack.Scale(T_A.GetScaleX(), T_A.GetScaleY(), T_A.GetScaleZ());
-	//RenderMesh(meshList[GEO_CUBE], false);
-	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(5.44f, 2.55f, 3.4f);
@@ -407,27 +382,31 @@ void SceneTrivia::Render() //My Own Pattern
 		RenderTextOnScreen(meshList[GEO_TEXT], "Use WASD to move to A, B or C", Color(0, 1, 0), 2.5f, 57, 59);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Spacebar to select & start", Color(0, 1, 0), 2.5f, 59, 52);
 	}
-	else 
+	else if (qn_num <= 10)
 	{
-		RenderTextOnScreen(meshList[GEO_TEXT], Qn_str, Color(0, 1, 0), 5, x_value, y_value);
-		//RenderTextOnScreen(meshList[GEO_TEXT], ("A:" + Qn->getChoice1()), Color(0, 1, 0), 2.5f, 45, 64);
-		//RenderTextOnScreen(meshList[GEO_TEXT], ("B:" + Qn->getChoice2()), Color(0, 1, 0), 2.5f, 45, 64);
-		//RenderTextOnScreen(meshList[GEO_TEXT], ("C:" + Qn->getChoice3()), Color(0, 1, 0), 2.5f, 45, 64);
-
+		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(score)) + "/10", Color(0, 1, 0), 6, 110, 76);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("Q" + std::to_string(qn_num) + ":" + Qn_str), Color(0, 1, 0), 2.44f, 37, 65);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("A:" + Qn->getChoice1()), Color(0, 1, 0), 4, 40, 57);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("B:" + Qn->getChoice2()), Color(0, 1, 0), 4, 40, 51);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("C:" + Qn->getChoice3()), Color(0, 1, 0), 4, 40,45);
+	}
+	else
+	{
+		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(score) + "/10"), Color(0, 1, 0), 10, 72, 53);
 	}
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-17, 13.4f, 23.3f);
+	modelStack.Translate(-19, 13.4f, 23.3f);
 	modelStack.Rotate(180, 1, 0, 0);
-	modelStack.Scale(10, 10, 10);
+	modelStack.Scale(8, 8, 8);
 	RenderMesh(meshList[GEO_LOGO], true);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(17, 13.4f, 23.3f);
+	modelStack.Translate(19, 13.4f, 23.3f);
 	modelStack.Rotate(180, 1, 0, 0);
-	modelStack.Scale(10, 10, 10);
+	modelStack.Scale(8, 8, 8);
 	RenderMesh(meshList[GEO_LOGO], true);
 	modelStack.PopMatrix();
 
@@ -451,25 +430,71 @@ void SceneTrivia::Exit()
 
 }
 
-void SceneTrivia::Check_Answer()
+void SceneTrivia::Check_Answer()//Checks the player's answer input and adds points respectfully
 {
 	is_correct = false;
 
 	goose.SetRotateY(180);
 	goose.SetPosition(Position(0, 0, -5));
 
-	switch (qn_num)
+	if (qn_num == 1)
 	{
-	case 1:
 		if (answer == ANS_TYPE::C)
 			is_correct = true;
-		break;
-	case 2:
+	}
+		
+	else if (qn_num == 2)
+	{
 		if (answer == ANS_TYPE::A)
 			is_correct = true;
-		break;
-	default:
-		break;
+	}
+		
+	else if (qn_num == 3)
+	{
+		if (answer == ANS_TYPE::B)
+			is_correct = true;
+	}
+		
+	else if (qn_num == 4)
+	{
+		if (answer == ANS_TYPE::B)
+			is_correct = true;
+	}
+		
+	else if (qn_num == 5)
+	{
+		if (answer == ANS_TYPE::A)
+			is_correct = true;
+	}
+		
+	else if (qn_num == 6)
+	{
+		if (answer == ANS_TYPE::C)
+			is_correct = true;
+	}
+		
+	else if (qn_num == 7)
+	{
+		if (answer == ANS_TYPE::A)
+			is_correct = true;
+	}
+		
+	else if (qn_num == 8)
+	{
+		if (answer == ANS_TYPE::C)
+			is_correct = true;
+	}
+		
+	else if (qn_num == 9)
+	{
+		if (answer == ANS_TYPE::B)
+			is_correct = true;
+	}
+		
+	else if (qn_num == 10)
+	{
+		if (answer == ANS_TYPE::C)
+			is_correct = true;
 	}
 
 	answer = ANS_TYPE::Blank;
