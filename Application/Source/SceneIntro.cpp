@@ -27,7 +27,7 @@ SceneIntro::~SceneIntro()
 void SceneIntro::Init()
 {
 	camera.Init(Vector3(40, 30, 30), Vector3(0, 0, 0), Vector3(0, 1, 0));
-	map.Set(Maps::SKYBOX_TYPE::SB_INTRO); 
+	map.Set(Maps::SKYBOX_TYPE::SB_INTRO);
 
 	//map.Set(Maps::MAP_TYPE::M_CITY, Maps::SKYBOX_TYPE::SB_DAY);
 
@@ -98,6 +98,8 @@ void SceneIntro::Init()
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//trebuchet.tga");
+
+	meshList[GEO_UI] = MeshBuilder::GenerateQuad("UI", Color(1, 1, 1), 1.f, 1.f);
 
 	meshList[GEO_SPLASH] = MeshBuilder::GenerateQuad("splash", blue, 1, 1);
 	//meshList[GEO_SPLASH]->textureID = LoadImage("Assets//start");
@@ -224,9 +226,6 @@ void SceneIntro::Init()
 
 void SceneIntro::Update(double dt)
 {
-	
-	camera.Update(dt);
-
 
 	fps = 1.0f / dt;
 
@@ -479,6 +478,8 @@ void SceneIntro::Render() //My Own Pattern
 
 	RenderMesh(meshList[GEO_AXES], false);
 
+	RenderMeshOnScreen(meshList[GEO_UI], 80, 50, 1, 1);
+
 	modelStack.PushMatrix();
 	modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
 	RenderMesh(meshList[GEO_LIGHTBALL], false);
@@ -503,6 +504,20 @@ void SceneIntro::Render() //My Own Pattern
 	modelStack.PopMatrix();
 
 	RenderMeshOnScreen(meshList[GEO_SPLASH], 1, 1, 10, 10);
+
+	if (Application::IsKeyPressed(VK_SPACE))
+	{
+		dialogue->Update();
+		if (dialogue->getPersonTalking() == "Boss Goose")
+		{
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//Boss Dialogue Box.tga");
+		}
+		else if (dialogue->getPersonTalking() == "Boss Duck")
+		{
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//Duck Dialogue Box.tga");
+		}
+		camera.Update(dt);
+	}
 }
 
 void SceneIntro::Exit()
@@ -598,7 +613,7 @@ void SceneIntro::RenderSkybox()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 999, 0);
+	modelStack.Translate(0, 998, 0);
 	modelStack.Rotate(90, 1, 0, 0);
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_TOP], false);
