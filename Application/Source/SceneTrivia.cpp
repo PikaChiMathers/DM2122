@@ -257,6 +257,8 @@ void SceneTrivia::Update(double dt)
 		press_time++;
 		if (press_time == 1) // To ensure that the Spacebar is only pressed once
 		{
+			sound.Engine()->play2D("media/honk_1.wav");
+
 			if (T_A.IsTriggered())
 				answer = Qn->getChoice1();
 

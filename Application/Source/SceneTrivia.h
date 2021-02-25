@@ -17,6 +17,7 @@
 #include "Score.h"
 #include "Objects.h"
 #include "Goose.h"
+#include "Sound.h"
 
 #include "Dialogue.h"
 
@@ -116,6 +117,7 @@ public:
 private: //added (Step 2)
 	Camera3 camera;
 	Light lights[NUM_LIGHTS];
+	Sound sound;
 
 	Dialogue* Qn;
 	std::string Qn_str;
