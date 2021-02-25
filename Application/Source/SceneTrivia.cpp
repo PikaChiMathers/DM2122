@@ -51,7 +51,7 @@ void SceneTrivia::Init()
 
 	press_time = qn_num = score = 0;
 	Qn = new Dialogue("Dialogue//Trivia.txt", Dialogue::TRIVIA);
-	Qn_str = "";
+	Qn_str = Qn->Update();
 
 	answer = "";
 
@@ -382,7 +382,7 @@ void SceneTrivia::Render() //My Own Pattern
 	modelStack.Rotate(180, 0, 1, 0);
 	if (qn_num == 0)
 	{
-		RenderTextOnScreen(meshList[GEO_TEXT], "Trivia", Color(0, 1, 0), 10, 63, 67);
+		RenderTextOnScreen(meshList[GEO_TEXT], Qn_str + " Trivia", Color(0, 1, 0), 10, 46, 64);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Use WASD to move to A, B or C", Color(0, 1, 0), 2.5f, 57, 59);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Spacebar to select & start", Color(0, 1, 0), 2.5f, 59, 52);
 	}
@@ -445,7 +445,13 @@ void SceneTrivia::Check_Answer()//Checks the player's answer input and adds poin
 	goose.SetPosition(Position(0, 0, -5));
 
 	if (answer == Qn->getAnswer())
+	{
+		sound.Engine()->play2D("media/correctAns.ogg");
 		score++;
+	}
+	else
+		sound.Engine()->play2D("media/wrongAns.ogg");
+
 	Qn_str = Qn->Update();
 }
 
