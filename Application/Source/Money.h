@@ -22,5 +22,6 @@ public:
 	void ResetMoney();
 	int getMoney();
 	void OnTriggerEnter(GameObject*);
+	std::string Type();
 };
 #endif

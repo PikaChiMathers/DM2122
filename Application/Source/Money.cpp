@@ -4,7 +4,6 @@ Money::Money()
 {
 	money = 0;
 	AddCollider();
-	SetPosition(Position(5, 0, 0));
 	GetCollider()->SetIsTrigger(true);
 }
 
@@ -18,7 +17,6 @@ void Money::OnTriggerEnter(GameObject*)
 	//Coin collected sound
 	IncreaseMoney(15);
 	score.setScore(0, getMoney());
-	delete this;
 }
 
 void Money::IncreaseMoney(int add)
@@ -49,4 +47,9 @@ void Money::ResetMoney()
 int Money::getMoney()
 {
 	return money;
+}
+
+std::string Money::Type()
+{
+	return "Money";
 }
