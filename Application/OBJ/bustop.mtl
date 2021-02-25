@@ -1,0 +1,66 @@
+# Blender MTL File: 'None'
+# Material Count: 6
+
+newmtl bus_stop_sign
+Ns 67.178361
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 0.560000 0.560000 0.560000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd C:\\Users\\amirr\\Downloads\\l62ro8tvl91c-bus_stop\\bus_stop\\textures\\bus_stop_sign.png
+
+newmtl glass
+Ns 900.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.698039 0.835294 0.835294
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 0.200000
+illum 6
+
+newmtl glass2
+Ns 18.000005
+Ka 1.000000 1.000000 1.000000
+Kd 0.698039 0.835294 0.835294
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 0.700000
+illum 1
+
+newmtl metall
+Ns 900.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.125490 0.125490 0.125490
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+
+newmtl reklama
+Ns 900.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd C:\\Users\\amirr\\Downloads\\l62ro8tvl91c-bus_stop\\bus_stop\\textures\\pomidor.jpg
+
+newmtl sofa
+Ns 29.241091
+Ka 1.000000 1.000000 1.000000
+Kd 0.588000 0.588000 0.588000
+Ks 0.460000 0.460000 0.460000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Bump -bm 0.300000 C:\\Users\\amirr\\Downloads\\l62ro8tvl91c-bus_stop\\bus_stop\\textures\\wood_bump.jpg
+map_Kd C:\\Users\\amirr\\Downloads\\l62ro8tvl91c-bus_stop\\bus_stop\\textures\\wood.jpg

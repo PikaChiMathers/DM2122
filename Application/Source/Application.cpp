@@ -17,6 +17,7 @@
 #include "SceneTrivia.h"
 #include "SceneSearch.h"
 #include "SceneIntro.h"
+#include "SceneDrive.h"
 
 GLFWwindow* m_window;
 const unsigned char FPS = 60; // FPS of this game
@@ -141,16 +142,25 @@ void Application::Run()
 	Scene* scene2 = new SceneTrivia();
 	Scene* scene3 = new SceneSearch();
 	Scene* scene4 = new SceneIntro();
-	Scene* scene = scene2;
+	Scene* scene5 = new SceneShop();
+	Scene* scene6 = new SceneDrive();
+	Scene* scene = scene3;
 	scene1->Init();
 	scene2->Init();
 	scene3->Init();
 	scene4->Init();
-
+	scene5->Init();
+	scene6->Init();
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
-	{
+	{ // stop removing this feature
+		if (IsKeyPressed(VK_F1)) scene = scene1;
+		if (IsKeyPressed(VK_F2)) scene = scene2;
+		if (IsKeyPressed(VK_F3)) scene = scene3;
+		if (IsKeyPressed(VK_F4)) scene = scene4;
+		if (IsKeyPressed(VK_F5)) scene = scene5;
+		if (IsKeyPressed(VK_F6)) scene = scene6;
 		scene->Update(m_timer.getElapsedTime());
 		scene->Render();
 		//Swap buffers
@@ -165,6 +175,8 @@ void Application::Run()
 	scene2->Exit();
 	scene3->Exit();
 	scene4->Exit();
+	scene5->Exit();
+	scene6->Exit();
 
 	delete scene;
 }

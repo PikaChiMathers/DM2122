@@ -14,12 +14,13 @@ private:
 
 public:
 	Money();
-	void OnTrigerEnter(GameObject*);
+	~Money();
 	void IncreaseMoney(int);
 	void SuccessfulTourist(int);
 	void DecreaseMoney(int);
 	void SetMoney(int);
 	void ResetMoney();
 	int getMoney();
+	void OnTriggerEnter(GameObject*);
 };
 #endif

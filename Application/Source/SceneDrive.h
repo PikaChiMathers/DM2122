@@ -1,5 +1,5 @@
-#ifndef SCENE_TEST
-#define SCENE_TEST
+#ifndef SCENE_DRIVE
+#define SCENE_DRIVE
 
 #include "Scene.h"
 #include "Camera2.h"
@@ -10,7 +10,6 @@
 #include "Light.h"
 
 #include "GameObjectManager.h"
-#include "GameObject.h"
 #include "Bus.h"
 #include "Test.h"
 #include "Person.h"
@@ -22,11 +21,11 @@
 
 #include <sstream>
 
-class SceneTester : public Scene
+class SceneDrive : public Scene
 {
 public:
-	SceneTester();
-	~SceneTester();
+	SceneDrive();
+	~SceneDrive();
 
 	virtual void Init();
 	virtual void Update(double dt);
@@ -142,43 +141,25 @@ public:
 
 private: //added (Step 2)
 	Camera3 camera;
-	Light lights[NUM_LIGHTS];
-	GameObjectManager manager;
-	Person person;
-	Money money;
+
 	Maps map;
+
+	GameObjectManager manager;
+
+	Money money;
 	Score score;
 
-	Dialogue* dialogue;
-
-	//GameObject gameObject;
 	Bus gameObject;
-	Test test;
-	GameObject box;
-	GameObject coin;
-	GameObject passport;
-	GameObject goose;
 
-
-
+	Light lights[NUM_LIGHTS];
 	unsigned m_vertexArrayID;
-	/*unsigned m_vertexBuffer[NUM_GEOMETRY];
-	unsigned m_colorBuffer[NUM_GEOMETRY];
-	unsigned m_indexBuffer[NUM_GEOMETRY];*/
-
 	Mesh* meshList[NUM_GEOMETRY];
-
 	MS modelStack, viewStack, projectionStack;
 
-
 	void RenderMesh(Mesh* mesh, bool enableLight);
-
 	void RenderSkybox();
-
 	void RenderText(Mesh* mesh, std::string text, Color color);
-
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
-
 	void RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int sizey);
 		
 	unsigned m_parameters[U_TOTAL];
