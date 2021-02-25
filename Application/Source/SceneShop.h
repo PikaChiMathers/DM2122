@@ -8,8 +8,8 @@
 #include "Vertex.h"
 #include "Light.h"
 #include "Maps.h"
+#include "GameObject.h"
 #include <sstream>
-#include "Bus.h"
 
 class SceneShop : public Scene
 {
@@ -113,8 +113,6 @@ private: //added (Step 2)
 	Light lights[NUM_LIGHTS];
 
 	Maps map;
-
-	Bus bus;
 
 	bool scene_change;
 
