@@ -125,8 +125,6 @@ public:
 private: //added (Step 2)
 	Camera3 camera;
 	Light lights[NUM_LIGHTS];
-	
-	Maps map;
 
 	Dialogue* Qn;
 	std::string Qn_str;
@@ -135,7 +133,7 @@ private: //added (Step 2)
 	bool is_correct;
 	ANS_TYPE answer;
 
-	GameObjectManager OBJmanager;
+	GameObjectManager manager;
 	Goose goose;
 	Objects P_A, P_B, P_C; //Podium A, B & C
 	TriggerCollider T_A, T_B, T_C;//Trigger A, B & C

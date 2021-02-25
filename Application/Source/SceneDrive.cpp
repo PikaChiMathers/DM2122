@@ -43,7 +43,6 @@ void SceneDrive::Init()
 	UI_width = 160;
 	UI_height = 90;
 
-	x_value = y_value = z_value = 0;
 	red.Set(1, 0, 0);
 	green.Set(0, 1, 0);
 	blue.Set(0, 0, 1);
@@ -82,6 +81,9 @@ void SceneDrive::Init()
 	meshList[GEO_QUAD]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
 	meshList[GEO_QUAD]->material.kShininess = 1.f;
 
+	meshList[GEO_TEMPLATE] = MeshBuilder::GenerateQuad("template", Color(1, 1, 1), 1.f, 1.f);
+	meshList[GEO_TEMPLATE]->textureID = LoadTGA("Image//map_template.tga");
+
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", blue, 1, 1, 1);
 	meshList[GEO_CUBE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
 	meshList[GEO_CUBE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
@@ -97,7 +99,19 @@ void SceneDrive::Init()
 
 	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("goose", "OBJ//goose.obj", Color(1 ,1, 1));
 	meshList[GEO_PASSPORT] = MeshBuilder::GenerateOBJMTL("passport", "OBJ//passport.obj", "OBJ//passport.mtl");
-	//meshList[GEO_MALL] = MeshBuilder::GenerateOBJMTL("mall", "OBJ//mall.obj", "OBJ//mall.obj");
+
+	meshList[GEO_BUILDING1] = MeshBuilder::GenerateOBJMTL("building1", "OBJ//short_apartment.obj", "OBJ//short_apartment.mtl");
+	meshList[GEO_BUILDING1]->textureID = LoadTGA("Image//apartment.tga");
+	meshList[GEO_BUILDING2] = MeshBuilder::GenerateOBJMTL("building2", "OBJ//med_apartment.obj", "OBJ//med_apartment.mtl");
+	meshList[GEO_BUILDING2]->textureID = LoadTGA("Image//apartment.tga");
+	meshList[GEO_BUILDING3] = MeshBuilder::GenerateOBJMTL("building3", "OBJ//tall_apartment.obj", "OBJ//tall_apartment.mtl");
+	meshList[GEO_BUILDING3]->textureID = LoadTGA("Image//apartment.tga");
+	meshList[GEO_BUILDING1B] = MeshBuilder::GenerateOBJMTL("building1", "OBJ//short_apartment.obj", "OBJ//short_apartment.mtl");
+	meshList[GEO_BUILDING1B]->textureID = LoadTGA("Image//house2.tga");
+	meshList[GEO_BUILDING2B] = MeshBuilder::GenerateOBJMTL("building2", "OBJ//med_apartment.obj", "OBJ//med_apartment.mtl");
+	meshList[GEO_BUILDING2B]->textureID = LoadTGA("Image//house2.tga");
+	meshList[GEO_BUILDING3B] = MeshBuilder::GenerateOBJMTL("building3", "OBJ//tall_apartment.obj", "OBJ//tall_apartment.mtl");
+	meshList[GEO_BUILDING3B]->textureID = LoadTGA("Image//house2.tga");
 
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
@@ -203,6 +217,40 @@ void SceneDrive::Init()
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 
+
+	manager.CreateGameObject(&bus);
+	cluster.SetPosition(Position(-20, 0, 20));
+	cluster.SetScale(Scale(11.5f, 1, 23));
+	cluster.SetTag("Type1");
+	manager.CreateGameObject(&cluster);
+	cluster2.SetPosition(Position(-20, 0, -20));
+	cluster2.SetScale(Scale(11.5f, 1, 23));
+	cluster2.SetTag("Type2");
+	manager.CreateGameObject(&cluster2);
+	cluster3.SetPosition(Position(20, 0, 20));
+	cluster3.SetScale(Scale(11.5f, 1, 23));
+	cluster3.SetTag("Type3");
+	manager.CreateGameObject(&cluster3);
+	cluster4.SetPosition(Position(20, 0, -20));
+	cluster4.SetScale(Scale(23, 1, 34.5));
+	cluster4.SetTag("Type4");
+	manager.CreateGameObject(&cluster4);
+	cluster5.SetPosition(Position(50, 0, -50));
+	cluster5.SetScale(Scale(23, 1, 34.5));
+	cluster5.SetTag("Type5");
+	manager.CreateGameObject(&cluster5);
+	cluster6.SetPosition(Position(-50, 0, -50));
+	cluster6.SetScale(Scale(23, 1, 23));
+	cluster6.SetTag("Type6");
+	manager.CreateGameObject(&cluster6);
+	cluster7.SetPosition(Position(-50, 0, 50));
+	cluster7.SetScale(Scale(23, 1, 23));
+	cluster7.SetTag("Type7");
+	manager.CreateGameObject(&cluster7);
+	cluster8.SetPosition(Position(50, 0, 50));
+	cluster8.SetScale(Scale(23, 1, 23));
+	cluster8.SetTag("Type8");
+	manager.CreateGameObject(&cluster8);
 }
 
 void SceneDrive::Update(double dt)
@@ -344,7 +392,7 @@ void SceneDrive::Render() //My Own Pattern
 
 	RenderMesh(meshList[GEO_AXES], false);
 
-	RenderMesh(meshList[GEO_TEST], lights[0].isOn);
+	//RenderMesh(meshList[GEO_TEST], lights[0].isOn);
 
 	modelStack.PushMatrix();
 		modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
@@ -353,13 +401,171 @@ void SceneDrive::Render() //My Own Pattern
 	RenderSkybox();
 
 	modelStack.PushMatrix();
-		modelStack.Translate(gameObject.GetPositionX(), gameObject.GetPositionY(), gameObject.GetPositionZ());
-		modelStack.Rotate(gameObject.GetRotateX(), 1, 0, 0);
-		modelStack.Rotate(gameObject.GetRotateY(), 0, 1, 0);
-		modelStack.Rotate(gameObject.GetRotateZ(), 0, 0, 1);
-		modelStack.Scale(gameObject.GetScaleX(), gameObject.GetScaleY(), gameObject.GetScaleZ());
-		RenderMesh(meshList[GEO_CUBE], false);
+		modelStack.Rotate(270, 1, 0, 0);
+		modelStack.Scale(500, 500, 1);
+		RenderMesh(meshList[GEO_TEMPLATE], false);
 	modelStack.PopMatrix();
+
+	std::vector<GameObject*>GOList = manager.GetGameObjectList();
+	for (int i = 0; i < GOList.size(); i++)
+	{
+		modelStack.PushMatrix();
+			modelStack.Translate(GOList[i]->GetPositionX(), GOList[i]->GetPositionY(), GOList[i]->GetPositionZ());
+			modelStack.Rotate(GOList[i]->GetRotateX(), 1, 0, 0);
+			modelStack.Rotate(GOList[i]->GetRotateY(), 0, 1, 0);
+			modelStack.Rotate(GOList[i]->GetRotateZ(), 0, 0, 1);
+			modelStack.PushMatrix();
+				if (GOList[i]->Type() == "Bus")
+				{
+					modelStack.Rotate(180, 0, 1, 0);
+					modelStack.Scale(.01f, .01f, .01f);
+					RenderMesh(meshList[GEO_TEST], false);
+				}
+				else if (GOList[i]->Type() == "ColliderObj")
+				{
+
+					modelStack.PushMatrix();
+						modelStack.Scale(GOList[i]->GetScaleX(), GOList[i]->GetScaleY(), GOList[i]->GetScaleZ());
+						RenderMesh(meshList[GEO_CUBE], false);
+					modelStack.PopMatrix();
+					if (GOList[i]->GetTag() == "Type1")
+					{
+						modelStack.PushMatrix();
+							modelStack.Translate(.85f, 0, .6f);
+							RenderMesh(meshList[GEO_BUILDING1], false);
+						modelStack.PopMatrix();
+					}
+					if (GOList[i]->GetTag() == "Type2")
+					{
+						modelStack.PushMatrix();
+							modelStack.Translate(.85f, 0, .6f);
+							RenderMesh(meshList[GEO_BUILDING2], false);
+						modelStack.PopMatrix();
+					}
+					if (GOList[i]->GetTag() == "Type3")
+					{
+						modelStack.PushMatrix();
+							modelStack.Translate(.85f, 0, .6f);
+							RenderMesh(meshList[GEO_BUILDING3], false);
+						modelStack.PopMatrix();
+					}
+					if (GOList[i]->GetTag() == "Type4")
+					{
+						modelStack.PushMatrix();
+							modelStack.Translate(0, 0, 11.5f);
+							modelStack.Rotate(90, 0, 1, 0);
+							modelStack.PushMatrix();
+								modelStack.Translate(.85f, 0, .6f);
+								RenderMesh(meshList[GEO_BUILDING3], false);
+							modelStack.PopMatrix();
+						modelStack.PopMatrix();
+						modelStack.PushMatrix();
+							modelStack.Translate(5.75, 0, -5.75f);
+							modelStack.Rotate(0, 0, 1, 0);
+							modelStack.PushMatrix();
+								modelStack.Translate(.85f, 0, .6f);
+								RenderMesh(meshList[GEO_BUILDING3], false);
+							modelStack.PopMatrix();
+						modelStack.PopMatrix();
+						modelStack.PushMatrix();
+							modelStack.Translate(-5.75, 0, -5.75f);
+							modelStack.Rotate(0, 0, 1, 0);
+							modelStack.PushMatrix();
+								modelStack.Translate(.85f, 0, .6f);
+								RenderMesh(meshList[GEO_BUILDING2], false);
+							modelStack.PopMatrix();
+						modelStack.PopMatrix();
+					}
+					if (GOList[i]->GetTag() == "Type5")
+					{
+						modelStack.PushMatrix();
+							modelStack.Translate(0, 0, 11.5f);
+							modelStack.Rotate(90, 0, 1, 0);
+							modelStack.PushMatrix();
+								modelStack.Translate(.85f, 0, .6f);
+								RenderMesh(meshList[GEO_BUILDING3], false);
+							modelStack.PopMatrix();
+						modelStack.PopMatrix();
+						modelStack.PushMatrix();
+							modelStack.Translate(5.75, 0, -5.75f);
+							modelStack.Rotate(0, 0, 1, 0);
+							modelStack.PushMatrix();
+								modelStack.Translate(.85f, 0, .6f);
+								RenderMesh(meshList[GEO_BUILDING2], false);
+							modelStack.PopMatrix();
+						modelStack.PopMatrix();
+						modelStack.PushMatrix();
+							modelStack.Translate(-5.75, 0, -5.75f);
+							modelStack.Rotate(0, 0, 1, 0);
+							modelStack.PushMatrix();
+								modelStack.Translate(.85f, 0, .6f);
+								RenderMesh(meshList[GEO_BUILDING2], false);
+							modelStack.PopMatrix();
+						modelStack.PopMatrix();
+					}
+					if (GOList[i]->GetTag() == "Type6")
+					{
+						modelStack.PushMatrix();
+							modelStack.Translate(5.75, 0, 0);
+							modelStack.Rotate(0, 0, 1, 0);
+							modelStack.PushMatrix();
+								modelStack.Translate(.85f, 0, .6f);
+								RenderMesh(meshList[GEO_BUILDING1], false);
+							modelStack.PopMatrix();
+						modelStack.PopMatrix();
+						modelStack.PushMatrix();
+							modelStack.Translate(-5.75, 0, 0);
+							modelStack.Rotate(0, 0, 1, 0);
+							modelStack.PushMatrix();
+								modelStack.Translate(.85f, 0, .6f);
+								RenderMesh(meshList[GEO_BUILDING1], false);
+							modelStack.PopMatrix();
+						modelStack.PopMatrix();
+					}
+					if (GOList[i]->GetTag() == "Type7")
+					{
+						modelStack.PushMatrix();
+							modelStack.Translate(5.75, 0, 0);
+							modelStack.Rotate(0, 0, 1, 0);
+							modelStack.PushMatrix();
+								modelStack.Translate(.85f, 0, .6f);
+								RenderMesh(meshList[GEO_BUILDING1], false);
+							modelStack.PopMatrix();
+						modelStack.PopMatrix();
+						modelStack.PushMatrix();
+							modelStack.Translate(-5.75, 0, 0);
+							modelStack.Rotate(0, 0, 1, 0);
+							modelStack.PushMatrix();
+								modelStack.Translate(.85f, 0, .6f);
+								RenderMesh(meshList[GEO_BUILDING2], false);
+							modelStack.PopMatrix();
+						modelStack.PopMatrix();
+					}
+					if (GOList[i]->GetTag() == "Type8")
+					{
+						modelStack.PushMatrix();
+							modelStack.Translate(5.75, 0, 0);
+							modelStack.Rotate(0, 0, 1, 0);
+							modelStack.PushMatrix();
+								modelStack.Translate(.85f, 0, .6f);
+								RenderMesh(meshList[GEO_BUILDING2], false);
+							modelStack.PopMatrix();
+						modelStack.PopMatrix();
+						modelStack.PushMatrix();
+							modelStack.Translate(-5.75, 0, 0);
+							modelStack.Rotate(0, 0, 1, 0);
+							modelStack.PushMatrix();
+								modelStack.Translate(.85f, 0, .6f);
+								RenderMesh(meshList[GEO_BUILDING3], false);
+							modelStack.PopMatrix();
+						modelStack.PopMatrix();
+					}
+				}
+			modelStack.PopMatrix();
+			modelStack.Scale(GOList[i]->GetScaleX(), GOList[i]->GetScaleY(), GOList[i]->GetScaleZ());
+			//RenderMesh(meshList[GEO_CUBE], false); // hitbox
+		modelStack.PopMatrix();
+	}
 
 	std::ostringstream ss;
 	ss.precision(5);
@@ -379,7 +585,6 @@ void SceneDrive::Render() //My Own Pattern
 void SceneDrive::Exit()
 {
 	// Cleanup VBO here
-
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 
 	//Step 6c
