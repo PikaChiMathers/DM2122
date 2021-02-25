@@ -15,7 +15,8 @@ Money::~Money()
 
 void Money::OnTriggerEnter(GameObject*)
 {
-	IncreaseMoney(100);
+	//Coin collected sound
+	IncreaseMoney(15);
 	score.setScore(0, getMoney());
 	delete this;
 }
