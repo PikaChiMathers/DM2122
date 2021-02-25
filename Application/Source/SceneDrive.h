@@ -1,5 +1,5 @@
-#ifndef SCENE_TRIVIA
-#define SCENE_TRIVIA
+#ifndef SCENE_DRIVE
+#define SCENE_DRIVE
 
 #include "Scene.h"
 #include "Camera2.h"
@@ -10,23 +10,22 @@
 #include "Light.h"
 
 #include "GameObjectManager.h"
-#include "TriggerCollider.h"
 #include "Bus.h"
+#include "Test.h"
+#include "Person.h"
 #include "Money.h"
 #include "Maps.h"
 #include "Score.h"
-#include "Objects.h"
-#include "Goose.h"
 
 #include "Dialogue.h"
 
 #include <sstream>
 
-class SceneTrivia : public Scene
+class SceneDrive : public Scene
 {
 public:
-	SceneTrivia();
-	~SceneTrivia();
+	SceneDrive();
+	~SceneDrive();
 
 	virtual void Init();
 	virtual void Update(double dt);
@@ -37,25 +36,35 @@ public:
 	float translateX, translateY;
 	float scaleAll;
 
+	float fps;
+
 	float x_value, y_value, z_value;
 
+	int translateXDir, translateYDir, rotateDir, scaleDir;
+
+	Color red, blue, green, pink, Lblue, purple, orange, yellow, cyan, magenta, moonshade;
+
+	bool scene_change;
+	bool coin_collect; // To stop rendering of coin after collected
+
 	int UI_height, UI_width;
+
+	int colCount = 0;
+	bool colEnter = false;
 
 
 	enum GEOMETRY_TYPE //added (Step 1)
 	{
 		GEO_AXES = 0,
+
 		GEO_QUAD,
 
 		GEO_CUBE,
 
+		GEO_COIN,
+		GEO_PASSPORT,
 		GEO_GOOSE,
-
-		GEO_TV,
-		GEO_LOGO,
-		GEO_PODIUM_A,
-		GEO_PODIUM_B,
-		GEO_PODIUM_C,
+		GEO_MALL,
 
 		GEO_LIGHTBALL,
 		GEO_SPHERE,
@@ -69,6 +78,8 @@ public:
 		GEO_BACK,
 
 		GEO_TEXT,
+
+		GEO_TEST,
 
 		NUM_GEOMETRY,
 	};
@@ -95,6 +106,19 @@ public:
 		U_LIGHT0_EXPONENT,
 
 
+		U_LIGHT1_POSITION,
+		U_LIGHT1_COLOR,
+		U_LIGHT1_POWER,
+		U_LIGHT1_KC,
+		U_LIGHT1_KL,
+		U_LIGHT1_KQ,
+		U_LIGHT1_TYPE,
+		U_LIGHT1_SPOTDIRECTION,
+		U_LIGHT1_COSCUTOFF,
+		U_LIGHT1_COSINNER,
+		U_LIGHT1_EXPONENT,
+
+
 		U_LIGHTENABLED,
 		U_NUMLIGHTS,
 
@@ -110,57 +134,34 @@ public:
 	enum LIGHT_TYPES
 	{
 		LIGHT1 = 0,
+		LIGHT2,
 		NUM_LIGHTS,
-	};
-
-	enum class ANS_TYPE //Keeps the different types of answers
-	{
-		Blank,
-		A,
-		B,
-		C
 	};
 
 
 private: //added (Step 2)
 	Camera3 camera;
-	Light lights[NUM_LIGHTS];
-	
+
 	Maps map;
 
-	Dialogue* Qn;
-	std::string Qn_str;
+	GameObjectManager manager;
 
-	int press_time, qn_num, score;
-	bool is_correct;
-	ANS_TYPE answer;
+	Money money;
+	Score score;
 
-	GameObjectManager OBJmanager;
-	Goose goose;
-	Objects P_A, P_B, P_C; //Podium A, B & C
-	TriggerCollider T_A, T_B, T_C;//Trigger A, B & C
+	Bus gameObject;
 
+	Light lights[NUM_LIGHTS];
 	unsigned m_vertexArrayID;
-	/*unsigned m_vertexBuffer[NUM_GEOMETRY];
-	unsigned m_colorBuffer[NUM_GEOMETRY];
-	unsigned m_indexBuffer[NUM_GEOMETRY];*/
-
 	Mesh* meshList[NUM_GEOMETRY];
-
 	MS modelStack, viewStack, projectionStack;
 
-	void Check_Answer();
-
 	void RenderMesh(Mesh* mesh, bool enableLight);
-
 	void RenderSkybox();
-
 	void RenderText(Mesh* mesh, std::string text, Color color);
-
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
-
 	void RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int sizey);
-
+		
 	unsigned m_parameters[U_TOTAL];
 	unsigned m_programID;
 };

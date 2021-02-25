@@ -4,14 +4,19 @@ Bus::Bus()
 {
 	acceleration = 50;
 	brakePower = 5;
-	grip = 1;
-	SetScale(Scale(1, 1, 3));
+	stop = false;
+	overSteerPct = 0;
+	SetScale(Scale(1, 1, 4));
 	AddCollider();
 	AddPhysics();
 	GetPhysics()->SetMass(300);
 }
 
 Bus::~Bus()
+{
+}
+
+void Bus::setStop(bool stop)
 {
 }
 
@@ -30,24 +35,30 @@ void Bus::GameObjectUpdate(double dt)
 	}
 	if (Application::IsKeyPressed('F'))
 	{
-		if (!velocity.IsZero()) rotation += 90 * dt;
+		if (GetPhysics()->GetVelocity().Dot(GetFoward()) > 0) rotation += 90 * dt;
+		else if (GetPhysics()->GetVelocity().Dot(GetFoward()) < 0) rotation -= 90 * dt;
 	}
 	if (Application::IsKeyPressed('H'))
 	{
-		if (!velocity.IsZero()) rotation -= 90 * dt;
+		if (GetPhysics()->GetVelocity().Dot(GetFoward()) > 0) rotation -= 90 * dt;
+		else if (GetPhysics()->GetVelocity().Dot(GetFoward()) < 0) rotation += 90 * dt;
 	}
-	if (Application::IsKeyPressed('Z'))
+	if (Application::IsKeyPressed('X'))
 	{
-		Delete();
+		overSteerPct = 0;
 	}
-	float turnVelMag = 0;
-	if (rotation > 0) turnVelMag = (GetPhysics()->GetVelocity() * grip).Length();
-	GetPhysics()->AddVelocity(-turnVelMag * GetFoward());
-	SetRotateY(GetRotateY() + rotation);
-	GetPhysics()->AddVelocity(turnVelMag * GetFoward());
-	if (velocity.Length() > acceleration) velocity *= (50 / velocity.Length());
-	GetPhysics()->AddVelocity(velocity);
-	if (velocity.Length() == 0) GetPhysics()->SetDrag(brakePower);
+	else overSteerPct = overSteerPct < 1 ? overSteerPct + dt : 1;
+
+	if (velocity.IsZero()) GetPhysics()->SetDrag(brakePower);
+	else
+	{
+		SetRotateY(GetRotateY() + rotation);
+		float centripetalForce = GetPhysics()->GetVelocity().Dot(GetRight()) * overSteerPct; // simulate tire grip
+		GetPhysics()->AddVelocity(GetRight() * -centripetalForce);
+
+		if (velocity.Length() > acceleration) velocity *= (50 / velocity.Length()); // cap velocity
+		GetPhysics()->AddVelocity(velocity);
+	}
 }
 
 std::string Bus::Type()
