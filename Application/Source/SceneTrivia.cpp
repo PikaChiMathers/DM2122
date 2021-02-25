@@ -49,12 +49,11 @@ void SceneTrivia::Init()
 	T_B.SetPosition(Position(0, 0, 0));
 	T_C.SetPosition(Position(-5, 0, 0));
 
-	is_correct = false;
 	press_time = qn_num = score = 0;
 	Qn = new Dialogue("Dialogue//Trivia.txt", Dialogue::TRIVIA);
 	Qn_str = "";
 
-	answer = ANS_TYPE::Blank;
+	answer = "";
 
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
@@ -74,7 +73,11 @@ void SceneTrivia::Init()
 
 	x_value = y_value = z_value = 0;
 
-	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJMTL("Goose", "OBJ//goose.obj", "OBJ//goose.mtl");
+	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("Goose", "OBJ//goose.obj", Color(.93f, .79f, 0));
+	meshList[GEO_GOOSE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	meshList[GEO_GOOSE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
+	meshList[GEO_GOOSE]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
+	meshList[GEO_GOOSE]->material.kShininess = 1.f;
 
 	meshList[GEO_PODIUM_A] = MeshBuilder::GenerateOBJ("A", "OBJ//podium.obj", Color(1, 0, 0));
 	meshList[GEO_PODIUM_B] = MeshBuilder::GenerateOBJ("B", "OBJ//podium.obj", Color(0, 1, 0));
@@ -170,7 +173,7 @@ void SceneTrivia::Init()
 	lights[0].type = Light::LIGHT_POINT;
 	lights[0].position.Set(0, 20, 0);
 	lights[0].color.Set(1, 1, 1);
-	lights[0].power = 10;
+	lights[0].power = 5;
 	lights[0].kC = 1.f;
 	lights[0].kL = 0.01f;
 	lights[0].kQ = 0.001f;
@@ -255,19 +258,18 @@ void SceneTrivia::Update(double dt)
 		if (press_time == 1) // To ensure that the Spacebar is only pressed once
 		{
 			if (T_A.IsTriggered())
-			{
-				answer = ANS_TYPE::A;
-			}
-			else if (T_B.IsTriggered())
-			{
-				answer = ANS_TYPE::B;
-			}
-			else if (T_C.IsTriggered())
-			{
-				answer = ANS_TYPE::C;
-			}
+				answer = Qn->getChoice1();
 
-			if (answer != ANS_TYPE::Blank && qn_num != 0) Check_Answer();
+			else if (T_B.IsTriggered())
+				answer = Qn->getChoice2();
+
+			else if (T_C.IsTriggered())
+				answer = Qn->getChoice3();
+
+			else
+				answer = "";
+
+			if (answer != "" && qn_num != 0) Check_Answer();
 
 			if (qn_num == 0)
 			{
@@ -384,6 +386,11 @@ void SceneTrivia::Render() //My Own Pattern
 	}
 	else if (qn_num <= 10)
 	{
+		if (qn_num == 10 && score == 9) //To set the lighting to Spotlight for a grand finally to see whether the player can get 10/10 for trivia
+		{
+			lights[0].type = Light::LIGHT_SPOT;
+			glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
+		}
 		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(score)) + "/10", Color(0, 1, 0), 6, 110, 76);
 		RenderTextOnScreen(meshList[GEO_TEXT], ("Q" + std::to_string(qn_num) + ":" + Qn_str), Color(0, 1, 0), 2.44f, 37, 65);
 		RenderTextOnScreen(meshList[GEO_TEXT], ("A:" + Qn->getChoice1()), Color(0, 1, 0), 4, 40, 57);
@@ -432,75 +439,12 @@ void SceneTrivia::Exit()
 
 void SceneTrivia::Check_Answer()//Checks the player's answer input and adds points respectfully
 {
-	is_correct = false;
-
 	goose.SetRotateY(180);
 	goose.SetPosition(Position(0, 0, -5));
 
-	if (qn_num == 1)
-	{
-		if (answer == ANS_TYPE::C)
-			is_correct = true;
-	}
-		
-	else if (qn_num == 2)
-	{
-		if (answer == ANS_TYPE::A)
-			is_correct = true;
-	}
-		
-	else if (qn_num == 3)
-	{
-		if (answer == ANS_TYPE::B)
-			is_correct = true;
-	}
-		
-	else if (qn_num == 4)
-	{
-		if (answer == ANS_TYPE::B)
-			is_correct = true;
-	}
-		
-	else if (qn_num == 5)
-	{
-		if (answer == ANS_TYPE::A)
-			is_correct = true;
-	}
-		
-	else if (qn_num == 6)
-	{
-		if (answer == ANS_TYPE::C)
-			is_correct = true;
-	}
-		
-	else if (qn_num == 7)
-	{
-		if (answer == ANS_TYPE::A)
-			is_correct = true;
-	}
-		
-	else if (qn_num == 8)
-	{
-		if (answer == ANS_TYPE::C)
-			is_correct = true;
-	}
-		
-	else if (qn_num == 9)
-	{
-		if (answer == ANS_TYPE::B)
-			is_correct = true;
-	}
-		
-	else if (qn_num == 10)
-	{
-		if (answer == ANS_TYPE::C)
-			is_correct = true;
-	}
-
-	answer = ANS_TYPE::Blank;
-	Qn_str = Qn->Update();
-	if (is_correct)
+	if (answer == Qn->getAnswer())
 		score++;
+	Qn_str = Qn->Update();
 }
 
 void SceneTrivia::RenderMesh(Mesh* mesh, bool enableLight)

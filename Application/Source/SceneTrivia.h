@@ -113,15 +113,6 @@ public:
 		NUM_LIGHTS,
 	};
 
-	enum class ANS_TYPE //Keeps the different types of answers
-	{
-		Blank,
-		A,
-		B,
-		C
-	};
-
-
 private: //added (Step 2)
 	Camera3 camera;
 	Light lights[NUM_LIGHTS];
@@ -130,8 +121,7 @@ private: //added (Step 2)
 	std::string Qn_str;
 
 	int press_time, qn_num, score;
-	bool is_correct;
-	ANS_TYPE answer;
+	std::string answer;
 
 	GameObjectManager manager;
 	Goose goose;
