@@ -226,6 +226,10 @@ void SceneIntro::Init()
 
 void SceneIntro::Update(double dt)
 {
+	
+	
+	camera.Update(dt);
+
 
 	fps = 1.0f / dt;
 
@@ -413,7 +417,18 @@ void SceneIntro::Update(double dt)
 		if (dialogue->getCurrentLine() < dialogue->getTotalLines())
 			std::cout << dialogue->Update() << std::endl;
 
-
+	if (Application::IsKeyPressed(VK_SPACE))
+	{
+		dialogue->Update();
+			if (dialogue->getPersonTalking() == "Boss Goose")
+			{
+				meshList[GEO_UI]->textureID = LoadTGA("Assets//Boss Dialogue Box.tga");
+			}
+			else if (dialogue->getPersonTalking() == "Boss Duck")
+			{
+				meshList[GEO_UI]->textureID = LoadTGA("Assets//Duck Dialogue Box.tga");
+			}
+	}
 }
 
 void SceneIntro::Render() //My Own Pattern
@@ -504,20 +519,6 @@ void SceneIntro::Render() //My Own Pattern
 	modelStack.PopMatrix();
 
 	RenderMeshOnScreen(meshList[GEO_SPLASH], 1, 1, 10, 10);
-
-	if (Application::IsKeyPressed(VK_SPACE))
-	{
-		dialogue->Update();
-		if (dialogue->getPersonTalking() == "Boss Goose")
-		{
-			meshList[GEO_UI]->textureID = LoadTGA("Assets//Boss Dialogue Box.tga");
-		}
-		else if (dialogue->getPersonTalking() == "Boss Duck")
-		{
-			meshList[GEO_UI]->textureID = LoadTGA("Assets//Duck Dialogue Box.tga");
-		}
-		camera.Update(dt);
-	}
 }
 
 void SceneIntro::Exit()
