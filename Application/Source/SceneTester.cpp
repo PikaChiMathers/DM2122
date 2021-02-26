@@ -234,8 +234,13 @@ void SceneTester::Init()
 	passport.AddCollider();
 	passport.SetPosition(Position(10, 0, 0));
 
+	
+
 	manager.CreateGameObject(&coin1);
+
+	coin1.AddCollider();
 	coin1.SetPosition(Position(5, 0, 0));
+	coin1.GetCollider()->SetIsTrigger(true);
 	coin1.SetTag("coin1");
 
 
@@ -394,11 +399,13 @@ void SceneTester::Update(double dt)
 		if (dialogue->getCurrentLine() < dialogue->getTotalLines())
 			std::cout << dialogue->Update() << std::endl;
 
-
-
-	
-
-	
+	if (manager.CheckCollision(coin1.GetCollider()).gameObject != nullptr && !colEnter)
+	{
+		coin_collect = true;
+		coin1.SetPosition(Position(5, -100, 0));
+		money.IncreaseMoney(15);
+		score.increaseScore(0, 15);
+	}
 
 	//	money.IncreaseMoney(100);
 	//	coin.SetPositionY(-10);
@@ -506,7 +513,7 @@ void SceneTester::Render() //My Own Pattern
 	modelStack.PopMatrix();
 
 
-	std::vector<GameObject*>GOList = manager.GetGameObjectList();
+	/*std::vector<GameObject*>GOList = manager.GetGameObjectList();
 	for (std::vector<GameObject*>::iterator it = GOList.begin(); it != GOList.end(); it++)
 	{
 		GameObject* gameObject = (*it);
@@ -525,7 +532,15 @@ void SceneTester::Render() //My Own Pattern
 			RenderMesh(meshList[GEO_COIN], true);
 			modelStack.PopMatrix();
 		}
-	}
+	}*/
+
+	if (coin_collect == false)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(5, 0, 0);
+		RenderMesh(meshList[GEO_COIN], true);
+		modelStack.PopMatrix();
+	};
 
 
 	modelStack.PushMatrix();
