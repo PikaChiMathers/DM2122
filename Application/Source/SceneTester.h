@@ -160,6 +160,7 @@ private: //added (Step 2)
 	GameObject goose;
 
 	Money coin1;
+	Money coin2;
 
 	unsigned m_vertexArrayID;
 	/*unsigned m_vertexBuffer[NUM_GEOMETRY];
