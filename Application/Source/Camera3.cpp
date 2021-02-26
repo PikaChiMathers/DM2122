@@ -9,6 +9,7 @@ static const float rotational_speed = 45.0f;
 
 Camera3::Camera3()
 {
+	multiplier = 1;
 }
 
 Camera3::~Camera3()
@@ -34,30 +35,38 @@ void Camera3::Update(double dt)
     yaw = ZOOM_SPEED * static_cast<float>(dt);
     pitch = ZOOM_SPEED * static_cast<float>(dt);
 
-	
+	if (Application::IsKeyPressed(SHIFT_PRESSED))
+	{
+		multiplier = 8;
+		if (Application::IsKeyPressed('R'))
+		{
+			Reset();
+		}
+	}
+	else multiplier = 1;
 	if (Application::IsKeyPressed('Q'))
 	{
-		position += up * CAMERA_SPEED * dt;
+		position += up * CAMERA_SPEED * multiplier * dt;
 	}
 	if (Application::IsKeyPressed('E'))
 	{
-		position -= up * CAMERA_SPEED * dt;
+		position -= up * CAMERA_SPEED * multiplier * dt;
 	}
 	if (Application::IsKeyPressed('A'))
 	{
-		position -= right * 0.3f * CAMERA_SPEED * dt;
+		position -= right * 0.3f * CAMERA_SPEED * multiplier * dt;
 	}
 	if (Application::IsKeyPressed('D'))
 	{
-		position += right * 0.3f * CAMERA_SPEED * dt;
+		position += right * 0.3f * CAMERA_SPEED * multiplier * dt;
 	}
 	if (Application::IsKeyPressed('S'))
 	{
-		position -= view * 0.3f * ZOOM_SPEED * dt;
+		position -= view * 0.3f * ZOOM_SPEED * multiplier * dt;
 	}
 	if (Application::IsKeyPressed('W'))
 	{
-		position += view * 0.3f * ZOOM_SPEED * dt;
+		position += view * 0.3f * ZOOM_SPEED * multiplier * dt;
 	}
 
 	if (Application::IsKeyPressed(VK_DOWN))
@@ -94,11 +103,6 @@ void Camera3::Update(double dt)
 		up = rotation * up;
 	}
 	target = position + view;
-
-	if (Application::IsKeyPressed('R'))
-	{
-		Reset();
-	}
 }
 
 void Camera3::Reset()

@@ -89,8 +89,6 @@ void SceneTrivia::Init()
 	UI_width = 160;
 	UI_height = 90;
 
-	x_value = y_value = z_value = 0;
-
 	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("Goose", "OBJ//goose.obj", Color(.93f, .79f, 0));
 	meshList[GEO_GOOSE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
 	meshList[GEO_GOOSE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
@@ -220,26 +218,6 @@ void SceneTrivia::Update(double dt)
 {
 	manager.GameObjectManagerUpdate(dt);
 
-	//editor controls
-	{
-		if (Application::IsKeyPressed('I'))
-			z_value -= (float)(LSPEED * dt);
-		if (Application::IsKeyPressed('K'))
-			z_value += (float)(LSPEED * dt);
-		if (Application::IsKeyPressed('J'))
-			x_value -= (float)(LSPEED * dt);
-		if (Application::IsKeyPressed('L'))
-			x_value += (float)(LSPEED * dt);
-		if (Application::IsKeyPressed('O'))
-			y_value -= (float)(LSPEED * dt);
-		if (Application::IsKeyPressed('U'))
-			y_value += (float)(LSPEED * dt);
-		if (Application::IsKeyPressed('T'))
-			lights[0].isOn = false;
-		if (Application::IsKeyPressed('Y'))
-			lights[0].isOn = true;
-	}
-
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
 	if (Application::IsKeyPressed('2'))
@@ -285,9 +263,6 @@ void SceneTrivia::Update(double dt)
 		{
 			sound.Engine()->play2D("media/honk_1.wav");
 
-			if(T_A.IsTriggered() || T_B.IsTriggered() || T_C.IsTriggered())
-				qn_num++;
-
 			if (T_A.IsTriggered())
 				answer = Qn->getChoice1();
 
@@ -300,7 +275,12 @@ void SceneTrivia::Update(double dt)
 			else
 				answer = "";
 
-			if (answer != "" && qn_num != 0) Check_Answer();
+			if (answer != "")
+			{
+				qn_num++;
+				if (qn_num != 0)
+					Check_Answer();
+			}
 
 			if (qn_num == 0)
 			{

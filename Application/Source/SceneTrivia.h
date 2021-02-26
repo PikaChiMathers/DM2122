@@ -38,8 +38,6 @@ public:
 	float translateX, translateY;
 	float scaleAll;
 
-	float x_value, y_value, z_value;
-
 	int UI_height, UI_width;
 
 
