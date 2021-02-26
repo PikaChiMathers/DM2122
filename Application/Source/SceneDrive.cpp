@@ -218,11 +218,11 @@ void SceneDrive::Init()
 
 
 	manager.CreateGameObject(&bus);
-	cluster.SetPosition(Position(-20, 0, 20));
+	cluster.SetPosition(Position(-50, 0, -100));
 	cluster.SetScale(Scale(11.5f, 1, 23));
-	cluster.SetTag("Type1");
+	cluster.SetTag("Type5");
 	manager.CreateGameObject(&cluster);
-	cluster2.SetPosition(Position(-20, 0, -20));
+	/*cluster2.SetPosition(Position(-20, 0, -20));
 	cluster2.SetScale(Scale(11.5f, 1, 23));
 	cluster2.SetTag("Type2");
 	manager.CreateGameObject(&cluster2);
@@ -249,7 +249,7 @@ void SceneDrive::Init()
 	cluster8.SetPosition(Position(50, 0, 50));
 	cluster8.SetScale(Scale(23, 1, 23));
 	cluster8.SetTag("Type8");
-	manager.CreateGameObject(&cluster8);
+	manager.CreateGameObject(&cluster8);*/
 }
 
 void SceneDrive::Update(double dt)
@@ -401,7 +401,7 @@ void SceneDrive::Render() //My Own Pattern
 
 	modelStack.PushMatrix();
 		modelStack.Rotate(270, 1, 0, 0);
-		modelStack.Scale(500, 500, 1);
+		modelStack.Scale(300, 300, 1);
 		RenderMesh(meshList[GEO_TEMPLATE], false);
 	modelStack.PopMatrix();
 
@@ -580,6 +580,7 @@ void SceneDrive::Render() //My Own Pattern
 	std::ostringstream sc;
 	sc << "Score:" << score.getScore(0);
 	RenderTextOnScreen(meshList[GEO_TEXT], sc.str(), Color(1, 0, 0), 3, 130, 87);
+	//RenderMeshOnScreen(meshList[GEO_QUAD], 80, 45, 10, 10);
 }
 
 void SceneDrive::Exit()
