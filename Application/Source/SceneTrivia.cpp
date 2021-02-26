@@ -542,7 +542,7 @@ void SceneTrivia::RenderSkybox()
 
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 24, 0);
-	modelStack.Rotate(-90, 1, 0, 0);
+	modelStack.Rotate(90, 1, 0, 0);
 	modelStack.Scale(50, 50, 50);
 	RenderMesh(meshList[GEO_TOP], true);
 	modelStack.PopMatrix();
