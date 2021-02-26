@@ -12,14 +12,13 @@
 #include "Application.h"
 
 
-SceneShop::SceneShop()
+SceneShop::SceneShop() : displayShopUI(false)
 {
 }
 
 SceneShop::~SceneShop()
 {
 }
-
 
 void SceneShop::Init()
 {
@@ -80,6 +79,8 @@ void SceneShop::Init()
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//trebuchet.tga");
+
+	meshList[GEO_UI] = MeshBuilder::GenerateQuad("UI", Color(1, 1, 1), 1.f, 1.f);
 
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
@@ -216,9 +217,103 @@ void SceneShop::Update(double dt)
 
 		scene_change = false;
 	}
+
+	bool canUpgrade0 = false;
+	bool canUpgrade1 = false;
+	bool canUpgrade2 = false;
+	if (camera.position.x > -13.5 && camera.position.z > -8.35 && camera.position.x < 13.5 && camera.position.z < 8.35)
+	{
+		displayShopUI = true;
+
+		if (shop.getUpgradeLevel(0) == 0)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 0.tga");
+		else if (shop.getUpgradeLevel(0) == 1)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 1.tga");
+		else if (shop.getUpgradeLevel(0) == 2)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 2.tga");
+		else if (shop.getUpgradeLevel(0) == 3)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 3.tga");
+		else if (shop.getUpgradeLevel(0) == 4)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 4.tga");
+		else if (shop.getUpgradeLevel(0) == 5)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 5.tga");
+
+		if (shop.getUpgradeLevel(0) != 5)
+			canUpgrade0 == true;
+	}
+	else if (camera.position.x > 13.5 && camera.position.z > -4 && camera.position.x < 18.85 && camera.position.z < 4)
+	{
+		displayShopUI = true;
+
+		if (shop.getUpgradeLevel(1) == 0)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 0.tga");
+		else if (shop.getUpgradeLevel(1) == 1)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 1.tga");
+		else if (shop.getUpgradeLevel(1) == 2)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 2.tga");
+		else if (shop.getUpgradeLevel(1) == 3)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 3.tga");
+		else if (shop.getUpgradeLevel(1) == 4)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 4.tga");
+		else if (shop.getUpgradeLevel(1) == 5)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 5.tga");
+
+		if (shop.getUpgradeLevel(1) != 5)
+			canUpgrade1 == true;
+	}
+	else if (camera.position.x > -18.85 && camera.position.z > -8.35 && camera.position.x < -13.5 && camera.position.z < 4)
+	{
+		displayShopUI = true;
+
+		if (shop.getUpgradeLevel(2) == 0)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 0.tga");
+		else if (shop.getUpgradeLevel(2) == 1)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 1.tga");
+		else if (shop.getUpgradeLevel(2) == 2)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 2.tga");
+		else if (shop.getUpgradeLevel(2) == 3)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 3.tga");
+		else if (shop.getUpgradeLevel(2) == 4)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 4.tga");
+		else if (shop.getUpgradeLevel(2) == 5)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 5.tga");
+
+		if (shop.getUpgradeLevel(2) != 5)
+			canUpgrade2 == true;
+	}
+	else
+		displayShopUI = false;
+
+	if (spacePressed == false && Application::IsKeyPressed(VK_SPACE))
+	{
+		spacePressed = true;
+
+		if (canUpgrade0 == true && money >= shop.getUpgradeCost(0))
+		{
+			money -= shop.getUpgradeCost(0);
+			shop.upgrade(0);
+		}
+		else if (canUpgrade1 == true && money >= shop.getUpgradeCost(1))
+		{
+			money -= shop.getUpgradeCost(1);
+			shop.upgrade(1);
+		}
+		else if (canUpgrade2 == true && money >= shop.getUpgradeCost(2))
+		{
+			money -= shop.getUpgradeCost(2);
+			shop.upgrade(2);
+		}
+	}
+	else
+	{
+		//print no money
+	}
+
+	if (spacePressed == true && !Application::IsKeyPressed(VK_SPACE))
+		spacePressed = false;
 }
 
-void SceneShop::Render() //My Own Pattern
+void SceneShop::Render()
 {
 	// Render VBO here
 
@@ -291,6 +386,9 @@ void SceneShop::Render() //My Own Pattern
 	ss.precision(5);
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 87);
+
+	if (displayShopUI)
+		RenderMeshOnScreen(meshList[GEO_UI], 90, 45, 100, 50);
 }
 
 void SceneShop::Exit()
@@ -480,8 +578,7 @@ void SceneShop::RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int size
 	viewStack.LoadIdentity(); //No need camera for ortho mode
 	modelStack.PushMatrix();
 	modelStack.LoadIdentity();
-	modelStack.Translate(x, y, 0); 
-	modelStack.Rotate(180, 1, 0, 0);
+	modelStack.Translate(x, y, 0);
 	modelStack.Scale(sizex, sizey, 1);
 	RenderMesh(mesh, false); //UI should not have light
 	projectionStack.PopMatrix();

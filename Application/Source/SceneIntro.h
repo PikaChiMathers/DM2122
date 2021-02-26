@@ -73,7 +73,7 @@ public:
 		GEO_SPLASH,
 		GEO_ROOM,
 		GEO_TEXT,
-
+		GEO_UI,
 		GEO_TEST,
 
 		NUM_GEOMETRY,

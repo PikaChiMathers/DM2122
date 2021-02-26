@@ -32,6 +32,13 @@ void SceneTrivia::Init()
 	manager.CreateGameObject(&P_B);
 	manager.CreateGameObject(&P_C);
 
+	//Initializes Wall Colliders front, back, left & right
+	manager.CreateGameObject(&C_F);
+	manager.CreateGameObject(&C_B);
+	manager.CreateGameObject(&C_L);
+	manager.CreateGameObject(&C_R);
+
+
 	//Initializes Trigger (Checks whether the player presses spacebar in a cerrtain area) of each podium
 	manager.CreateGameObject(&T_A);
 	manager.CreateGameObject(&T_B);
@@ -45,13 +52,24 @@ void SceneTrivia::Init()
 	P_B.SetPosition(Position(0, 0, 0));
 	P_C.SetPosition(Position(-5, 0, 0));
 
+	C_F.SetScale(Scale(50, 50, 50));
+	C_B.SetScale(Scale(50, 50, 50));
+	C_L.SetScale(Scale(50, 50, 50));
+	C_R.SetScale(Scale(50, 50, 50));
+
+	C_F.SetPosition(Position(0, 0, 46));
+	C_B.SetPosition(Position(0, 0, -33));
+	C_L.SetPosition(Position(-38, 0, 5));
+	C_R.SetPosition(Position(38, 0, 5));
+
+
 	T_A.SetPosition(Position(5, 0, 0));
 	T_B.SetPosition(Position(0, 0, 0));
 	T_C.SetPosition(Position(-5, 0, 0));
 
 	press_time = qn_num = score = 0;
 	Qn = new Dialogue("Dialogue//Trivia.txt", Dialogue::TRIVIA);
-	Qn_str = "";
+	Qn_str = Qn->Update();
 
 	answer = "";
 
@@ -252,12 +270,23 @@ void SceneTrivia::Update(double dt)
 		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
 	}
 
+	if (qn_num == 10 && score == 9) //To set the lighting to Spotlight for a grand finally to see whether the player can get 10/10 for trivia
+	{
+		if (dt/13 == 0)
+			sound.Engine()->play2D("media/correctAns.ogg");
+		lights[0].type = Light::LIGHT_SPOT;
+		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
+	}
+	
 	if (Application::IsKeyPressed(VK_SPACE))
 	{
 		press_time++;
 		if (press_time == 1) // To ensure that the Spacebar is only pressed once
 		{
 			sound.Engine()->play2D("media/honk_1.wav");
+
+			if(T_A.IsTriggered() || T_B.IsTriggered() || T_C.IsTriggered())
+				qn_num++;
 
 			if (T_A.IsTriggered())
 				answer = Qn->getChoice1();
@@ -278,8 +307,6 @@ void SceneTrivia::Update(double dt)
 				qn_num++;
 				Qn_str = Qn->Update();
 			}
-			else
-				qn_num++;
 		}
 	}
 	else press_time = 0;
@@ -319,6 +346,8 @@ void SceneTrivia::Render() //My Own Pattern
 
 	Mtx44 mvp = projectionStack.Top() * viewStack.Top() * modelStack.Top();
 	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &mvp.a[0]); //update the shader with new MVP
+
+	RenderMesh(meshList[GEO_AXES], false);
 
 	modelStack.PushMatrix();
 	modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
@@ -377,22 +406,16 @@ void SceneTrivia::Render() //My Own Pattern
 	RenderText(meshList[GEO_TEXT], "C", Color(1, 1, 1));
 	modelStack.PopMatrix();
 
-
 	modelStack.PushMatrix();
 	modelStack.Rotate(180, 0, 1, 0);
 	if (qn_num == 0)
 	{
-		RenderTextOnScreen(meshList[GEO_TEXT], "Trivia", Color(0, 1, 0), 10, 63, 67);
+		RenderTextOnScreen(meshList[GEO_TEXT], Qn_str + " Trivia", Color(0, 1, 0), 10, 46, 64);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Use WASD to move to A, B or C", Color(0, 1, 0), 2.5f, 57, 59);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Spacebar to select & start", Color(0, 1, 0), 2.5f, 59, 52);
 	}
 	else if (qn_num <= 10)
 	{
-		if (qn_num == 10 && score == 9) //To set the lighting to Spotlight for a grand finally to see whether the player can get 10/10 for trivia
-		{
-			lights[0].type = Light::LIGHT_SPOT;
-			glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-		}
 		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(score)) + "/10", Color(0, 1, 0), 6, 110, 76);
 		RenderTextOnScreen(meshList[GEO_TEXT], ("Q" + std::to_string(qn_num) + ":" + Qn_str), Color(0, 1, 0), 2.44f, 37, 65);
 		RenderTextOnScreen(meshList[GEO_TEXT], ("A:" + Qn->getChoice1()), Color(0, 1, 0), 4, 40, 57);
@@ -403,6 +426,7 @@ void SceneTrivia::Render() //My Own Pattern
 	{
 		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(score) + "/10"), Color(0, 1, 0), 10, 72, 53);
 	}
+
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -445,7 +469,13 @@ void SceneTrivia::Check_Answer()//Checks the player's answer input and adds poin
 	goose.SetPosition(Position(0, 0, -5));
 
 	if (answer == Qn->getAnswer())
+	{
+		sound.Engine()->play2D("media/correctAns.ogg");
 		score++;
+	}
+	else
+		sound.Engine()->play2D("media/wrongAns.ogg");
+
 	Qn_str = Qn->Update();
 }
 
@@ -626,7 +656,6 @@ void SceneTrivia::RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int si
 	modelStack.PushMatrix();
 	modelStack.LoadIdentity();
 	modelStack.Translate(x, y, 0);
-	modelStack.Rotate(180, 1, 0, 0);
 	modelStack.Scale(sizex, sizey, 1);
 	RenderMesh(mesh, false); //UI should not have light
 	projectionStack.PopMatrix();

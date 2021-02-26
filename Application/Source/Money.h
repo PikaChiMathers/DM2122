@@ -9,7 +9,6 @@ class Money : public GameObject
 {
 private:
 	int money;
-	GameObject* coins;
 	Score score;
 
 public:
@@ -22,5 +21,6 @@ public:
 	void ResetMoney();
 	int getMoney();
 	void OnTriggerEnter(GameObject*);
+	std::string Type();
 };
 #endif
