@@ -142,14 +142,12 @@ private: //added (Step 2)
 	Maps map;
 
 	GameObjectManager manager;
-	ColliderObj cluster;
-	ColliderObj cluster2;
-	ColliderObj cluster3;
-	ColliderObj cluster4;
-	ColliderObj cluster5;
-	ColliderObj cluster6;
-	ColliderObj cluster7;
-	ColliderObj cluster8;
+	ColliderObj* cluster[16];
+
+	GameObject* TestRef;
+	double toggleTime = 0;
+	bool toggleHitBox = false;
+	float multiplier = 4;
 
 	Money money;
 	Score score;
