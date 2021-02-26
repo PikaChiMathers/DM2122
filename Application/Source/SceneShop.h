@@ -9,6 +9,7 @@
 #include "Light.h"
 #include "Maps.h"
 #include "GameObject.h"
+#include "Shop.h"
 #include <sstream>
 
 class SceneShop : public Scene
@@ -51,6 +52,7 @@ public:
 		GEO_BACK,
 
 		GEO_TEXT,
+		GEO_UI,
 
 		NUM_GEOMETRY,
 	};
@@ -115,6 +117,12 @@ private: //added (Step 2)
 	Maps map;
 
 	bool scene_change;
+
+	Shop shop;
+	bool displayShopUI;
+	int money;
+
+	bool spacePressed;
 
 	unsigned m_vertexArrayID;
 
