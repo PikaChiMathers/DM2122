@@ -233,6 +233,12 @@ void SceneTester::Init()
 	//coin.GetCollider()->SetIsTrigger(true);
 	passport.AddCollider();
 	passport.SetPosition(Position(10, 0, 0));
+
+	manager.CreateGameObject(&coin1);
+	coin1.SetPosition(Position(5, 0, 0));
+	coin1.SetTag("coin1");
+
+
 }
 
 void SceneTester::Update(double dt)
@@ -499,13 +505,28 @@ void SceneTester::Render() //My Own Pattern
 		RenderMesh(meshList[GEO_CUBE], false);
 	modelStack.PopMatrix();
 
-	if (coin_collect == false)
+
+	std::vector<GameObject*>GOList = manager.GetGameObjectList();
+	for (std::vector<GameObject*>::iterator it = GOList.begin(); it != GOList.end(); it++)
 	{
-		modelStack.PushMatrix();
-		modelStack.Translate(5, 0, 0);
-		RenderMesh(meshList[GEO_COIN], true);
-		modelStack.PopMatrix();
+		GameObject* gameObject = (*it);
+		if (gameObject->Type() == "Bus")
+		{
+			modelStack.PushMatrix();
+			modelStack.Rotate(180, 0, 1, 0);
+			modelStack.Scale(.01f, .01f, .01f);
+			RenderMesh(meshList[GEO_TEST], false);
+			modelStack.PopMatrix();
+		}
+		if (gameObject->GetTag() == "coin1")
+		{
+			modelStack.PushMatrix();
+			modelStack.Translate(5, 0, 0);
+			RenderMesh(meshList[GEO_COIN], true);
+			modelStack.PopMatrix();
+		}
 	}
+
 
 	modelStack.PushMatrix();
 	RenderMesh(meshList[GEO_GOOSE], true);
@@ -659,6 +680,8 @@ void SceneTester::RenderSkybox()
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_TOP], false);
 	modelStack.PopMatrix();
+
+
 }
 
 void SceneTester::RenderText(Mesh* mesh, std::string text, Color color)
