@@ -163,10 +163,6 @@ private: //added (Step 2)
 	Dialogue* dialogue;
 
 	//GameObject gameObject;
-	Bus gameObject;
-	GameObject box;
-	GameObject coin;
-	GameObject passport;
 	Goose goose;
 
 

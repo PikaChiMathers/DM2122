@@ -29,10 +29,6 @@ void SceneSearch::Init()
 
 	dialogue = new Dialogue("Dialogue//D1.txt", Dialogue::DIALOGUE);
 
-	manager.CreateGameObject(&gameObject);
-	manager.CreateGameObject(&box);
-	manager.CreateGameObject(&coin);
-	manager.CreateGameObject(&passport);
 	manager.CreateGameObject(&goose);
 
 	Mtx44 projection;
