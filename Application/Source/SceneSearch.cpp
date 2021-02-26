@@ -232,17 +232,6 @@ void SceneSearch::Init()
 
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
-
-	box.AddCollider();
-	//box.GetCollider()->AddPhysics();
-	gameObject.SetPosition(Position(10, 0, 5));
-	box.SetPosition(Position(10, 0, 10));
-	box.SetScale(Scale(2, 1, 1));
-	//box.GetCollider()->SetIsTrigger(true);
-	//coin.AddCollider();
-	//coin.GetCollider()->SetIsTrigger(true);
-	passport.AddCollider();
-	passport.SetPosition(Position(10, 0, 0));
 }
 
 void SceneSearch::Update(double dt)
@@ -409,33 +398,12 @@ void SceneSearch::Render() //My Own Pattern
 	RenderMesh(meshList[GEO_QUAD], lights[0].isOn);
 	modelStack.PopMatrix();
 
-	//modelStack.PushMatrix();
-	//modelStack.Translate(10, 0, 0);
-	//RenderMesh(meshList[GEO_MALL], false);
-	//modelStack.PopMatrix();
-
 	RenderCity();
 
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, Application::GetWindowHeight() * .1f);
-
-	if (manager.CheckCollision(gameObject.GetCollider()).gameObject != nullptr && !colEnter)
-	{
-		colEnter = true;
-		colCount++;
-	}
-	if (colEnter && (manager.CheckCollision(gameObject.GetCollider()).gameObject == nullptr))
-	{
-		colEnter = false;
-	}
-	RenderTextOnScreen(meshList[GEO_TEXT], "Collide: " + std::to_string(colEnter), Color(0, 1, 0), 4, 0, 4);
-	RenderTextOnScreen(meshList[GEO_TEXT], "Collide Count: " + std::to_string(colCount), Color(0, 1, 0), 4, 0, 0);
-	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(box.GetCollider()->GetPosition().x) + ", " + std::to_string(box.GetCollider()->GetPosition().y) + ", " + std::to_string(box.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 8);
-	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetCollider()->GetPosition().x) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().y) + ", " + std::to_string(gameObject.GetCollider()->GetPosition().z), Color(0, 1, 0), 2, 0, 10);
-	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetFoward().x) + ", " + std::to_string(gameObject.GetFoward().y) + ", " + std::to_string(gameObject.GetFoward().z), Color(0, 1, 0), 2, 0, 12);
-	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetPhysics()->GetVelocity().x) + ", " + std::to_string(gameObject.GetPhysics()->GetVelocity().y) + ", " + std::to_string(gameObject.GetPhysics()->GetVelocity().z), Color(0, 1, 0), 2, 0, 14);
 
 	std::ostringstream mn;
 	mn << "Money:" << money.getMoney();
