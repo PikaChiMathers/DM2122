@@ -12,7 +12,7 @@
 #include "Application.h"
 
 
-SceneShop::SceneShop() : displayShopUI(false)
+SceneShop::SceneShop() : displayShopUI(false), displayMessage(false)
 {
 }
 
@@ -184,8 +184,6 @@ void SceneShop::Init()
 
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
-
-	money = 800;
 }
 
 void SceneShop::Update(double dt)
@@ -286,6 +284,11 @@ void SceneShop::Update(double dt)
 	else
 		displayShopUI = false;
 
+	if (timer > 0)
+		timer -= dt;
+	else
+		displayMessage = false;
+
 	if (spacePressed == false && Application::IsKeyPressed(VK_SPACE))
 	{
 		spacePressed = true;
@@ -305,10 +308,11 @@ void SceneShop::Update(double dt)
 			money -= shop.getUpgradeCost(2);
 			shop.upgrade(2);
 		}
-	}
-	else
-	{
-		//print no money
+		else
+		{
+			displayMessage = true;
+			timer = 1;
+		}
 	}
 
 	if (spacePressed == true && !Application::IsKeyPressed(VK_SPACE))
@@ -390,7 +394,10 @@ void SceneShop::Render()
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 87);
 
 	if (displayShopUI)
-		RenderMeshOnScreen(meshList[GEO_UI], 90, 45, 100, 50);
+		RenderMeshOnScreen(meshList[GEO_UI], 80, 15, 100, 30);
+
+	if (displayMessage)
+		RenderTextOnScreen(meshList[GEO_TEXT], "Not enough money!", Color(1, 1, 1), 3, 55, 50);
 }
 
 void SceneShop::Exit()
