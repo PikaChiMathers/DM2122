@@ -4,6 +4,7 @@
 #include "Scene.h"
 #include "Camera2.h"
 #include "Camera3.h"
+#include "CameraChase.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Vertex.h"
@@ -137,17 +138,19 @@ public:
 
 
 private: //added (Step 2)
-	Camera3 camera;
+	//Camera3 camera;
+	CameraChase camera;
 
 	Maps map;
 
 	GameObjectManager manager;
-	ColliderObj* cluster[16];
+	ColliderObj* cluster[51];
 
 	GameObject* TestRef;
 	double toggleTime = 0;
 	bool toggleHitBox = false;
 	float multiplier = 4;
+	int clusterType = 1;
 
 	Money money;
 	Score score;
