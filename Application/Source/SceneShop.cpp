@@ -22,9 +22,9 @@ SceneShop::~SceneShop()
 
 void SceneShop::Init()
 {
-	camera.Init(Vector3(9.5, 3, 6), Vector3(0, 3, 0), Vector3(0, 1, 0));
-	camera.setShopBound(Vector3(-18.85, 2, -8.35), Vector3(18.85, 4, 8.35));
-	camera.setBusBound(Vector3(-13.5, 2, -4), Vector3(13.5, 4, 4));
+	camera.Init(Vector3(9.5f, 3, 6), Vector3(0, 3, 0), Vector3(0, 1, 0));
+	camera.setShopBound(Vector3(-18.85f, 2, -8.35f), Vector3(18.85f, 4, 8.35f));
+	camera.setBusBound(Vector3(-13.5f, 2, -4), Vector3(13.5f, 4, 4));
 
 	map.Set(Maps::SKYBOX_TYPE::SB_SHOP);
 
@@ -184,6 +184,8 @@ void SceneShop::Init()
 
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
+
+	money = 800;
 }
 
 void SceneShop::Update(double dt)
@@ -238,8 +240,8 @@ void SceneShop::Update(double dt)
 		else if (shop.getUpgradeLevel(0) == 5)
 			meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 5.tga");
 
-		if (shop.getUpgradeLevel(0) != 5)
-			canUpgrade0 == true;
+		if (shop.getUpgradeLevel(0) < 5)
+			canUpgrade0 = true;
 	}
 	else if (camera.position.x > 13.5 && camera.position.z > -4 && camera.position.x < 18.85 && camera.position.z < 4)
 	{
@@ -259,7 +261,7 @@ void SceneShop::Update(double dt)
 			meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 5.tga");
 
 		if (shop.getUpgradeLevel(1) != 5)
-			canUpgrade1 == true;
+			canUpgrade1 = true;
 	}
 	else if (camera.position.x > -18.85 && camera.position.z > -8.35 && camera.position.x < -13.5 && camera.position.z < 4)
 	{
@@ -279,7 +281,7 @@ void SceneShop::Update(double dt)
 			meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 5.tga");
 
 		if (shop.getUpgradeLevel(2) != 5)
-			canUpgrade2 == true;
+			canUpgrade2 = true;
 	}
 	else
 		displayShopUI = false;
@@ -378,7 +380,7 @@ void SceneShop::Render()
 
 	modelStack.PushMatrix();
 	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(0.07, 0.07, 0.07);
+	modelStack.Scale(0.07f, 0.07f, 0.07f);
 	RenderMesh(meshList[GEO_BUS], lights[0].isOn);
 	modelStack.PopMatrix();
 
@@ -450,28 +452,28 @@ void SceneShop::RenderMesh(Mesh* mesh, bool enableLight)
 void SceneShop::RenderSkybox()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(18.99, 4.99, 0);
+	modelStack.Translate(18.99f, 4.99f, 0);
 	modelStack.Rotate(-90, 0, 1, 0);
 	modelStack.Scale(17, 10, 20);
 	RenderMesh(meshList[GEO_FRONT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-18.99, 4.99, 0);
+	modelStack.Translate(-18.99f, 4.99f, 0);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(17, 10, 38);
 	RenderMesh(meshList[GEO_BACK], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 4.99, 8.49);
+	modelStack.Translate(0, 4.99f, 8.49f);
 	modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Scale(38, 10, 17);
 	RenderMesh(meshList[GEO_LEFT], false);
 	modelStack.PopMatrix();
 	
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 4.99, -8.49);
+	modelStack.Translate(0, 4.99f, -8.49f);
 	modelStack.Scale(38, 10, 17);
 	RenderMesh(meshList[GEO_RIGHT], false);
 	modelStack.PopMatrix();
