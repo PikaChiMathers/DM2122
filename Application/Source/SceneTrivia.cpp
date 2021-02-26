@@ -263,9 +263,6 @@ void SceneTrivia::Update(double dt)
 		{
 			sound.Engine()->play2D("media/honk_1.wav");
 
-			if(T_A.IsTriggered() || T_B.IsTriggered() || T_C.IsTriggered())
-				qn_num++;
-
 			if (T_A.IsTriggered())
 				answer = Qn->getChoice1();
 
@@ -278,7 +275,12 @@ void SceneTrivia::Update(double dt)
 			else
 				answer = "";
 
-			if (answer != "" && qn_num != 0) Check_Answer();
+			if (answer != "")
+			{
+				qn_num++;
+				if (qn_num != 0)
+					Check_Answer();
+			}
 
 			if (qn_num == 0)
 			{

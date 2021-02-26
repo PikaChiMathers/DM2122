@@ -10,6 +10,7 @@
 #include "Light.h"
 
 #include "GameObjectManager.h"
+#include "Goose.h"
 #include "Bus.h"
 #include "Person.h"
 #include "Money.h"
@@ -166,7 +167,7 @@ private: //added (Step 2)
 	GameObject box;
 	GameObject coin;
 	GameObject passport;
-	GameObject goose;
+	Goose goose;
 
 
 

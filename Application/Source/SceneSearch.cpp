@@ -126,8 +126,11 @@ void SceneSearch::Init()
 	meshList[GEO_TREE1] = MeshBuilder::GenerateOBJ("tree1", "OBJ//tree_large.obj", Color(0.184314, 0.309804, 0.184314));
 	meshList[GEO_TREE2] = MeshBuilder::GenerateOBJ("tree2", "OBJ//tree_small.obj", Color(0.184314, 0.309804, 0.184314));
 
-	/*meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("goose", "OBJ//goose.obj", Color(1 ,1, 1));
-	meshList[GEO_PASSPORT] = MeshBuilder::GenerateOBJMTL("passport", "OBJ//passport.obj", "OBJ//passport.mtl");*/
+	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("Goose", "OBJ//goose.obj", Color(.93f, .79f, 0));
+	meshList[GEO_GOOSE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	meshList[GEO_GOOSE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
+	meshList[GEO_GOOSE]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
+	meshList[GEO_GOOSE]->material.kShininess = 1.f;
 
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
@@ -210,7 +213,6 @@ void SceneSearch::Init()
 	lights[1].exponent = 3.f;
 	lights[1].spotDirection.Set(0.f, 0.5f, 0.f);
 
-
 	glUniform1i(m_parameters[U_NUMLIGHTS], 1);
 	glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
 	glUniform3fv(m_parameters[U_LIGHT0_COLOR], 1, &lights[0].color.r);
@@ -221,9 +223,6 @@ void SceneSearch::Init()
 	glUniform1f(m_parameters[U_LIGHT0_COSCUTOFF], lights[0].cosCutoff);
 	glUniform1f(m_parameters[U_LIGHT0_COSINNER], lights[0].cosInner);
 	glUniform1f(m_parameters[U_LIGHT0_EXPONENT], lights[0].exponent);
-
-
-
 
 	glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
 	glUniform3fv(m_parameters[U_LIGHT1_COLOR], 1, &lights[1].color.r);
@@ -273,35 +272,10 @@ void SceneSearch::Update(double dt)
 	if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
 
-	//if (Application::IsKeyPressed('I'))
-	//	lights[0].position.z -= (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('K'))
-	//	lights[0].position.z += (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('J'))
-	//	lights[0].position.x -= (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('L'))
-	//	lights[0].position.x += (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('O'))
-	//	lights[0].position.y -= (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('U'))
-	//	lights[0].position.y += (float)(LSPEED * dt);
 	if (Application::IsKeyPressed('T'))
 		lights[0].isOn = false;
 	if (Application::IsKeyPressed('Y'))
 		lights[0].isOn = true;
-
-	//for testing purposes
-	if (Application::IsKeyPressed('V'))
-	{
-		scene_change = true;
-		map.Set(Maps::SKYBOX_TYPE::SB_DAY);
-	}
-	if (Application::IsKeyPressed('B'))
-	{
-		scene_change = true;
-		map.Set(Maps::SKYBOX_TYPE::SB_NIGHT);
-	}
-
 
 	if (scene_change) //to ensure that the skybox only updates when the scene changes
 	{
@@ -313,48 +287,6 @@ void SceneSearch::Update(double dt)
 		meshList[GEO_BOTTOM]->textureID = LoadTGA((map.skybox_loc[5]).std::string::c_str());
 
 		scene_change = false;
-	}
-	//Mouse Inputs
-	static bool bLButtonState = false;
-	if (!bLButtonState && Application::IsMousePressed(0))
-	{
-		bLButtonState = true;
-		std::cout << "LBUTTON DOWN" << std::endl;
-	}
-	else if (bLButtonState && !Application::IsMousePressed(0))
-	{
-		bLButtonState = false;
-		//Converting Viewport space to UI space
-		double x, y;
-		Application::GetCursorPos(&x, &y);
-		int w = Application::GetWindowWidth();
-		int h = Application::GetWindowHeight();
-		float posX = x / 10; //convert (0,800) to (0,80)
-		float posY = 60 - (y / 10); //convert (600,0) to (0,60)
-		std::cout << "posX:" << posX << " , posY:" << posY <<
-			std::endl;
-		if (posX > 20 && posX < 60 && posY >
-			45 && posY < 15)
-		{
-			std::cout << "Hit!" << std::endl;
-			//trigger user action or function
-		}
-		else
-		{
-			std::cout << "Miss!" << std::endl;
-		}
-		std::cout << "LBUTTON UP" << std::endl;
-	}
-	static bool bRButtonState = false;
-	if (!bRButtonState && Application::IsMousePressed(1))
-	{
-		bRButtonState = true;
-		std::cout << "RBUTTON DOWN" << std::endl;
-	}
-	else if (bRButtonState && !Application::IsMousePressed(1))
-	{
-		bRButtonState = false;
-		std::cout << "RBUTTON UP" << std::endl;
 	}
 
 	if (Application::IsKeyPressed('5'))
@@ -403,15 +335,6 @@ void SceneSearch::Update(double dt)
 		if (dialogue->getCurrentLine() < dialogue->getTotalLines())
 			std::cout << dialogue->Update() << std::endl;
 
-
-
-
-
-
-
-	//	money.IncreaseMoney(100);
-	//	coin.SetPositionY(-10);
-	//score.setScore(0, money.getMoney());
 }
 
 void SceneSearch::Render() //My Own Pattern
