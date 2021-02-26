@@ -216,40 +216,70 @@ void SceneDrive::Init()
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 
-
-	manager.CreateGameObject(&bus);
-	cluster.SetPosition(Position(-20, 0, 20));
-	cluster.SetScale(Scale(11.5f, 1, 23));
-	cluster.SetTag("Type1");
-	manager.CreateGameObject(&cluster);
-	cluster2.SetPosition(Position(-20, 0, -20));
-	cluster2.SetScale(Scale(11.5f, 1, 23));
-	cluster2.SetTag("Type2");
-	manager.CreateGameObject(&cluster2);
-	cluster3.SetPosition(Position(20, 0, 20));
-	cluster3.SetScale(Scale(11.5f, 1, 23));
-	cluster3.SetTag("Type3");
-	manager.CreateGameObject(&cluster3);
-	cluster4.SetPosition(Position(20, 0, -20));
-	cluster4.SetScale(Scale(23, 1, 34.5));
-	cluster4.SetTag("Type4");
-	manager.CreateGameObject(&cluster4);
-	cluster5.SetPosition(Position(50, 0, -50));
-	cluster5.SetScale(Scale(23, 1, 34.5));
-	cluster5.SetTag("Type5");
-	manager.CreateGameObject(&cluster5);
-	cluster6.SetPosition(Position(-50, 0, -50));
-	cluster6.SetScale(Scale(23, 1, 23));
-	cluster6.SetTag("Type6");
-	manager.CreateGameObject(&cluster6);
-	cluster7.SetPosition(Position(-50, 0, 50));
-	cluster7.SetScale(Scale(23, 1, 23));
-	cluster7.SetTag("Type7");
-	manager.CreateGameObject(&cluster7);
-	cluster8.SetPosition(Position(50, 0, 50));
-	cluster8.SetScale(Scale(23, 1, 23));
-	cluster8.SetTag("Type8");
-	manager.CreateGameObject(&cluster8);
+	/**
+	* scaling
+	* type 1-3: 11.5,23
+	* type 4-5: 23,34.5
+	* type 6-8: 23,23
+	*/
+	//manager.CreateGameObject(&bus);
+	cluster[0] = new ColliderObj;
+	cluster[0]->SetPosition(Position(-46.2519, 0, -79.7891));
+	cluster[0]->SetScale(Scale(23, 1, 34.5f));
+	cluster[0]->SetTag("Type5");
+	manager.CreateGameObject(cluster[0]);
+	cluster[1] = new ColliderObj;
+	cluster[1]->SetPosition(Position(-122.5, 0, -120.3));
+	cluster[1]->SetScale(Scale(23, 1, 23));
+	cluster[1]->SetTag("Type6");
+	manager.CreateGameObject(cluster[1]);
+	cluster[2] = new ColliderObj;
+	cluster[2]->SetPosition(Position(-42.929, 0, -45.03));
+	cluster[2]->SetRotateY(-90);
+	cluster[2]->SetScale(Scale(11.5f, 1, 23));
+	cluster[2]->SetTag("Type3");
+	manager.CreateGameObject(cluster[2]);
+	cluster[3] = new ColliderObj;
+	cluster[3]->SetPosition(Position(-41.1, 0, -13.18));
+	cluster[3]->SetScale(Scale(23, 1, 23));
+	cluster[3]->SetTag("Type8");
+	manager.CreateGameObject(cluster[3]);
+	cluster[4] = new ColliderObj;
+	cluster[4]->SetPosition(Position(-39.92, 0, 23.2));
+	cluster[4]->SetRotateY(-90);
+	cluster[4]->SetScale(Scale(23, 1, 34.5));
+	cluster[4]->SetTag("Type5");
+	manager.CreateGameObject(cluster[4]);
+	cluster[5] = new ColliderObj;
+	cluster[5]->SetPosition(Position(-123.15, 0, 22.24));
+	cluster[5]->SetScale(Scale(23, 1, 23));
+	cluster[5]->SetTag("Type6");
+	manager.CreateGameObject(cluster[5]);
+	cluster[6] = new ColliderObj;
+	cluster[6]->SetPosition(Position(-122.87, 0, -13.5));
+	cluster[6]->SetRotateY(180);
+	cluster[6]->SetScale(Scale(23, 1, 23));
+	cluster[6]->SetTag("Type7");
+	manager.CreateGameObject(cluster[6]);
+	cluster[7] = new ColliderObj;
+	cluster[7]->SetPosition(Position(106.76, 0, 35.54));
+	cluster[7]->SetRotateY(-23.5);
+	cluster[7]->SetScale(Scale(23, 1, 23));
+	cluster[7]->SetTag("Type8");
+	manager.CreateGameObject(cluster[7]);
+	cluster[8] = new ColliderObj;
+	cluster[8]->SetPosition(Position(-47.537, 0, -121.438));
+	cluster[8]->SetRotateY(180);
+	cluster[8]->SetScale(Scale(23, 1, 23));
+	cluster[8]->SetTag("Type8");
+	manager.CreateGameObject(cluster[8]);
+	cluster[9] = new ColliderObj;
+	cluster[9]->SetPosition(Position(-83.786, 0, -12.705));
+	cluster[9]->SetRotateY(90);
+	cluster[9]->SetScale(Scale(23, 1, 34.5));
+	cluster[9]->SetTag("Type4");
+	manager.CreateGameObject(cluster[9]);
+	TestRef = cluster[9];
 }
 
 void SceneDrive::Update(double dt)
@@ -269,7 +299,7 @@ void SceneDrive::Update(double dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
 
 	//for testing purposes
-	if (Application::IsKeyPressed('V'))
+	/*if (Application::IsKeyPressed('V'))
 	{
 		scene_change = true;
 		map.Set(Maps::SKYBOX_TYPE::SB_DAY);
@@ -278,8 +308,59 @@ void SceneDrive::Update(double dt)
 	{
 		scene_change = true;
 		map.Set(Maps::SKYBOX_TYPE::SB_NIGHT);
-	}
+	}*/
 
+	if (Application::IsKeyPressed('T'))
+	{
+		TestRef->SetPositionZ(TestRef->GetPositionZ() - 5 * multiplier * dt);
+	}
+	if (Application::IsKeyPressed('G'))
+	{
+		TestRef->SetPositionZ(TestRef->GetPositionZ() + 5 * multiplier * dt);
+	}
+	if (Application::IsKeyPressed('F'))
+	{
+		TestRef->SetPositionX(TestRef->GetPositionX() - 5 * multiplier * dt);
+	}
+	if (Application::IsKeyPressed('H'))
+	{
+		TestRef->SetPositionX(TestRef->GetPositionX() + 5 * multiplier * dt);
+	}
+	if (Application::IsMousePressed(1))
+	{
+		multiplier = 10;
+	}
+	else if (Application::IsMousePressed(0))
+	{
+		multiplier = 1;
+	}
+	else multiplier = 5;
+
+	if (Application::IsKeyPressed('C'))
+	{
+		TestRef->SetRotateY(TestRef->GetRotateY() + 90 * dt);
+	}
+	if (Application::IsKeyPressed('V'))
+	{
+		TestRef->SetRotateY(TestRef->GetRotateY() - 90 * dt);
+	}
+	if (Application::IsKeyPressed('Z') && toggleTime <= 0)
+	{
+		TestRef->SetRotateY(TestRef->GetRotateY() + 45);
+		toggleTime = .3;
+	}
+	else if (Application::IsKeyPressed('X') && toggleTime <= 0)
+	{
+		TestRef->SetRotateY(TestRef->GetRotateY() - 45);
+		toggleTime = .3;
+	}
+	else if (Application::IsKeyPressed('B') && toggleTime <= 0)
+	{
+		toggleHitBox = !toggleHitBox;
+		toggleTime = .3;
+
+	}
+	else if (toggleTime > 0) toggleTime -= dt;
 
 	if (scene_change) //to ensure that the skybox only updates when the scene changes
 	{
@@ -401,7 +482,7 @@ void SceneDrive::Render() //My Own Pattern
 
 	modelStack.PushMatrix();
 		modelStack.Rotate(270, 1, 0, 0);
-		modelStack.Scale(500, 500, 1);
+		modelStack.Scale(300, 300, 1);
 		RenderMesh(meshList[GEO_TEMPLATE], false);
 	modelStack.PopMatrix();
 
@@ -424,10 +505,10 @@ void SceneDrive::Render() //My Own Pattern
 				else if (gameObject->Type() == "ColliderObj")
 				{
 
-					modelStack.PushMatrix();
+					/*modelStack.PushMatrix();
 						modelStack.Scale(gameObject->GetScaleX(), gameObject->GetScaleY(), gameObject->GetScaleZ());
 						RenderMesh(meshList[GEO_CUBE], false);
-					modelStack.PopMatrix();
+					modelStack.PopMatrix();*/
 					if (gameObject->GetTag() == "Type1")
 					{
 						modelStack.PushMatrix();
@@ -563,7 +644,7 @@ void SceneDrive::Render() //My Own Pattern
 				}
 			modelStack.PopMatrix();
 			modelStack.Scale(gameObject->GetScaleX(), gameObject->GetScaleY(), gameObject->GetScaleZ());
-			//RenderMesh(meshList[GEO_CUBE], false); // hitbox
+			if (toggleHitBox) RenderMesh(meshList[GEO_CUBE], false); // hitbox
 		modelStack.PopMatrix();
 	}
 
@@ -580,6 +661,10 @@ void SceneDrive::Render() //My Own Pattern
 	std::ostringstream sc;
 	sc << "Score:" << score.getScore(0);
 	RenderTextOnScreen(meshList[GEO_TEXT], sc.str(), Color(1, 0, 0), 3, 130, 87);
+
+	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(TestRef->GetPositionX()) + ", " + std::to_string(TestRef->GetPositionZ()) + ", " + std::to_string(TestRef->GetRotateY()), Color(1, 0, 1), 3, 0, 0);
+
+	//RenderMeshOnScreen(meshList[GEO_QUAD], 80, 45, 10, 10);
 }
 
 void SceneDrive::Exit()

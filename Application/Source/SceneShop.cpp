@@ -12,7 +12,7 @@
 #include "Application.h"
 
 
-SceneShop::SceneShop()
+SceneShop::SceneShop() : displayShopUI(false)
 {
 }
 
@@ -20,12 +20,11 @@ SceneShop::~SceneShop()
 {
 }
 
-
 void SceneShop::Init()
 {
-	camera.Init(Vector3(9.5, 3, 6), Vector3(0, 3, 0), Vector3(0, 1, 0));
-	camera.setShopBound(Vector3(-18.85, 2, -8.35), Vector3(18.85, 4, 8.35));
-	camera.setBusBound(Vector3(-13.5, 2, -4), Vector3(13.5, 4, 4));
+	camera.Init(Vector3(9.5f, 3, 6), Vector3(0, 3, 0), Vector3(0, 1, 0));
+	camera.setShopBound(Vector3(-18.85f, 2, -8.35f), Vector3(18.85f, 4, 8.35f));
+	camera.setBusBound(Vector3(-13.5f, 2, -4), Vector3(13.5f, 4, 4));
 
 	map.Set(Maps::SKYBOX_TYPE::SB_SHOP);
 
@@ -80,6 +79,8 @@ void SceneShop::Init()
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//trebuchet.tga");
+
+	meshList[GEO_UI] = MeshBuilder::GenerateQuad("UI", Color(1, 1, 1), 1.f, 1.f);
 
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
@@ -183,6 +184,8 @@ void SceneShop::Init()
 
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
+
+	money = 800;
 }
 
 void SceneShop::Update(double dt)
@@ -216,9 +219,103 @@ void SceneShop::Update(double dt)
 
 		scene_change = false;
 	}
+
+	bool canUpgrade0 = false;
+	bool canUpgrade1 = false;
+	bool canUpgrade2 = false;
+	if (camera.position.x > -13.5 && camera.position.z > -8.35 && camera.position.x < 13.5 && camera.position.z < 8.35)
+	{
+		displayShopUI = true;
+
+		if (shop.getUpgradeLevel(0) == 0)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 0.tga");
+		else if (shop.getUpgradeLevel(0) == 1)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 1.tga");
+		else if (shop.getUpgradeLevel(0) == 2)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 2.tga");
+		else if (shop.getUpgradeLevel(0) == 3)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 3.tga");
+		else if (shop.getUpgradeLevel(0) == 4)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 4.tga");
+		else if (shop.getUpgradeLevel(0) == 5)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 5.tga");
+
+		if (shop.getUpgradeLevel(0) < 5)
+			canUpgrade0 = true;
+	}
+	else if (camera.position.x > 13.5 && camera.position.z > -4 && camera.position.x < 18.85 && camera.position.z < 4)
+	{
+		displayShopUI = true;
+
+		if (shop.getUpgradeLevel(1) == 0)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 0.tga");
+		else if (shop.getUpgradeLevel(1) == 1)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 1.tga");
+		else if (shop.getUpgradeLevel(1) == 2)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 2.tga");
+		else if (shop.getUpgradeLevel(1) == 3)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 3.tga");
+		else if (shop.getUpgradeLevel(1) == 4)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 4.tga");
+		else if (shop.getUpgradeLevel(1) == 5)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 5.tga");
+
+		if (shop.getUpgradeLevel(1) != 5)
+			canUpgrade1 = true;
+	}
+	else if (camera.position.x > -18.85 && camera.position.z > -8.35 && camera.position.x < -13.5 && camera.position.z < 4)
+	{
+		displayShopUI = true;
+
+		if (shop.getUpgradeLevel(2) == 0)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 0.tga");
+		else if (shop.getUpgradeLevel(2) == 1)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 1.tga");
+		else if (shop.getUpgradeLevel(2) == 2)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 2.tga");
+		else if (shop.getUpgradeLevel(2) == 3)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 3.tga");
+		else if (shop.getUpgradeLevel(2) == 4)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 4.tga");
+		else if (shop.getUpgradeLevel(2) == 5)
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 5.tga");
+
+		if (shop.getUpgradeLevel(2) != 5)
+			canUpgrade2 = true;
+	}
+	else
+		displayShopUI = false;
+
+	if (spacePressed == false && Application::IsKeyPressed(VK_SPACE))
+	{
+		spacePressed = true;
+
+		if (canUpgrade0 == true && money >= shop.getUpgradeCost(0))
+		{
+			money -= shop.getUpgradeCost(0);
+			shop.upgrade(0);
+		}
+		else if (canUpgrade1 == true && money >= shop.getUpgradeCost(1))
+		{
+			money -= shop.getUpgradeCost(1);
+			shop.upgrade(1);
+		}
+		else if (canUpgrade2 == true && money >= shop.getUpgradeCost(2))
+		{
+			money -= shop.getUpgradeCost(2);
+			shop.upgrade(2);
+		}
+	}
+	else
+	{
+		//print no money
+	}
+
+	if (spacePressed == true && !Application::IsKeyPressed(VK_SPACE))
+		spacePressed = false;
 }
 
-void SceneShop::Render() //My Own Pattern
+void SceneShop::Render()
 {
 	// Render VBO here
 
@@ -283,7 +380,7 @@ void SceneShop::Render() //My Own Pattern
 
 	modelStack.PushMatrix();
 	modelStack.Rotate(90, 0, 1, 0);
-	modelStack.Scale(0.07, 0.07, 0.07);
+	modelStack.Scale(0.07f, 0.07f, 0.07f);
 	RenderMesh(meshList[GEO_BUS], lights[0].isOn);
 	modelStack.PopMatrix();
 
@@ -291,6 +388,9 @@ void SceneShop::Render() //My Own Pattern
 	ss.precision(5);
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 87);
+
+	if (displayShopUI)
+		RenderMeshOnScreen(meshList[GEO_UI], 90, 45, 100, 50);
 }
 
 void SceneShop::Exit()
@@ -352,28 +452,28 @@ void SceneShop::RenderMesh(Mesh* mesh, bool enableLight)
 void SceneShop::RenderSkybox()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(18.99, 4.99, 0);
+	modelStack.Translate(18.99f, 4.99f, 0);
 	modelStack.Rotate(-90, 0, 1, 0);
 	modelStack.Scale(17, 10, 20);
 	RenderMesh(meshList[GEO_FRONT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-18.99, 4.99, 0);
+	modelStack.Translate(-18.99f, 4.99f, 0);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Scale(17, 10, 38);
 	RenderMesh(meshList[GEO_BACK], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 4.99, 8.49);
+	modelStack.Translate(0, 4.99f, 8.49f);
 	modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Scale(38, 10, 17);
 	RenderMesh(meshList[GEO_LEFT], false);
 	modelStack.PopMatrix();
 	
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 4.99, -8.49);
+	modelStack.Translate(0, 4.99f, -8.49f);
 	modelStack.Scale(38, 10, 17);
 	RenderMesh(meshList[GEO_RIGHT], false);
 	modelStack.PopMatrix();
@@ -480,8 +580,7 @@ void SceneShop::RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int size
 	viewStack.LoadIdentity(); //No need camera for ortho mode
 	modelStack.PushMatrix();
 	modelStack.LoadIdentity();
-	modelStack.Translate(x, y, 0); 
-	modelStack.Rotate(180, 1, 0, 0);
+	modelStack.Translate(x, y, 0);
 	modelStack.Scale(sizex, sizey, 1);
 	RenderMesh(mesh, false); //UI should not have light
 	projectionStack.PopMatrix();

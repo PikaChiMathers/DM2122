@@ -38,8 +38,6 @@ public:
 	float translateX, translateY;
 	float scaleAll;
 
-	float x_value, y_value, z_value;
-
 	int UI_height, UI_width;
 
 
@@ -128,6 +126,7 @@ private: //added (Step 2)
 	GameObjectManager manager;
 	Goose goose;
 	Objects P_A, P_B, P_C; //Podium A, B & C
+	Objects C_F, C_B, C_L, C_R; //Collider front, back, left & right
 	TriggerCollider T_A, T_B, T_C;//Trigger A, B & C
 
 	unsigned m_vertexArrayID;

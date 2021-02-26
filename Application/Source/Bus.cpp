@@ -49,8 +49,6 @@ void Bus::GameObjectUpdate(double dt)
 	}
 	else overSteerPct = overSteerPct < 1 ? overSteerPct + dt : 1;
 
-	if (Application::IsKeyPressed('Z')) Delete();
-
 	if (velocity.IsZero()) GetPhysics()->SetDrag(brakePower);
 	else
 	{

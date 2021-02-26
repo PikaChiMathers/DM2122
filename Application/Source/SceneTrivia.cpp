@@ -32,6 +32,13 @@ void SceneTrivia::Init()
 	manager.CreateGameObject(&P_B);
 	manager.CreateGameObject(&P_C);
 
+	//Initializes Wall Colliders front, back, left & right
+	manager.CreateGameObject(&C_F);
+	manager.CreateGameObject(&C_B);
+	manager.CreateGameObject(&C_L);
+	manager.CreateGameObject(&C_R);
+
+
 	//Initializes Trigger (Checks whether the player presses spacebar in a cerrtain area) of each podium
 	manager.CreateGameObject(&T_A);
 	manager.CreateGameObject(&T_B);
@@ -44,6 +51,17 @@ void SceneTrivia::Init()
 	P_A.SetPosition(Position(5, 0, 0));
 	P_B.SetPosition(Position(0, 0, 0));
 	P_C.SetPosition(Position(-5, 0, 0));
+
+	C_F.SetScale(Scale(50, 50, 50));
+	C_B.SetScale(Scale(50, 50, 50));
+	C_L.SetScale(Scale(50, 50, 50));
+	C_R.SetScale(Scale(50, 50, 50));
+
+	C_F.SetPosition(Position(0, 0, 46));
+	C_B.SetPosition(Position(0, 0, -33));
+	C_L.SetPosition(Position(-38, 0, 5));
+	C_R.SetPosition(Position(38, 0, 5));
+
 
 	T_A.SetPosition(Position(5, 0, 0));
 	T_B.SetPosition(Position(0, 0, 0));
@@ -70,8 +88,6 @@ void SceneTrivia::Init()
 
 	UI_width = 160;
 	UI_height = 90;
-
-	x_value = y_value = z_value = 0;
 
 	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("Goose", "OBJ//goose.obj", Color(.93f, .79f, 0));
 	meshList[GEO_GOOSE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
@@ -202,26 +218,6 @@ void SceneTrivia::Update(double dt)
 {
 	manager.GameObjectManagerUpdate(dt);
 
-	//editor controls
-	{
-		if (Application::IsKeyPressed('I'))
-			z_value -= (float)(LSPEED * dt);
-		if (Application::IsKeyPressed('K'))
-			z_value += (float)(LSPEED * dt);
-		if (Application::IsKeyPressed('J'))
-			x_value -= (float)(LSPEED * dt);
-		if (Application::IsKeyPressed('L'))
-			x_value += (float)(LSPEED * dt);
-		if (Application::IsKeyPressed('O'))
-			y_value -= (float)(LSPEED * dt);
-		if (Application::IsKeyPressed('U'))
-			y_value += (float)(LSPEED * dt);
-		if (Application::IsKeyPressed('T'))
-			lights[0].isOn = false;
-		if (Application::IsKeyPressed('Y'))
-			lights[0].isOn = true;
-	}
-
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
 	if (Application::IsKeyPressed('2'))
@@ -252,6 +248,14 @@ void SceneTrivia::Update(double dt)
 		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
 	}
 
+	if (qn_num == 10 && score == 9) //To set the lighting to Spotlight for a grand finally to see whether the player can get 10/10 for trivia
+	{
+		if (dt/13 == 0)
+			sound.Engine()->play2D("media/correctAns.ogg");
+		lights[0].type = Light::LIGHT_SPOT;
+		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
+	}
+	
 	if (Application::IsKeyPressed(VK_SPACE))
 	{
 		press_time++;
@@ -271,15 +275,18 @@ void SceneTrivia::Update(double dt)
 			else
 				answer = "";
 
-			if (answer != "" && qn_num != 0) Check_Answer();
+			if (answer != "")
+			{
+				qn_num++;
+				if (qn_num != 0)
+					Check_Answer();
+			}
 
 			if (qn_num == 0)
 			{
 				qn_num++;
 				Qn_str = Qn->Update();
 			}
-			else
-				qn_num++;
 		}
 	}
 	else press_time = 0;
@@ -319,6 +326,8 @@ void SceneTrivia::Render() //My Own Pattern
 
 	Mtx44 mvp = projectionStack.Top() * viewStack.Top() * modelStack.Top();
 	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &mvp.a[0]); //update the shader with new MVP
+
+	RenderMesh(meshList[GEO_AXES], false);
 
 	modelStack.PushMatrix();
 	modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
@@ -377,7 +386,6 @@ void SceneTrivia::Render() //My Own Pattern
 	RenderText(meshList[GEO_TEXT], "C", Color(1, 1, 1));
 	modelStack.PopMatrix();
 
-
 	modelStack.PushMatrix();
 	modelStack.Rotate(180, 0, 1, 0);
 	if (qn_num == 0)
@@ -388,11 +396,6 @@ void SceneTrivia::Render() //My Own Pattern
 	}
 	else if (qn_num <= 10)
 	{
-		if (qn_num == 10 && score == 9) //To set the lighting to Spotlight for a grand finally to see whether the player can get 10/10 for trivia
-		{
-			lights[0].type = Light::LIGHT_SPOT;
-			glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-		}
 		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(score)) + "/10", Color(0, 1, 0), 6, 110, 76);
 		RenderTextOnScreen(meshList[GEO_TEXT], ("Q" + std::to_string(qn_num) + ":" + Qn_str), Color(0, 1, 0), 2.44f, 37, 65);
 		RenderTextOnScreen(meshList[GEO_TEXT], ("A:" + Qn->getChoice1()), Color(0, 1, 0), 4, 40, 57);
@@ -403,6 +406,7 @@ void SceneTrivia::Render() //My Own Pattern
 	{
 		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(score) + "/10"), Color(0, 1, 0), 10, 72, 53);
 	}
+
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
@@ -632,7 +636,6 @@ void SceneTrivia::RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int si
 	modelStack.PushMatrix();
 	modelStack.LoadIdentity();
 	modelStack.Translate(x, y, 0);
-	modelStack.Rotate(180, 1, 0, 0);
 	modelStack.Scale(sizex, sizey, 1);
 	RenderMesh(mesh, false); //UI should not have light
 	projectionStack.PopMatrix();

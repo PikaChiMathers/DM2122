@@ -10,6 +10,7 @@
 #include "Light.h"
 
 #include "GameObjectManager.h"
+#include "Goose.h"
 #include "Bus.h"
 #include "Person.h"
 #include "Money.h"
@@ -166,14 +167,11 @@ private: //added (Step 2)
 	GameObject box;
 	GameObject coin;
 	GameObject passport;
-	GameObject goose;
+	Goose goose;
 
 
 
 	unsigned m_vertexArrayID;
-	/*unsigned m_vertexBuffer[NUM_GEOMETRY];
-	unsigned m_colorBuffer[NUM_GEOMETRY];
-	unsigned m_indexBuffer[NUM_GEOMETRY];*/
 
 	Mesh* meshList[NUM_GEOMETRY];
 
@@ -183,6 +181,8 @@ private: //added (Step 2)
 	void RenderMesh(Mesh* mesh, bool enableLight);
 
 	void RenderSkybox();
+
+	void RenderCity();
 
 	void RenderText(Mesh* mesh, std::string text, Color color);
 
