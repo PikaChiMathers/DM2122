@@ -116,8 +116,8 @@ void Bus::GameObjectUpdate(double dt)
 
 			if (loopDelay <= 0) // for sound
 			{
-				sound.Engine()->play2D("media/bus.wav, true");
-				loopDelay = 3;
+				sound.Engine()->play2D("media/bus.wav");
+				loopDelay = 2.5;
 			}
 			else loopDelay -= dt;
 		}
