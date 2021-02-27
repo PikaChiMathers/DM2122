@@ -6,7 +6,7 @@ Bus::Bus()
 	brakePower = 5;
 	stop = false;
 	overSteerPct = 0;
-	SetScale(Scale(1, 1, 4));
+	SetScale(Scale(3, 1, 12));
 	AddCollider();
 	AddPhysics();
 	GetPhysics()->SetMass(300);

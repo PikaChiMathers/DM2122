@@ -13,6 +13,7 @@
 #include "GameObjectManager.h"
 #include "Bus.h"
 #include "ColliderObj.h"
+#include "Border.h"
 #include "Test.h"
 #include "Person.h"
 #include "Money.h"
@@ -48,8 +49,8 @@ public:
 		GEO_AXES = 0,
 
 		GEO_QUAD,
-
 		GEO_TEMPLATE,
+		GEO_BORDER,
 
 		GEO_CUBE,
 
@@ -138,13 +139,15 @@ public:
 
 
 private: //added (Step 2)
-	//Camera3 camera;
-	CameraChase camera;
+	Camera3 camera;
+	//CameraChase camera;
 
 	Maps map;
 
 	GameObjectManager manager;
 	ColliderObj* cluster[51];
+	ColliderObj* borderCol[4];
+	Border* border[4];
 
 	GameObject* TestRef;
 	double toggleTime = 0;
