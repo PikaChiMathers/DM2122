@@ -2,6 +2,7 @@
 
 Bus::Bus()
 {
+	passengers = 0;
 	acceleration = 50;
 	brakePower = 5;
 	stop = false;
@@ -16,8 +17,34 @@ Bus::~Bus()
 {
 }
 
-void Bus::setStop(bool stop)
+void Bus::SetPassengerCount(int count)
 {
+	passengers = count;
+}
+
+void Bus::AddPassengerCount()
+{
+	passengers++;
+}
+
+int Bus::GetPassengerCount()
+{
+	return passengers;
+}
+
+void Bus::SetAccel(float accel)
+{
+	acceleration = accel;
+}
+
+void Bus::SetBrakePower(float brake)
+{
+	brakePower = brake;
+}
+
+void Bus::SetStop(bool stop)
+{
+	
 }
 
 void Bus::GameObjectUpdate(double dt)

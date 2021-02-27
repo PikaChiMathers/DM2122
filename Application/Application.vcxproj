@@ -156,6 +156,7 @@
     <ClCompile Include="Source\Border.cpp" />
     <ClCompile Include="Source\CameraChase.cpp" />
     <ClCompile Include="Source\ColliderObj.cpp" />
+    <ClCompile Include="Source\DriveObjective.cpp" />
     <ClCompile Include="Source\SceneDrive.cpp" />
     <ClCompile Include="Source\Test.cpp" />
     <ClCompile Include="Source\TriggerCollider.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="Source\Border.h" />
     <ClInclude Include="Source\CameraChase.h" />
     <ClInclude Include="Source\ColliderObj.h" />
+    <ClInclude Include="Source\DriveObjective.h" />
     <ClInclude Include="Source\SceneDrive.h" />
     <ClInclude Include="Source\Test.h" />
     <ClInclude Include="Source\TriggerCollider.h" />

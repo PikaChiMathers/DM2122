@@ -227,6 +227,11 @@ void SceneDrive::Init()
 	* type 6-8: 23,23
 	*/
 	manager.CreateGameObject(&bus);
+	endpoint.SetPosition(Position(62.4, 0, 68.7));
+	endpoint.SetRotateY(81);
+	endpoint.SetScale(Scale(45, 1, 13));
+	endpoint.SetPlayer(&bus);
+	manager.CreateGameObject(&endpoint);
 	cluster[0] = new ColliderObj;
 	cluster[0]->SetPosition(Position(-46.2519, 0, -79.7891));
 	cluster[0]->SetScale(Scale(23, 1, 34.5f));
@@ -566,7 +571,7 @@ void SceneDrive::Init()
 	borderCol[3]->SetRotateY(90);
 	borderCol[3]->SetScale(Scale(300, 20, 20));
 	manager.CreateGameObject(borderCol[3]);
-	TestRef = border[0];
+	TestRef = &endpoint;
 }
 
 void SceneDrive::Update(double dt)
@@ -968,7 +973,6 @@ void SceneDrive::Render() //My Own Pattern
 				}
 				else if (gameObject->Type() == "Border")
 				{
-					//modelStack.Rotate(90, 1, 0, 0);
 					if (gameObject->GetTag() == "Render")
 					{
 						for (int i = -150; i <= 150; i += 10)
@@ -980,6 +984,11 @@ void SceneDrive::Render() //My Own Pattern
 							modelStack.PopMatrix();
 						}
 					}
+				}
+				else if (gameObject->Type() == "DriveObjective")
+				{
+					modelStack.Scale(gameObject->GetScaleX(), gameObject->GetScaleY(), gameObject->GetScaleZ());
+					RenderMesh(meshList[GEO_CUBE], false); // hitbox
 				}
 			modelStack.PopMatrix();
 			modelStack.Scale(gameObject->GetScaleX(), gameObject->GetScaleY(), gameObject->GetScaleZ());

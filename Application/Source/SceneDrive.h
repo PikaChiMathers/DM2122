@@ -14,6 +14,8 @@
 #include "Bus.h"
 #include "ColliderObj.h"
 #include "Border.h"
+#include "DriveObjective.h"
+
 #include "Test.h"
 #include "Person.h"
 #include "Money.h"
@@ -148,6 +150,8 @@ private: //added (Step 2)
 	ColliderObj* cluster[51];
 	ColliderObj* borderCol[4];
 	Border* border[4];
+	Bus bus;
+	DriveObjective endpoint;
 
 	GameObject* TestRef;
 	double toggleTime = 0;
@@ -158,7 +162,7 @@ private: //added (Step 2)
 	Money money;
 	Score score;
 
-	Bus bus;
+	
 
 	Light lights[NUM_LIGHTS];
 	unsigned m_vertexArrayID;
