@@ -3,6 +3,7 @@
 #define BUS_H
 
 #include"GameObject.h"
+#include "Sound.h"
 
 class Bus : public GameObject
 {
@@ -36,5 +37,6 @@ public:
 	void SetStop(bool stop);// when we dont want the bus to move at all like if it is paused or smth
 	void GameObjectUpdate(double dt);
 	std::string Type();
+	Sound sound;
 };
 #endif
