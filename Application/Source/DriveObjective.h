@@ -18,6 +18,7 @@ public:
 	void SetPlayer(Bus* player);
 	//set the min no. of passengers to collect
 	void SetReqiuredPassengerCount(int count);
+	int GetRequiredPassengerCount();
 	//set the time limit
 	void SetTimer(double timer);
 	//start the time
