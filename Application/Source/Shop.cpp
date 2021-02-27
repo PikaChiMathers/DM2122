@@ -12,8 +12,8 @@ Shop::~Shop()
 
 void Shop::upgrade(int upgradeType)
 {
-    upgradeLevel[upgradeType] += 1;
     sound.Engine()->play2D("media/keching.wav");
+    upgradeLevel[upgradeType] += 1;
     upgradeCost[upgradeType] = 300 + upgradeLevel[upgradeType] * 200;
 }
 

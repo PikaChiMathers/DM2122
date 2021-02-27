@@ -55,19 +55,23 @@ void Bus::GameObjectUpdate(double dt)
 	GetPhysics()->SetDrag(1);
 	if (Application::IsKeyPressed('T'))
 	{
+		sound.Engine()->play2D("media/bus.wav");
 		velocity += GetFoward() * acceleration * dt;
 	}
 	if (Application::IsKeyPressed('G'))
 	{
+		sound.Engine()->play2D("media/bus.wav");
 		velocity -= GetFoward() * acceleration * dt;
 	}
 	if (Application::IsKeyPressed('F'))
 	{
+		sound.Engine()->play2D("media/bus.wav");
 		if (GetPhysics()->GetVelocity().Dot(GetFoward()) > 8) rotation += 90 * dt;
 		else if (GetPhysics()->GetVelocity().Dot(GetFoward()) < -8) rotation -= 90 * dt;
 	}
 	if (Application::IsKeyPressed('H'))
 	{
+		sound.Engine()->play2D("media/bus.wav, true");
 		if (GetPhysics()->GetVelocity().Dot(GetFoward()) > 8) rotation -= 90 * dt;
 		else if (GetPhysics()->GetVelocity().Dot(GetFoward()) < -8) rotation += 90 * dt;
 	}
