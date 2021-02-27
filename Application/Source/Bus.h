@@ -3,6 +3,7 @@
 #define BUS_H
 
 #include"GameObject.h"
+#include "Sound.h"
 
 class Bus : public GameObject
 {
