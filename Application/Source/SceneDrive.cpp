@@ -226,7 +226,7 @@ void SceneDrive::Init()
 	* type 4-5: 23,34.5
 	* type 6-8: 23,23
 	*/
-	manager.CreateGameObject(&bus);
+	//manager.CreateGameObject(&bus);
 	endpoint.SetPosition(Position(62.4, 0, 68.7));
 	endpoint.SetRotateY(81);
 	endpoint.SetScale(Scale(45, 1, 13));
@@ -571,7 +571,10 @@ void SceneDrive::Init()
 	borderCol[3]->SetRotateY(90);
 	borderCol[3]->SetScale(Scale(300, 20, 20));
 	manager.CreateGameObject(borderCol[3]);
-	TestRef = &endpoint;
+
+	temp.SetTag("Temp");
+	manager.CreateGameObject(&temp);
+	TestRef = &temp;
 }
 
 void SceneDrive::Update(double dt)
@@ -603,7 +606,7 @@ void SceneDrive::Update(double dt)
 		map.Set(Maps::SKYBOX_TYPE::SB_NIGHT);
 	}*/
 
-	/*if (Application::IsKeyPressed('T'))
+	if (Application::IsKeyPressed('T'))
 	{
 		TestRef->SetPositionZ(TestRef->GetPositionZ() - 5 * multiplier * dt);
 	}
@@ -646,7 +649,7 @@ void SceneDrive::Update(double dt)
 	{
 		TestRef->SetRotateY(TestRef->GetRotateY() - 45);
 		toggleTime = .3;
-	}*/
+	}
 	/*else if (Application::IsMousePressed(2) && toggleTime <= 0)
 	{
 		clusterType++;
@@ -838,6 +841,12 @@ void SceneDrive::Render() //My Own Pattern
 						modelStack.Scale(gameObject->GetScaleX(), gameObject->GetScaleY(), gameObject->GetScaleZ());
 						RenderMesh(meshList[GEO_CUBE], false);
 					modelStack.PopMatrix();*/
+					if (gameObject->GetTag() == "Temp")
+					{
+						modelStack.PushMatrix();
+							RenderMesh(meshList[GEO_CUBE], false);
+						modelStack.PopMatrix();
+					}
 					if (gameObject->GetTag() == "Type1")
 					{
 						modelStack.PushMatrix();
