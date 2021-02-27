@@ -23,8 +23,8 @@ SceneDrive::~SceneDrive()
 
 void SceneDrive::Init() 
 {
-	camera.Init(Vector3(40, 30, 30), Vector3(0, 0, 0), Vector3(0, 1, 0));
-	//camera.Init(&bus, Vector3(0, 1, 0));
+	//camera.Init(Vector3(40, 30, 30), Vector3(0, 0, 0), Vector3(0, 1, 0));
+	camera.Init(&bus, Vector3(0, 1, 0));
 
 	map.Set(Maps::SKYBOX_TYPE::SB_DAY);
 
@@ -227,6 +227,8 @@ void SceneDrive::Init()
 	* type 4-5: 23,34.5
 	* type 6-8: 23,23
 	*/
+	bus.SetPosition(Position(63, 0, 40));
+	//bus.SetRotateY(-550);
 	manager.CreateGameObject(&bus);
 	endpoint.SetPosition(Position(62.4, 0, 68.7));
 	endpoint.SetRotateY(81);
@@ -655,7 +657,7 @@ void SceneDrive::Update(double dt)
 {
 	manager.GameObjectManagerUpdate(dt);
 	camera.Update(dt);
-	//camera.SetChase(&bus);
+	camera.SetChase(&bus);
 
 	fps = 1.0f / dt;
 
@@ -880,7 +882,7 @@ void SceneDrive::Render() //My Own Pattern
 
 	RenderSkybox();
 	//modelStack.Scale(3, 3, 3);
-	RenderMesh(meshList[GEO_AXES], false);
+	//RenderMesh(meshList[GEO_AXES], false);
 
 	modelStack.PushMatrix();
 		modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
@@ -1094,9 +1096,9 @@ void SceneDrive::Render() //My Own Pattern
 
 	RenderTextOnScreen(meshList[GEO_TEXT], "Passengers:" + std::to_string(bus.GetPassengerCount()) + "/" + std::to_string(endpoint.GetRequiredPassengerCount()), Color(0, 0, 1), 3, 0, 81);
 
-	RenderTextOnScreen(meshList[GEO_TEXT], "Total Money:" + std::to_string(bus.GetMoney()), Color(1, 1, 0), 3, 0, 84);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Total Money:" + std::to_string(bus.GetMoney()), Color(1, 1, 0), 3, 0, 87);
 
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:", Color(1, 0, 0), 3, 0, 87);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money Collected:" + std::to_string(bus.GetMoneyCurrent()), Color(1, 0, 0), 3, 0, 84);
 
 	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(TestRef->GetPositionX()) + ", " + std::to_string(TestRef->GetPositionZ()) + ", " + std::to_string(TestRef->GetRotateY()) + ", " + TestRef->GetTag(), Color(1, 0, 1), 3, 0, 0);
 

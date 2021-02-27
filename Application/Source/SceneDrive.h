@@ -141,8 +141,8 @@ public:
 
 
 private: //added (Step 2)
-	Camera3 camera;
-	//CameraChase camera;
+	//Camera3 camera;
+	CameraChase camera;
 
 	Maps map;
 

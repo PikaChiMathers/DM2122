@@ -26,9 +26,11 @@ class Bus : public GameObject
 public:
 	Bus();
 	~Bus();
-	void SetMoney(int amount);
+	void SetTotalMoney(int amount);
+	void SetCurrentMoney(int amount);
 	void AddMoney(int amount);
 	int GetMoney();
+	int GetMoneyCurrent();
 	// set the number of passengers collected
 	void SetPassengerCount(int count);
 	//add 1 to the number of passengers collected

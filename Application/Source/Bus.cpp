@@ -23,7 +23,12 @@ Bus::~Bus()
 	//Nothing.
 }
 
-void Bus::SetMoney(int amount)
+void Bus::SetCurrentMoney(int amount)
+{
+	moneyCurrent = amount;
+}
+
+void Bus::SetTotalMoney(int amount)
 {
 	Bus::money = amount;
 }
@@ -31,11 +36,17 @@ void Bus::SetMoney(int amount)
 void Bus::AddMoney(int amount)
 {
 	Bus::money += amount;
+	moneyCurrent += amount;
 }
 
 int Bus::GetMoney()
 {
 	return Bus::money;
+}
+
+int Bus::GetMoneyCurrent()
+{
+	return moneyCurrent;
 }
 
 void Bus::SetPassengerCount(int count)
