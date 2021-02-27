@@ -14,6 +14,9 @@ class Bus : public GameObject
 	bool stop; // when we dont want the bus to move at all like if it is paused or smth
 	float overSteerPct; // 0 - max oversteer (drifting), 1 - no oversteer
 	int passengers;
+
+	//for sound
+	double loopDelay;
 	/*enum ENUM_STATE
 	{
 		STATIC,

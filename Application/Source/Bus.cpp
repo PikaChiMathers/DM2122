@@ -12,6 +12,8 @@ Bus::Bus()
 	AddCollider();
 	AddPhysics();
 	GetPhysics()->SetMass(300);
+
+	loopDelay = 0;
 }
 
 int Bus::money;
@@ -98,7 +100,11 @@ void Bus::GameObjectUpdate(double dt)
 		}
 		else overSteerPct = overSteerPct < 1 ? overSteerPct + dt : 1;
 
-		if (velocity.IsZero()) GetPhysics()->SetDrag(brakePower);
+		if (velocity.IsZero())
+		{
+			GetPhysics()->SetDrag(brakePower);
+			//if can try put sound for braking here. this will keep looping so make it only play once
+		}
 		else
 		{
 			SetRotateY(GetRotateY() + rotation);
@@ -107,6 +113,13 @@ void Bus::GameObjectUpdate(double dt)
 
 			if (velocity.Length() > acceleration) velocity *= (50 / velocity.Length()); // cap velocity
 			GetPhysics()->AddVelocity(velocity);
+
+			if (loopDelay <= 0) // for sound
+			{
+				sound.Engine()->play2D("media/bus.wav, true");
+				loopDelay = 3;
+			}
+			else loopDelay -= dt;
 		}
 	}
 }
