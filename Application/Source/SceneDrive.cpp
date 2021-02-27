@@ -14,6 +14,7 @@
 
 SceneDrive::SceneDrive()
 {
+	coinRot = 0;
 }
 
 SceneDrive::~SceneDrive()
@@ -571,10 +572,83 @@ void SceneDrive::Init()
 	borderCol[3]->SetRotateY(90);
 	borderCol[3]->SetScale(Scale(300, 20, 20));
 	manager.CreateGameObject(borderCol[3]);
+	for (int i = 0; i < sizeof(coins)/sizeof(*coins); i++)
+	{
+		coins[i] = new Money;
+		coins[i]->SetPlayer(&bus);
+		coins[i]->SetValue(50);
+		coins[i]->SetScale(Scale(3.5f, 3.5f, 3.5f));
+		manager.CreateGameObject(coins[i]);
+	}
+	coins[0]->SetPosition(Position(61.7, 0, -6.2));
+	coins[1]->SetPosition(Position(50.8, 0, -39.3));
+	coins[2]->SetPosition(Position(70.6, 0, -40.4));
+	coins[3]->SetPosition(Position(86.8, 0, -31.3));
+	coins[4]->SetPosition(Position(94.6, 0, -9.5));
+	coins[5]->SetPosition(Position(93.3, 0, 5.87));
+	coins[6]->SetPosition(Position(75.4, 0, 22.4));
+	coins[7]->SetPosition(Position(55.4, 0, 24));
+	coins[8]->SetPosition(Position(35.5, 0, 13.8));
+	coins[9]->SetPosition(Position(30, 0, -2.8));
+	coins[10]->SetPosition(Position(30.5, 0, -18.1));
+	coins[11]->SetPosition(Position(38, 0, -30.6));
+	coins[12]->SetPosition(Position(84.6, 0, 100.6));
+	coins[13]->SetPosition(Position(103, 0, 73.1));
+	coins[14]->SetPosition(Position(124.8, 0, 53.8));
+	coins[15]->SetPosition(Position(138.5, 0, 24.9));
+	coins[16]->SetPosition(Position(145.8, 0, -12.1));
+	coins[17]->SetPosition(Position(134.5, 0, -49.6));
+	coins[18]->SetPosition(Position(114, 0, -75.1));
+	coins[19]->SetPosition(Position(97.5, 0, -91.2));
+	coins[20]->SetPosition(Position(80.7, 0, -110));
+	//coins[21]->SetPosition(Position(136.1, 0, -146.2));
+	//coins[22]->SetPosition(Position(86.6, 0, -146.2));
+	//coins[23]->SetPosition(Position(46.4, 0, -146.2));
+	//coins[24]->SetPosition(Position(7.9, 0, -146.2));
+	//coins[25]->SetPosition(Position(-27.7, 0, -146.2));
+	//coins[26]->SetPosition(Position(-60.9, 0, -146.2));
+	//coins[27]->SetPosition(Position(-103.1, 0, -146.2));
+	//coins[28]->SetPosition(Position(-139.4, 0, -146.2));
+	coins[21]->SetPosition(Position(136.1, 0, -120));
+	coins[22]->SetPosition(Position(46.4, 0, -108));
+	coins[23]->SetPosition(Position(7.9, 0, -102.8));
+	coins[24]->SetPosition(Position(-27.7, 0, -102.8));
+	coins[25]->SetPosition(Position(-60.9, 0, -102.8));
+	coins[26]->SetPosition(Position(-103.1, 0, -102.8));
+	coins[27]->SetPosition(Position(-139.4, 0, -102.8));
+	coins[28]->SetPosition(Position(-60.9, 0, -58));
+	coins[29]->SetPosition(Position(-103.1, 0, -58));
+	coins[30]->SetPosition(Position(-139.4, 0, -58));
+	coins[31]->SetPosition(Position(-60.9, 0, -31));
+	coins[32]->SetPosition(Position(-103.1, 0, -31));
+	coins[33]->SetPosition(Position(-139.4, 0, -31));
+	coins[34]->SetPosition(Position(-60.9, 0, 5));
+	coins[35]->SetPosition(Position(-103.1, 0, 5));
+	coins[36]->SetPosition(Position(-139.4, 0, 5));
+	coins[37]->SetPosition(Position(-60.9, 0, 41));
+	coins[38]->SetPosition(Position(-103.1, 0, 41));
+	coins[39]->SetPosition(Position(-139.4, 0, 41));
+	coins[40]->SetPosition(Position(-60.9, 0, 89));
+	coins[41]->SetPosition(Position(-103.1, 0, 89));
+	coins[42]->SetPosition(Position(-139.4, 0, 89));
+	//coins[51]->SetPosition(Position(-60.9, 0, 147));
+	//coins[52]->SetPosition(Position(-103.1, 0, 147));
+	//coins[53]->SetPosition(Position(-139.4, 0, 147));
+	//coins[54]->SetPosition(Position(-3, 0, 147));
+	//coins[55]->SetPosition(Position(44.5, 0, 147));
+	//coins[56]->SetPosition(Position(89, 0, 147));
+	//coins[57]->SetPosition(Position(136, 0, 147));
+	coins[43]->SetPosition(Position(44.5, 0, 106.5));
+	coins[44]->SetPosition(Position(136, 0, 106.5));
+	coins[45]->SetPosition(Position(-9.3, 0, -58.5));
+	coins[46]->SetPosition(Position(-18.6, 0, -28.5));
+	coins[47]->SetPosition(Position(-19.4, 0, 4));
+	coins[48]->SetPosition(Position(-11.7, 0, 37.2));
+	coins[49]->SetPosition(Position(-0.5, 0, 90));
 
 	//temp.SetTag("Temp");
 	//manager.CreateGameObject(&temp);
-	TestRef = &temp;
+	TestRef = &bus;
 }
 
 void SceneDrive::Update(double dt)
@@ -584,6 +658,8 @@ void SceneDrive::Update(double dt)
 	//camera.SetChase(&bus);
 
 	fps = 1.0f / dt;
+
+	coinRot += coinRot > 360 ? (180 * dt) - 360 : 180 * dt;
 
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
@@ -996,8 +1072,14 @@ void SceneDrive::Render() //My Own Pattern
 				}
 				else if (gameObject->Type() == "DriveObjective")
 				{
-					modelStack.Scale(gameObject->GetScaleX(), gameObject->GetScaleY(), gameObject->GetScaleZ());
-					RenderMesh(meshList[GEO_CUBE], false); // hitbox
+					//modelStack.Scale(gameObject->GetScaleX(), gameObject->GetScaleY(), gameObject->GetScaleZ());
+					//RenderMesh(meshList[GEO_CUBE], false); // hitbox
+				}
+				else if (gameObject->Type() == "Money")
+				{
+					modelStack.Scale(10, 10, 10);
+					modelStack.Rotate(coinRot, 0, 1, 0);
+					RenderMesh(meshList[GEO_COIN], true);
 				}
 			modelStack.PopMatrix();
 			modelStack.Scale(gameObject->GetScaleX(), gameObject->GetScaleY(), gameObject->GetScaleZ());
@@ -1012,11 +1094,9 @@ void SceneDrive::Render() //My Own Pattern
 
 	RenderTextOnScreen(meshList[GEO_TEXT], "Passengers:" + std::to_string(bus.GetPassengerCount()) + "/" + std::to_string(endpoint.GetRequiredPassengerCount()), Color(0, 0, 1), 3, 0, 81);
 
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(bus.GetMoney()), Color(1, 1, 0), 3, 0, 84);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Total Money:" + std::to_string(bus.GetMoney()), Color(1, 1, 0), 3, 0, 84);
 
-	std::ostringstream sc;
-	sc << "Score:" << score.getScore(0);
-	RenderTextOnScreen(meshList[GEO_TEXT], sc.str(), Color(1, 0, 0), 3, 0, 87);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:", Color(1, 0, 0), 3, 0, 87);
 
 	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(TestRef->GetPositionX()) + ", " + std::to_string(TestRef->GetPositionZ()) + ", " + std::to_string(TestRef->GetRotateY()) + ", " + TestRef->GetTag(), Color(1, 0, 1), 3, 0, 0);
 
