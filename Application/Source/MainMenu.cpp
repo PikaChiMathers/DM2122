@@ -243,11 +243,10 @@ void MainMenu::Update(double dt)
 		float posY = 60 - (y / 10); //convert (600,0) to (0,60)
 		std::cout << "posX:" << posX << " , posY:" << posY <<
 			std::endl;
-		if (posX > 44 && posX < 85 && posY >
-			23 && posY < 1)
+		if (posX > 44 && posX < 85 && posY > 1 && posY < 23)
 		{
 			std::cout << "Hit!" << std::endl;
-			//trigger user action or function
+			buttonPressed = true;
 		}
 		else
 		{
