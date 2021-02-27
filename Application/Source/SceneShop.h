@@ -120,7 +120,9 @@ private: //added (Step 2)
 
 	Shop shop;
 	bool displayShopUI;
+	bool displayMessage;
 	int money;
+	double timer;
 
 	bool spacePressed;
 

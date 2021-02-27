@@ -153,6 +153,8 @@
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp" />
     <ClCompile Include="Source\BasicPhysics.cpp" />
+    <ClCompile Include="Source\Border.cpp" />
+    <ClCompile Include="Source\CameraChase.cpp" />
     <ClCompile Include="Source\Camera5.cpp" />
     <ClCompile Include="Source\ColliderObj.cpp" />
     <ClCompile Include="Source\SceneDrive.cpp" />
@@ -192,6 +194,8 @@
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
     <ClInclude Include="Source\BasicPhysics.h" />
+    <ClInclude Include="Source\Border.h" />
+    <ClInclude Include="Source\CameraChase.h" />
     <ClInclude Include="Source\Camera5.h" />
     <ClInclude Include="Source\ColliderObj.h" />
     <ClInclude Include="Source\SceneDrive.h" />

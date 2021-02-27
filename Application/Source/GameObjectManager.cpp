@@ -239,19 +239,23 @@ void GameObjectManager::GameObjectManagerUpdate(double dt)
 					RefCollider.SetTransform(gameObject->GetCollider()->GetTransform());
 					RefCollider.SetSize(gameObject->GetCollider()->GetSize());
 					RefCollider.SetPosition(newPos);
-					Collide hit = CheckCollision(RefCollider, gameObject->GetCollider());
-					if (hit.gameObject != nullptr && !hit.gameObject->GetCollider()->GetIsTrigger())
+					std::vector<Collide> hits = CheckCollisions(RefCollider, gameObject->GetCollider());
+					for (std::vector<Collide>::iterator it_hit = hits.begin(); it_hit != hits.end(); it_hit++)
 					{
-						float posGO, pos2;
-						Vector3 axis = hit.axis.Normalize();
-						posGO = Vector3(newPos.x, newPos.y, newPos.z).Dot(axis);
-						pos2 = Vector3(hit.gameObject->GetPositionX(), hit.gameObject->GetPositionY(), hit.gameObject->GetPositionZ()).Dot(axis);
-						axis *= hit.distance * (posGO > pos2 ? 1 : -1);
-						Vector3 translatePos(newPos.x, newPos.y, newPos.z);
-						translatePos += axis;
-						newPos.Set(translatePos.x, translatePos.y, translatePos.z);
-						axis = hit.axis.Normalize();
-						physics->AddVelocity(axis * -physics->GetVelocity().Dot(axis));
+						Collide hit = (*it_hit);
+						if (hit.gameObject != nullptr && !hit.gameObject->GetCollider()->GetIsTrigger())
+						{
+							float posGO, pos2;
+							Vector3 axis = hit.axis.Normalize();
+							posGO = Vector3(newPos.x, newPos.y, newPos.z).Dot(axis);
+							pos2 = Vector3(hit.gameObject->GetPositionX(), hit.gameObject->GetPositionY(), hit.gameObject->GetPositionZ()).Dot(axis);
+							axis *= hit.distance * (posGO > pos2 ? 1 : -1);
+							Vector3 translatePos(newPos.x, newPos.y, newPos.z);
+							translatePos += axis;
+							newPos.Set(translatePos.x, translatePos.y, translatePos.z);
+							axis = hit.axis.Normalize();
+							physics->AddVelocity(axis * -physics->GetVelocity().Dot(axis));
+						}
 					}
 					gameObject->SetPosition(newPos);
 					//{ // physics stuff not working

@@ -23,6 +23,7 @@ SceneDrive::~SceneDrive()
 void SceneDrive::Init() 
 {
 	camera.Init(Vector3(40, 30, 30), Vector3(0, 0, 0), Vector3(0, 1, 0));
+	//camera.Init(&bus, Vector3(0, 1, 0));
 
 	map.Set(Maps::SKYBOX_TYPE::SB_DAY);
 
@@ -82,6 +83,9 @@ void SceneDrive::Init()
 
 	meshList[GEO_TEMPLATE] = MeshBuilder::GenerateQuad("template", Color(1, 1, 1), 1.f, 1.f);
 	meshList[GEO_TEMPLATE]->textureID = LoadTGA("Image//map_template.tga");
+	
+	meshList[GEO_BORDER] = MeshBuilder::GenerateQuad("border", Color(1, 1, 1), 1.f, 1.f);
+	meshList[GEO_BORDER]->textureID = LoadTGA("Image//border.tga");
 
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", blue, 1, 1, 1);
 	meshList[GEO_CUBE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
@@ -169,9 +173,9 @@ void SceneDrive::Init()
 	glUseProgram(m_programID);
 	
 	lights[0].type = Light::LIGHT_POINT;
-	lights[0].position.Set(0, 20, 0);
+	lights[0].position.Set(0, 1000, 0);
 	lights[0].color.Set(1, 1, 1);
-	lights[0].power = 1;
+	lights[0].power = 4500;
 	lights[0].kC = 1.f;
 	lights[0].kL = 0.01f;
 	lights[0].kQ = 0.001f;
@@ -222,7 +226,7 @@ void SceneDrive::Init()
 	* type 4-5: 23,34.5
 	* type 6-8: 23,23
 	*/
-	//manager.CreateGameObject(&bus);
+	manager.CreateGameObject(&bus);
 	cluster[0] = new ColliderObj;
 	cluster[0]->SetPosition(Position(-46.2519, 0, -79.7891));
 	cluster[0]->SetScale(Scale(23, 1, 34.5f));
@@ -279,13 +283,297 @@ void SceneDrive::Init()
 	cluster[9]->SetScale(Scale(23, 1, 34.5));
 	cluster[9]->SetTag("Type4");
 	manager.CreateGameObject(cluster[9]);
-	TestRef = cluster[9];
+	cluster[10] = new ColliderObj;
+	cluster[10]->SetPosition(Position(-123.421, 0, 135.403));
+	cluster[10]->SetRotateY(90);
+	cluster[10]->SetScale(Scale(11.5, 1, 23));
+	cluster[10]->SetTag("Type3");
+	manager.CreateGameObject(cluster[10]);
+	cluster[11] = new ColliderObj;
+	cluster[11]->SetPosition(Position(-122.97, 0, 111.517));
+	cluster[11]->SetRotateY(180);
+	cluster[11]->SetScale(Scale(23, 1, 34.5));
+	cluster[11]->SetTag("Type4");
+	manager.CreateGameObject(cluster[11]);
+	cluster[12] = new ColliderObj;
+	cluster[12]->SetPosition(Position(-124.252, 0, 71.04));
+	cluster[12]->SetRotateY(180);
+	cluster[12]->SetScale(Scale(23, 1, 23));
+	cluster[12]->SetTag("Type7");
+	manager.CreateGameObject(cluster[12]);
+	cluster[13] = new ColliderObj;
+	cluster[13]->SetPosition(Position(-124.233, 0, 53.178));
+	cluster[13]->SetRotateY(90);
+	cluster[13]->SetScale(Scale(11.5, 1, 23));
+	cluster[13]->SetTag("Type3");
+	manager.CreateGameObject(cluster[13]);
+	cluster[14] = new ColliderObj;
+	cluster[14]->SetPosition(Position(-123.803, 0, -45.587));
+	cluster[14]->SetRotateY(-90);
+	cluster[14]->SetScale(Scale(11.5, 1, 23));
+	cluster[14]->SetTag("Type2");
+	manager.CreateGameObject(cluster[14]);
+	cluster[15] = new ColliderObj;
+	cluster[15]->SetPosition(Position(-122.923, 0, -78.824));
+	cluster[15]->SetRotateY(-90);
+	cluster[15]->SetScale(Scale(23, 1, 23));
+	cluster[15]->SetTag("Type7");
+	manager.CreateGameObject(cluster[15]);
+	cluster[16] = new ColliderObj;
+	cluster[16]->SetPosition(Position(-84.1958, 0, -130.384));
+	cluster[16]->SetRotateY(90);
+	cluster[16]->SetScale(Scale(23, 1, 34.5));
+	cluster[16]->SetTag("Type4");
+	manager.CreateGameObject(cluster[16]);
+	cluster[17] = new ColliderObj;
+	cluster[17]->SetPosition(Position(-80.799, 0, -79.205));
+	cluster[17]->SetRotateY(180);
+	cluster[17]->SetScale(Scale(23, 1, 34.5));
+	cluster[17]->SetTag("Type5");
+	manager.CreateGameObject(cluster[17]);
+	cluster[18] = new ColliderObj;
+	cluster[18]->SetPosition(Position(-83.377, 0, -45.077));
+	cluster[18]->SetRotateY(270);
+	cluster[18]->SetScale(Scale(11.5, 1, 23));
+	cluster[18]->SetTag("Type3");
+	manager.CreateGameObject(cluster[18]);
+	cluster[19] = new ColliderObj;
+	cluster[19]->SetPosition(Position(-82.5234, 0, 22.9695));
+	cluster[19]->SetRotateY(270);
+	cluster[19]->SetScale(Scale(23, 1, 34.5));
+	cluster[19]->SetTag("Type4");
+	manager.CreateGameObject(cluster[19]);
+	cluster[20] = new ColliderObj;
+	cluster[20]->SetPosition(Position(-82.135, 0, 76.2388));
+	cluster[20]->SetRotateY(270);
+	cluster[20]->SetScale(Scale(11.5, 1, 23));
+	cluster[20]->SetTag("Type1");
+	manager.CreateGameObject(cluster[20]);
+	cluster[21] = new ColliderObj;
+	cluster[21]->SetPosition(Position(-79.5776, 0, 57.9134));
+	cluster[21]->SetRotateY(90);
+	cluster[21]->SetScale(Scale(23, 1, 23));
+	cluster[21]->SetTag("Type7");
+	manager.CreateGameObject(cluster[21]);
+	cluster[22] = new ColliderObj;
+	cluster[22]->SetPosition(Position(-86.833, 0, 107.758));
+	cluster[22]->SetRotateY(90);
+	cluster[22]->SetScale(Scale(23, 1, 23));
+	cluster[22]->SetTag("Type7");
+	manager.CreateGameObject(cluster[22]);
+	cluster[23] = new ColliderObj;
+	cluster[23]->SetPosition(Position(-83.01, 0, 130.354));
+	cluster[23]->SetRotateY(90);
+	cluster[23]->SetScale(Scale(11.5, 1, 23));
+	cluster[23]->SetTag("Type3");
+	manager.CreateGameObject(cluster[23]);
+	cluster[24] = new ColliderObj;
+	cluster[24]->SetPosition(Position(-47.9536, 0, 114.564));
+	cluster[24]->SetRotateY(180);
+	cluster[24]->SetScale(Scale(23, 1, 34.5));
+	cluster[24]->SetTag("Type4");
+	manager.CreateGameObject(cluster[24]);
+	cluster[25] = new ColliderObj;
+	cluster[25]->SetPosition(Position(-47.9536, 0, 136.763));
+	cluster[25]->SetRotateY(-270);
+	cluster[25]->SetScale(Scale(11.5, 1, 23));
+	cluster[25]->SetTag("Type3");
+	manager.CreateGameObject(cluster[25]);
+	cluster[26] = new ColliderObj;
+	cluster[26]->SetPosition(Position(-25.430, 0, 125.748));
+	cluster[26]->SetRotateY(90);
+	cluster[26]->SetScale(Scale(23, 1, 23));
+	cluster[26]->SetTag("Type7");
+	manager.CreateGameObject(cluster[26]);
+	cluster[27] = new ColliderObj;
+	cluster[27]->SetPosition(Position(-26.692, 0, 103.604));
+	cluster[27]->SetRotateY(90);
+	cluster[27]->SetScale(Scale(11.5, 1, 23));
+	cluster[27]->SetTag("Type1");
+	manager.CreateGameObject(cluster[27]);
+	cluster[28] = new ColliderObj;
+	cluster[28]->SetPosition(Position(-49.2745, 0, 69.097));
+	cluster[28]->SetRotateY(0);
+	cluster[28]->SetScale(Scale(11.5, 1, 23));
+	cluster[28]->SetTag("Type1");
+	manager.CreateGameObject(cluster[28]);
+	cluster[29] = new ColliderObj;
+	cluster[29]->SetPosition(Position(-27.1164, 0, 71.240));
+	cluster[29]->SetRotateY(-90);
+	cluster[29]->SetScale(Scale(23, 1, 34.5));
+	cluster[29]->SetTag("Type5");
+	manager.CreateGameObject(cluster[29]);
+	cluster[30] = new ColliderObj;
+	cluster[30]->SetPosition(Position(26.4525, 0, 44.7866));
+	cluster[30]->SetRotateY(217.309);
+	cluster[30]->SetScale(Scale(23, 1, 34.5));
+	cluster[30]->SetTag("Type5");
+	manager.CreateGameObject(cluster[30]);
+	cluster[31] = new ColliderObj;
+	cluster[31]->SetPosition(Position(2.1104, 0, 14.127));
+	cluster[31]->SetRotateY(-78.8068);
+	cluster[31]->SetScale(Scale(11.5, 1, 23));
+	cluster[31]->SetTag("Type2");
+	manager.CreateGameObject(cluster[31]);
+	cluster[32] = new ColliderObj;
+	cluster[32]->SetPosition(Position(-10.9397, 0, -125.9913));
+	cluster[32]->SetRotateY(180);
+	cluster[32]->SetScale(Scale(23, 1, 34.5));
+	cluster[32]->SetTag("Type4");
+	manager.CreateGameObject(cluster[32]);
+	cluster[33] = new ColliderObj;
+	cluster[33]->SetPosition(Position(-19.1237, 0, -76.1837));
+	cluster[33]->SetRotateY(0);
+	cluster[33]->SetScale(Scale(11.5, 1, 23));
+	cluster[33]->SetTag("Type3");
+	manager.CreateGameObject(cluster[33]);
+	cluster[34] = new ColliderObj;
+	cluster[34]->SetPosition(Position(21.4181, 0, 130.1077));
+	cluster[34]->SetRotateY(-90);
+	cluster[34]->SetScale(Scale(23, 1, 34.5));
+	cluster[34]->SetTag("Type4");
+	manager.CreateGameObject(cluster[34]);
+	cluster[35] = new ColliderObj;
+	cluster[35]->SetPosition(Position(21.41817, 0, 108.3904));
+	cluster[35]->SetRotateY(90);
+	cluster[35]->SetScale(Scale(23, 1, 34.5));
+	cluster[35]->SetTag("Type4");
+	manager.CreateGameObject(cluster[35]);
+	cluster[36] = new ColliderObj;
+	cluster[36]->SetPosition(Position(62.7545, 0, 124.217));
+	cluster[36]->SetRotateY(90);
+	cluster[36]->SetScale(Scale(23, 1, 23));
+	cluster[36]->SetTag("Type7");
+	manager.CreateGameObject(cluster[36]);
+	cluster[37] = new ColliderObj;
+	cluster[37]->SetPosition(Position(111.78678, 0, 129.3267));
+	cluster[37]->SetRotateY(90);
+	cluster[37]->SetScale(Scale(23, 1, 34.5));
+	cluster[37]->SetTag("Type5");
+	manager.CreateGameObject(cluster[37]);
+	cluster[38] = new ColliderObj;
+	cluster[38]->SetPosition(Position(62.82099, 0, 95.6409));
+	cluster[38]->SetRotateY(262.404);
+	cluster[38]->SetScale(Scale(11.5, 1, 23));
+	cluster[38]->SetTag("Type3");
+	manager.CreateGameObject(cluster[38]);
+	cluster[39] = new ColliderObj;
+	cluster[39]->SetPosition(Position(71.7895, 0, 80.32));
+	cluster[39]->SetRotateY(352.404);
+	cluster[39]->SetScale(Scale(11.5, 1, 23));
+	cluster[39]->SetTag("Type3");
+	manager.CreateGameObject(cluster[39]);
+	cluster[40] = new ColliderObj;
+	cluster[40]->SetPosition(Position(76.498299, 0, 58.5145));
+	cluster[40]->SetRotateY(352.404);
+	cluster[40]->SetScale(Scale(11.5, 1, 23));
+	cluster[40]->SetTag("Type2");
+	manager.CreateGameObject(cluster[40]);
+	cluster[41] = new ColliderObj;
+	cluster[41]->SetPosition(Position(117.82504, 0, -0.24954));
+	cluster[41]->SetRotateY(274.70874);
+	cluster[41]->SetScale(Scale(11.5, 1, 23));
+	cluster[41]->SetTag("Type7");
+	manager.CreateGameObject(cluster[41]);
+	cluster[42] = new ColliderObj;
+	cluster[42]->SetPosition(Position(26.7506, 0, -126.4129));
+	cluster[42]->SetRotateY(180);
+	cluster[42]->SetScale(Scale(23, 1, 34.5));
+	cluster[42]->SetTag("Type4");
+	manager.CreateGameObject(cluster[42]);
+	cluster[43] = new ColliderObj;
+	cluster[43]->SetPosition(Position(65.074, 0, -132.3670));
+	cluster[43]->SetRotateY(-270);
+	cluster[43]->SetScale(Scale(11.5, 1, 23));
+	cluster[43]->SetTag("Type2");
+	manager.CreateGameObject(cluster[43]);
+	cluster[44] = new ColliderObj;
+	cluster[44]->SetPosition(Position(105.1129, 0, -134.954));
+	cluster[44]->SetRotateY(90);
+	cluster[44]->SetScale(Scale(11.5, 1, 23));
+	cluster[44]->SetTag("Type1");
+	manager.CreateGameObject(cluster[44]);
+	cluster[45] = new ColliderObj;
+	cluster[45]->SetPosition(Position(125.6322, 0, -27.1762));
+	cluster[45]->SetRotateY(97.209);
+	cluster[45]->SetScale(Scale(11.5, 1, 23));
+	cluster[45]->SetTag("Type1");
+	manager.CreateGameObject(cluster[45]);
+	cluster[46] = new ColliderObj;
+	cluster[46]->SetPosition(Position(17.3438, 0, -58.9819));
+	cluster[46]->SetRotateY(236.355);
+	cluster[46]->SetScale(Scale(23, 1, 34.5));
+	cluster[46]->SetTag("Type5");
+	manager.CreateGameObject(cluster[46]);
+	cluster[47] = new ColliderObj;
+	cluster[47]->SetPosition(Position(60.851799, 0, -81.5723));
+	cluster[47]->SetRotateY(211.29794);
+	cluster[47]->SetScale(Scale(23, 1, 34.5));
+	cluster[47]->SetTag("Type5");
+	manager.CreateGameObject(cluster[47]);
+	cluster[48] = new ColliderObj;
+	cluster[48]->SetPosition(Position(77.3685, 0, -60.651939));
+	cluster[48]->SetRotateY(211.29794);
+	cluster[48]->SetScale(Scale(23, 1, 23));
+	cluster[48]->SetTag("Type6");
+	manager.CreateGameObject(cluster[48]);
+	cluster[49] = new ColliderObj;
+	cluster[49]->SetPosition(Position(104.776, 0, -61.1024));
+	cluster[49]->SetRotateY(121.297);
+	cluster[49]->SetScale(Scale(23, 1, 23));
+	cluster[49]->SetTag("Type6");
+	manager.CreateGameObject(cluster[49]);
+	cluster[50] = new ColliderObj;
+	cluster[50]->SetPosition(Position(87.690628, 0, -78.13084));
+	cluster[50]->SetRotateY(45);
+	cluster[50]->SetScale(Scale(11.5, 1, 23));
+	cluster[50]->SetTag("Type2");
+	manager.CreateGameObject(cluster[50]);
+	border[0] = new Border;
+	border[0]->SetPosition(Position(0, 5, -150));
+	border[0]->SetScale(Scale(300, 20, 80));
+	manager.CreateGameObject(border[0]);
+	borderCol[0] = new ColliderObj;
+	borderCol[0]->SetPosition(Position(0, 0, -160));
+	borderCol[0]->SetScale(Scale(300, 20, 20));
+	manager.CreateGameObject(borderCol[0]);
+	border[1] = new Border;
+	border[1]->SetPosition(Position(0, 5, 150));
+	border[1]->SetRotateY(180);
+	border[1]->SetScale(Scale(300, 20, 80));
+	manager.CreateGameObject(border[1]);
+	borderCol[1] = new ColliderObj;
+	borderCol[1]->SetPosition(Position(0, 0, 160));
+	borderCol[1]->SetScale(Scale(300, 20, 20));
+	manager.CreateGameObject(borderCol[1]);
+	border[2] = new Border;
+	border[2]->SetPosition(Position(-150, 5, 0));
+	border[2]->SetRotateY(90);
+	border[2]->SetScale(Scale(300, 20, 80));
+	manager.CreateGameObject(border[2]);
+	borderCol[2] = new ColliderObj;
+	borderCol[2]->SetPosition(Position(-160, 0, 0));
+	borderCol[2]->SetRotateY(90);
+	borderCol[2]->SetScale(Scale(300, 20, 20));
+	manager.CreateGameObject(borderCol[2]);
+	border[3] = new Border;
+	border[3]->SetPosition(Position(150, 5, 0));
+	border[3]->SetRotateY(-90);
+	border[3]->SetScale(Scale(300, 20, 80));
+	manager.CreateGameObject(border[3]);
+	borderCol[3] = new ColliderObj;
+	borderCol[3]->SetPosition(Position(160, 0, 0));
+	borderCol[3]->SetRotateY(90);
+	borderCol[3]->SetScale(Scale(300, 20, 20));
+	manager.CreateGameObject(borderCol[3]);
+	TestRef = border[0];
 }
 
 void SceneDrive::Update(double dt)
 {
 	manager.GameObjectManagerUpdate(dt);
 	camera.Update(dt);
+	//camera.SetChase(&bus);
 
 	fps = 1.0f / dt;
 
@@ -310,7 +598,7 @@ void SceneDrive::Update(double dt)
 		map.Set(Maps::SKYBOX_TYPE::SB_NIGHT);
 	}*/
 
-	if (Application::IsKeyPressed('T'))
+	/*if (Application::IsKeyPressed('T'))
 	{
 		TestRef->SetPositionZ(TestRef->GetPositionZ() - 5 * multiplier * dt);
 	}
@@ -353,7 +641,43 @@ void SceneDrive::Update(double dt)
 	{
 		TestRef->SetRotateY(TestRef->GetRotateY() - 45);
 		toggleTime = .3;
-	}
+	}*/
+	/*else if (Application::IsMousePressed(2) && toggleTime <= 0)
+	{
+		clusterType++;
+		switch (clusterType)
+		{
+		case 1:
+			TestRef->SetTag("Type1");
+			break;
+		case 2:
+			TestRef->SetTag("Type2");
+			break;
+		case 3:
+			TestRef->SetTag("Type3");
+			break;
+		case 4:
+			TestRef->SetTag("Type4");
+			break;
+		case 5:
+			TestRef->SetTag("Type5");
+			break;
+		case 6:
+			TestRef->SetTag("Type6");
+			break;
+		case 7:
+			TestRef->SetTag("Type7");
+			break;
+		case 8:
+			TestRef->SetTag("Type8");
+			break;
+		default:
+			clusterType = 1;
+			TestRef->SetTag("Type1");
+			break;
+		}
+		toggleTime = .3;
+	}*/
 	else if (Application::IsKeyPressed('B') && toggleTime <= 0)
 	{
 		toggleHitBox = !toggleHitBox;
@@ -374,7 +698,7 @@ void SceneDrive::Update(double dt)
 		scene_change = false;
 	}
 
-	if (Application::IsKeyPressed('5'))
+	/*if (Application::IsKeyPressed('5'))
 	{
 		lights[0].type = Light::LIGHT_POINT;
 		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
@@ -414,7 +738,7 @@ void SceneDrive::Update(double dt)
 	{
 		lights[1].type = Light::LIGHT_MULTIPLE;
 		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
-	}
+	}*/
 }
 
 void SceneDrive::Render() //My Own Pattern
@@ -470,20 +794,20 @@ void SceneDrive::Render() //My Own Pattern
 	Mtx44 mvp = projectionStack.Top() * viewStack.Top() * modelStack.Top();
 	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &mvp.a[0]); //update the shader with new MVP
 
+	RenderSkybox();
+	//modelStack.Scale(3, 3, 3);
 	RenderMesh(meshList[GEO_AXES], false);
-
-//RenderMesh(meshList[GEO_TEST], lights[0].isOn);
 
 	modelStack.PushMatrix();
 		modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
 		RenderMesh(meshList[GEO_LIGHTBALL], false);
-		modelStack.PopMatrix();
-	RenderSkybox();
+	modelStack.PopMatrix();
+	
 
 	modelStack.PushMatrix();
 		modelStack.Rotate(270, 1, 0, 0);
 		modelStack.Scale(300, 300, 1);
-		RenderMesh(meshList[GEO_TEMPLATE], false);
+		RenderMesh(meshList[GEO_TEMPLATE], true);
 	modelStack.PopMatrix();
 
 	std::vector<GameObject*>GOList = manager.GetGameObjectList();
@@ -499,8 +823,8 @@ void SceneDrive::Render() //My Own Pattern
 				if (gameObject->Type() == "Bus")
 				{
 					modelStack.Rotate(180, 0, 1, 0);
-					modelStack.Scale(.01f, .01f, .01f);
-					RenderMesh(meshList[GEO_TEST], false);
+					modelStack.Scale(.03f, .03f, .03f);
+					RenderMesh(meshList[GEO_TEST], true);
 				}
 				else if (gameObject->Type() == "ColliderObj")
 				{
@@ -513,21 +837,21 @@ void SceneDrive::Render() //My Own Pattern
 					{
 						modelStack.PushMatrix();
 							modelStack.Translate(.85f, 0, .6f);
-							RenderMesh(meshList[GEO_BUILDING1], false);
+							RenderMesh(meshList[GEO_BUILDING1], lights[0].isOn);
 						modelStack.PopMatrix();
 					}
 					if (gameObject->GetTag() == "Type2")
 					{
 						modelStack.PushMatrix();
 							modelStack.Translate(.85f, 0, .6f);
-							RenderMesh(meshList[GEO_BUILDING2], false);
+							RenderMesh(meshList[GEO_BUILDING2], lights[0].isOn);
 						modelStack.PopMatrix();
 					}
 					if (gameObject->GetTag() == "Type3")
 					{
 						modelStack.PushMatrix();
 							modelStack.Translate(.85f, 0, .6f);
-							RenderMesh(meshList[GEO_BUILDING3], false);
+							RenderMesh(meshList[GEO_BUILDING3], lights[0].isOn);
 						modelStack.PopMatrix();
 					}
 					if (gameObject->GetTag() == "Type4")
@@ -537,7 +861,7 @@ void SceneDrive::Render() //My Own Pattern
 							modelStack.Rotate(90, 0, 1, 0);
 							modelStack.PushMatrix();
 								modelStack.Translate(.85f, 0, .6f);
-								RenderMesh(meshList[GEO_BUILDING3], false);
+								RenderMesh(meshList[GEO_BUILDING3], lights[0].isOn);
 							modelStack.PopMatrix();
 						modelStack.PopMatrix();
 						modelStack.PushMatrix();
@@ -545,7 +869,7 @@ void SceneDrive::Render() //My Own Pattern
 							modelStack.Rotate(0, 0, 1, 0);
 							modelStack.PushMatrix();
 								modelStack.Translate(.85f, 0, .6f);
-								RenderMesh(meshList[GEO_BUILDING3], false);
+								RenderMesh(meshList[GEO_BUILDING3], lights[0].isOn);
 							modelStack.PopMatrix();
 						modelStack.PopMatrix();
 						modelStack.PushMatrix();
@@ -553,7 +877,7 @@ void SceneDrive::Render() //My Own Pattern
 							modelStack.Rotate(0, 0, 1, 0);
 							modelStack.PushMatrix();
 								modelStack.Translate(.85f, 0, .6f);
-								RenderMesh(meshList[GEO_BUILDING2], false);
+								RenderMesh(meshList[GEO_BUILDING2], lights[0].isOn);
 							modelStack.PopMatrix();
 						modelStack.PopMatrix();
 					}
@@ -564,7 +888,7 @@ void SceneDrive::Render() //My Own Pattern
 							modelStack.Rotate(90, 0, 1, 0);
 							modelStack.PushMatrix();
 								modelStack.Translate(.85f, 0, .6f);
-								RenderMesh(meshList[GEO_BUILDING3], false);
+								RenderMesh(meshList[GEO_BUILDING3], lights[0].isOn);
 							modelStack.PopMatrix();
 						modelStack.PopMatrix();
 						modelStack.PushMatrix();
@@ -572,7 +896,7 @@ void SceneDrive::Render() //My Own Pattern
 							modelStack.Rotate(0, 0, 1, 0);
 							modelStack.PushMatrix();
 								modelStack.Translate(.85f, 0, .6f);
-								RenderMesh(meshList[GEO_BUILDING2], false);
+								RenderMesh(meshList[GEO_BUILDING2], lights[0].isOn);
 							modelStack.PopMatrix();
 						modelStack.PopMatrix();
 						modelStack.PushMatrix();
@@ -580,7 +904,7 @@ void SceneDrive::Render() //My Own Pattern
 							modelStack.Rotate(0, 0, 1, 0);
 							modelStack.PushMatrix();
 								modelStack.Translate(.85f, 0, .6f);
-								RenderMesh(meshList[GEO_BUILDING2], false);
+								RenderMesh(meshList[GEO_BUILDING2], lights[0].isOn);
 							modelStack.PopMatrix();
 						modelStack.PopMatrix();
 					}
@@ -591,7 +915,7 @@ void SceneDrive::Render() //My Own Pattern
 							modelStack.Rotate(0, 0, 1, 0);
 							modelStack.PushMatrix();
 								modelStack.Translate(.85f, 0, .6f);
-								RenderMesh(meshList[GEO_BUILDING1], false);
+								RenderMesh(meshList[GEO_BUILDING1], lights[0].isOn);
 							modelStack.PopMatrix();
 						modelStack.PopMatrix();
 						modelStack.PushMatrix();
@@ -599,7 +923,7 @@ void SceneDrive::Render() //My Own Pattern
 							modelStack.Rotate(0, 0, 1, 0);
 							modelStack.PushMatrix();
 								modelStack.Translate(.85f, 0, .6f);
-								RenderMesh(meshList[GEO_BUILDING1], false);
+								RenderMesh(meshList[GEO_BUILDING1], lights[0].isOn);
 							modelStack.PopMatrix();
 						modelStack.PopMatrix();
 					}
@@ -610,7 +934,7 @@ void SceneDrive::Render() //My Own Pattern
 							modelStack.Rotate(0, 0, 1, 0);
 							modelStack.PushMatrix();
 								modelStack.Translate(.85f, 0, .6f);
-								RenderMesh(meshList[GEO_BUILDING1], false);
+								RenderMesh(meshList[GEO_BUILDING1], lights[0].isOn);
 							modelStack.PopMatrix();
 						modelStack.PopMatrix();
 						modelStack.PushMatrix();
@@ -618,7 +942,7 @@ void SceneDrive::Render() //My Own Pattern
 							modelStack.Rotate(0, 0, 1, 0);
 							modelStack.PushMatrix();
 								modelStack.Translate(.85f, 0, .6f);
-								RenderMesh(meshList[GEO_BUILDING2], false);
+								RenderMesh(meshList[GEO_BUILDING2], lights[0].isOn);
 							modelStack.PopMatrix();
 						modelStack.PopMatrix();
 					}
@@ -629,7 +953,7 @@ void SceneDrive::Render() //My Own Pattern
 							modelStack.Rotate(0, 0, 1, 0);
 							modelStack.PushMatrix();
 								modelStack.Translate(.85f, 0, .6f);
-								RenderMesh(meshList[GEO_BUILDING2], false);
+								RenderMesh(meshList[GEO_BUILDING2], lights[0].isOn);
 							modelStack.PopMatrix();
 						modelStack.PopMatrix();
 						modelStack.PushMatrix();
@@ -637,9 +961,24 @@ void SceneDrive::Render() //My Own Pattern
 							modelStack.Rotate(0, 0, 1, 0);
 							modelStack.PushMatrix();
 								modelStack.Translate(.85f, 0, .6f);
-								RenderMesh(meshList[GEO_BUILDING3], false);
+								RenderMesh(meshList[GEO_BUILDING3], lights[0].isOn);
 							modelStack.PopMatrix();
 						modelStack.PopMatrix();
+					}
+				}
+				else if (gameObject->Type() == "Border")
+				{
+					//modelStack.Rotate(90, 1, 0, 0);
+					if (gameObject->GetTag() == "Render")
+					{
+						for (int i = -150; i <= 150; i += 10)
+						{
+							modelStack.PushMatrix();
+								modelStack.Translate(i, 0, 0);
+								modelStack.Scale(10, 10, 10);
+								RenderMesh(meshList[GEO_BORDER], false);
+							modelStack.PopMatrix();
+						}
 					}
 				}
 			modelStack.PopMatrix();
@@ -662,7 +1001,7 @@ void SceneDrive::Render() //My Own Pattern
 	sc << "Score:" << score.getScore(0);
 	RenderTextOnScreen(meshList[GEO_TEXT], sc.str(), Color(1, 0, 0), 3, 130, 87);
 
-	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(TestRef->GetPositionX()) + ", " + std::to_string(TestRef->GetPositionZ()) + ", " + std::to_string(TestRef->GetRotateY()), Color(1, 0, 1), 3, 0, 0);
+	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(TestRef->GetPositionX()) + ", " + std::to_string(TestRef->GetPositionZ()) + ", " + std::to_string(TestRef->GetRotateY()) + ", " + TestRef->GetTag(), Color(1, 0, 1), 3, 0, 0);
 
 	//RenderMeshOnScreen(meshList[GEO_QUAD], 80, 45, 10, 10);
 }
