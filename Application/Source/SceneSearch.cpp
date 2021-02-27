@@ -12,7 +12,7 @@
 #include "Application.h"
 
 
-SceneSearch::SceneSearch() : person(Vector3(0, 0, 0))
+SceneSearch::SceneSearch()
 {
 }
 
@@ -23,21 +23,15 @@ SceneSearch::~SceneSearch()
 
 void SceneSearch::Init()
 {
-	camera.Init(Vector3(40, 30, 30), Vector3(0, 0, 0), Vector3(0, 1, 0));
+	camera.Init(Vector3(0,240, -330), Vector3(7, 240, 332), Vector3(0, 1, 0.));
 
 	map.Set(Maps::SKYBOX_TYPE::SB_DAY);
-
-	dialogue = new Dialogue("Dialogue//D1.txt", Dialogue::DIALOGUE);
-
-	manager.CreateGameObject(&goose);
 
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
 
 	rotateAngle = 0;
-
-	coin_collect = false;
 
 	//Set background color to dark blue (Step 3a)
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
@@ -51,24 +45,9 @@ void SceneSearch::Init()
 	UI_width = 160;
 	UI_height = 90;
 
-	x_value = y_value = z_value = 0;
-	red.Set(1, 0, 0);
-	green.Set(0, 1, 0);
-	blue.Set(0, 0, 1);
-	pink.Set(1.0f, 0.55f, 0.6f);
-	Lblue.Set(0.1f, 0.1f, 1.0f);
-	purple.Set(0.6f, 0.5f, 1.0f);
-	orange.Set(0.89f, 0.66f, 0.41f);
-	yellow.Set(1, 1, 0);
-	cyan.Set(0, 1, 1);
-	magenta.Set(1, 0, 1);
-
-
-	moonshade.Set(0.93f, 0.93f, 0.88f);
-
 	meshList[GEO_TEST] = MeshBuilder::GenerateOBJ("test", "OBJ//bus.obj", Color(1, 1, 1));
 
-	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("Rsphere", red, 30, 30, 1);
+	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("Rsphere", Color(1, 0, 0), 30, 30, 1);
 	meshList[GEO_SPHERE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
 	meshList[GEO_SPHERE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
 	meshList[GEO_SPHERE]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
@@ -81,7 +60,7 @@ void SceneSearch::Init()
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", Color(1, 1, 1), 1.f, 1.f);
 	meshList[GEO_BOTTOM] = MeshBuilder::GenerateQuad("bottom", Color(1, 1, 1), 1.f, 1.f);
 	meshList[GEO_BACK] = MeshBuilder::GenerateQuad("back", Color(1, 1, 1), 1.f, 1.f);
-	meshList[GEO_TOP] = MeshBuilder::GenerateQuad("top", Color(1, 1, 1), 1.f, 1.f);
+	meshList[GEO_TOP] = MeshBuilder::GenerateRevQuad("top", Color(1, 1, 1), 1.f, 1.f);
 	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left", Color(1, 1, 1), 1.f, 1.f);
 	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", Color(1, 1, 1), 1.f, 1.f);
 	meshList[GEO_FLOOR] = MeshBuilder::GenerateQuad("floor", Color(1, 1, 1), 1.f, 1.f);
@@ -93,12 +72,11 @@ void SceneSearch::Init()
 	meshList[GEO_QUAD]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
 	meshList[GEO_QUAD]->material.kShininess = 1.f;
 
-	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", blue, 1, 1, 1);
+	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(0, 0, 1), 1, 1, 1);
 	meshList[GEO_CUBE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
 	meshList[GEO_CUBE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
 	meshList[GEO_CUBE]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
 	meshList[GEO_CUBE]->material.kShininess = 1.f;
-	meshList[GEO_CUBE]->textureID = LoadTGA("Image//muscle_capoo.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//trebuchet.tga");
@@ -121,12 +99,6 @@ void SceneSearch::Init()
 	meshList[GEO_MALL]->textureID = LoadTGA("Image//stadium.tga");
 	meshList[GEO_TREE1] = MeshBuilder::GenerateOBJ("tree1", "OBJ//tree_large.obj", Color(0.184314, 0.309804, 0.184314));
 	meshList[GEO_TREE2] = MeshBuilder::GenerateOBJ("tree2", "OBJ//tree_small.obj", Color(0.184314, 0.309804, 0.184314));
-
-	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("Goose", "OBJ//goose.obj", Color(.93f, .79f, 0));
-	meshList[GEO_GOOSE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
-	meshList[GEO_GOOSE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	meshList[GEO_GOOSE]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
-	meshList[GEO_GOOSE]->material.kShininess = 1.f;
 
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
@@ -236,17 +208,7 @@ void SceneSearch::Init()
 
 void SceneSearch::Update(double dt)
 {
-	manager.GameObjectManagerUpdate(dt);
 	camera.Update(dt);
-
-	person.Update(dt);
-
-	fps = 1.0f / dt;
-
-	rotateAngle += (float)(50 * dt);
-	translateX += (float)(translateXDir * 10 * dt);
-	translateY += (float)(translateYDir * 50 * dt);
-	scaleAll += (float)(scaleDir * 2 * dt);
 
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
@@ -317,8 +279,9 @@ void SceneSearch::Update(double dt)
 	}
 
 	if (Application::IsKeyPressed(VK_SPACE))
-		if (dialogue->getCurrentLine() < dialogue->getTotalLines())
-			std::cout << dialogue->Update() << std::endl;
+	{
+
+	}
 
 }
 
@@ -399,20 +362,6 @@ void SceneSearch::Render() //My Own Pattern
 	modelStack.PopMatrix();
 
 	RenderCity();
-
-	std::ostringstream ss;
-	ss.precision(5);
-	ss << "FPS: " << fps;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, Application::GetWindowHeight() * .1f);
-
-	std::ostringstream mn;
-	mn << "Money:" << money.getMoney();
-	RenderTextOnScreen(meshList[GEO_TEXT], mn.str(), Color(1, 1, 0), 3, 130, 84);
-
-	std::ostringstream sc;
-	sc << "Score:" << score.getScore(0);
-	RenderTextOnScreen(meshList[GEO_TEXT], sc.str(), Color(1, 0, 0), 3, 130, 87);
-
 }
 
 void SceneSearch::Exit()
@@ -509,7 +458,7 @@ void SceneSearch::RenderSkybox()
 
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 499, 0);
-	modelStack.Rotate(-90, 1, 0, 0);
+	modelStack.Rotate(90, 1, 0, 0);
 	modelStack.Scale(1000, 1000, 1000);
 	RenderMesh(meshList[GEO_TOP], false);
 	modelStack.PopMatrix();
