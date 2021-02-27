@@ -23,9 +23,38 @@ SceneSearch::~SceneSearch()
 
 void SceneSearch::Init()
 {
-	cameras[0].Init(Vector3(0, 240, -330), Vector3(.7f, 239.7f, -329), Vector3(0.1f, 1, 0.2f));
-	cameras[1].Init(Vector3(0, 240, -330), Vector3(.59f, 239.7f, -329), Vector3(0.1f, 1, 0.2f));
-	camera = cameras[1];
+	srand(time(NULL)); //to initialize random seed
+
+	targets[0].Init(Vector3(0, 240, -330), Vector3(.73f, 239.7f, -329), Vector3(0.1f, 1, 0.2f));
+	targets[1].Init(Vector3(0, 240, -330), Vector3(.59f, 239.7f, -329), Vector3(0.1f, 1, 0.2f));
+	targets[2].Init(Vector3(0, 240, -330), Vector3(.48f, 239.73f, -329), Vector3(0.1f, 1, 0.2f));
+	targets[3].Init(Vector3(0, 240, -330), Vector3(.4f, 239.6f, -329), Vector3(0.1f, 1, 0.2f));
+	targets[4].Init(Vector3(0, 240, -330), Vector3(.38f, 239.8f, -329), Vector3(0.1f, 1, 0.2f));
+	targets[5].Init(Vector3(0, 240, -330), Vector3(.25f, 239.95f, -329), Vector3(0.1f, 1, 0.2f));
+	targets[6].Init(Vector3(0, 240, -330), Vector3(.11f, 239.7f, -329), Vector3(0.1f, 1, 0.2f));
+	targets[7].Init(Vector3(0, 240, -330), Vector3(.08f, 239.95f, -329), Vector3(0.1f, 1, 0.2f));
+	targets[8].Init(Vector3(0, 240, -330), Vector3(-.22f, 239.8f, -329), Vector3(0.1f, 1, 0.2f));
+	targets[9].Init(Vector3(0, 240, -330), Vector3(-.25f, 239.69f, -329), Vector3(0.1f, 1, 0.2f));
+	targets[10].Init(Vector3(0, 240, -330), Vector3(-.29f, 239.6f, -329), Vector3(0.1f, 1, 0.2f));
+	targets[11].Init(Vector3(0, 240, -330), Vector3(-.41f, 239.8f, -329), Vector3(0.1f, 1, 0.2f));
+	targets[12].Init(Vector3(0, 240, -330), Vector3(-.48f, 239.65f, -329), Vector3(0.1f, 1, 0.2f));
+	targets[13].Init(Vector3(0, 240, -330), Vector3(-.58f, 239.7f, -329), Vector3(0.1f, 1, 0.2f));
+	targets[14].Init(Vector3(0, 240, -330), Vector3(-.73f, 239.75f, -329), Vector3(0.1f, 1, 0.2f));
+	targets[15].Init(Vector3(0, 240, -330), Vector3(-1.f, 239.4f, -329), Vector3(0.1f, 1, 0.2f));
+
+	game_start = false;
+
+	int min = 2; //min is how long this game will last in minutes
+	timer = min * 60 * 60;
+
+	for (int cam = 0; cam < 9; cam++) //Uses randomizer to set up to 9 random targets/buildings to have passengers
+	{
+		int target_num = rand() % 16;
+		targets[target_num].num_passengers = rand() % 5 + 1; //each of the randomly selected buildings can have 1 to 5 passengers
+	}
+
+	current_target = press_count = passenger_count = press_time = spam_time = 0;
+	camera = &targets[0];
 
 	map.Set(Maps::SKYBOX_TYPE::SB_DAY);
 
@@ -66,8 +95,14 @@ void SceneSearch::Init()
 	meshList[GEO_FLOOR] = MeshBuilder::GenerateQuad("floor", Color(1, 1, 1), 1.f, 1.f);
 	meshList[GEO_FLOOR]->textureID = LoadTGA("Image//HNS_map.tga");
 
-	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("target", Color(1, 1, 1), 1.f, 1.f);
-	meshList[GEO_QUAD]->textureID = LoadTGA("Image//target.tga");
+	meshList[GEO_TARGET] = MeshBuilder::GenerateRevQuad("target", Color(1, 1, 1), 1.f, 1.f);
+	meshList[GEO_TARGET]->textureID = LoadTGA("Image//target.tga");
+
+	meshList[GEO_PROGRESS] = MeshBuilder::GenerateRevQuad("progress", Color(1, 1, 1), 1.f, 1.f);
+
+	meshList[GEO_INSTRUCTIONS] = MeshBuilder::GenerateRevQuad("Instructions", Color(1, 1, 1), 1, 1);
+	meshList[GEO_INSTRUCTIONS]->textureID = LoadTGA("Assets//search_instructions.tga");
+
 
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(0, 0, 1), 1, 1, 1);
 	meshList[GEO_CUBE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
@@ -77,9 +112,6 @@ void SceneSearch::Init()
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//trebuchet.tga");
-
-	meshList[GEO_COIN] = MeshBuilder::GenerateOBJMTL("coin", "OBJ//coin.obj", "OBJ//coin.mtl");
-	meshList[GEO_COIN]->textureID = LoadTGA("Image//coin.tga");
 
 	meshList[GEO_BUILDING1] = MeshBuilder::GenerateOBJMTL("building1", "OBJ//short_apartment.obj", "OBJ//short_apartment.mtl");
 	meshList[GEO_BUILDING1]->textureID = LoadTGA("Image//apartment.tga");
@@ -102,7 +134,6 @@ void SceneSearch::Init()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	m_programID = LoadShaders("Shader//Texture.vertexshader", "Shader//Text.fragmentshader");
-	/*m_programID = LoadShaders("Shader//Texture.vertexshader", "Shader//Blending.fragmentshader");*/
 
 	m_parameters[U_MVP] = glGetUniformLocation(m_programID,
 		"MVP");
@@ -117,7 +148,7 @@ void SceneSearch::Init()
 	m_parameters[U_MATERIAL_SPECULAR] =
 		glGetUniformLocation(m_programID, "material.kSpecular");
 	m_parameters[U_MATERIAL_SHININESS] = glGetUniformLocation(m_programID, "material.kShininess");
-	m_parameters[U_LIGHT0_POSITION] = glGetUniformLocation(m_programID, "lights[0].position_cameraspace");
+	m_parameters[U_LIGHT0_POSITION] = glGetUniformLocation(m_programID, "lights[0].position_targetspace");
 	m_parameters[U_LIGHT0_COLOR] = glGetUniformLocation(m_programID, "lights[0].color");
 	m_parameters[U_LIGHT0_POWER] = glGetUniformLocation(m_programID, "lights[0].power");
 	m_parameters[U_LIGHT0_KC] = glGetUniformLocation(m_programID, "lights[0].kC");
@@ -128,18 +159,6 @@ void SceneSearch::Init()
 	m_parameters[U_LIGHT0_COSCUTOFF] = glGetUniformLocation(m_programID, "lights[0].cosCutoff");
 	m_parameters[U_LIGHT0_COSINNER] = glGetUniformLocation(m_programID, "lights[0].cosInner");
 	m_parameters[U_LIGHT0_EXPONENT] = glGetUniformLocation(m_programID, "lights[0].exponent");
-
-	m_parameters[U_LIGHT1_POSITION] = glGetUniformLocation(m_programID, "lights[1].position_cameraspace");
-	m_parameters[U_LIGHT1_COLOR] = glGetUniformLocation(m_programID, "lights[1].color");
-	m_parameters[U_LIGHT1_POWER] = glGetUniformLocation(m_programID, "lights[1].power");
-	m_parameters[U_LIGHT1_KC] = glGetUniformLocation(m_programID, "lights[1].kC");
-	m_parameters[U_LIGHT1_KL] = glGetUniformLocation(m_programID, "lights[1].kL");
-	m_parameters[U_LIGHT1_KQ] = glGetUniformLocation(m_programID, "lights[1].kQ");
-	m_parameters[U_LIGHT1_TYPE] = glGetUniformLocation(m_programID, "lights[1].type");
-	m_parameters[U_LIGHT1_SPOTDIRECTION] = glGetUniformLocation(m_programID, "lights[1].spotDirection");
-	m_parameters[U_LIGHT1_COSCUTOFF] = glGetUniformLocation(m_programID, "lights[1].cosCutoff");
-	m_parameters[U_LIGHT1_COSINNER] = glGetUniformLocation(m_programID, "lights[1].cosInner");
-	m_parameters[U_LIGHT1_EXPONENT] = glGetUniformLocation(m_programID, "lights[1].exponent");
 
 	m_parameters[U_LIGHTENABLED] = glGetUniformLocation(m_programID, "lightEnabled");
 	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
@@ -153,11 +172,10 @@ void SceneSearch::Init()
 
 	glUseProgram(m_programID);
 
-
 	lights[0].type = Light::LIGHT_POINT;
 	lights[0].position.Set(0, 1000, 0);
 	lights[0].color.Set(1, 1, 1);
-	lights[0].power = 4500;
+	lights[0].power = 1800;
 	lights[0].kC = 1.f;
 	lights[0].kL = 0.01f;
 	lights[0].kQ = 0.001f;
@@ -165,18 +183,6 @@ void SceneSearch::Init()
 	lights[0].cosInner = cos(Math::DegreeToRadian(30));
 	lights[0].exponent = 3.f;
 	lights[0].spotDirection.Set(-1.f, 1.f, 0.f);
-
-	lights[1].type = Light::LIGHT_SPOT;
-	lights[1].position.Set(0, 20, 0);
-	lights[1].color.Set(1, 1, 1);
-	lights[1].power = 1;
-	lights[1].kC = 1.f;
-	lights[1].kL = 0.01f;
-	lights[1].kQ = 0.001f;
-	lights[1].cosCutoff = cos(Math::DegreeToRadian(45));
-	lights[1].cosInner = cos(Math::DegreeToRadian(30));
-	lights[1].exponent = 3.f;
-	lights[1].spotDirection.Set(0.f, 0.5f, 0.f);
 
 	glUniform1i(m_parameters[U_NUMLIGHTS], 1);
 	glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
@@ -189,38 +195,12 @@ void SceneSearch::Init()
 	glUniform1f(m_parameters[U_LIGHT0_COSINNER], lights[0].cosInner);
 	glUniform1f(m_parameters[U_LIGHT0_EXPONENT], lights[0].exponent);
 
-	glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
-	glUniform3fv(m_parameters[U_LIGHT1_COLOR], 1, &lights[1].color.r);
-	glUniform1f(m_parameters[U_LIGHT1_POWER], lights[1].power);
-	glUniform1f(m_parameters[U_LIGHT1_KC], lights[1].kC);
-	glUniform1f(m_parameters[U_LIGHT1_KL], lights[1].kL);
-	glUniform1f(m_parameters[U_LIGHT1_KQ], lights[1].kQ);
-	glUniform1f(m_parameters[U_LIGHT1_COSCUTOFF], lights[1].cosCutoff);
-	glUniform1f(m_parameters[U_LIGHT1_COSINNER], lights[1].cosInner);
-	glUniform1f(m_parameters[U_LIGHT1_EXPONENT], lights[1].exponent);
-
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 }
 
 void SceneSearch::Update(double dt)
 {
-	camera.Update(dt);
-
-	if (Application::IsKeyPressed('1'))
-		glEnable(GL_CULL_FACE);
-	if (Application::IsKeyPressed('2'))
-		glDisable(GL_CULL_FACE);
-	if (Application::IsKeyPressed('3'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //default fill mode
-	if (Application::IsKeyPressed('4'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
-
-	if (Application::IsKeyPressed('T'))
-		lights[0].isOn = false;
-	if (Application::IsKeyPressed('Y'))
-		lights[0].isOn = true;
-
 	if (scene_change) //to ensure that the skybox only updates when the scene changes
 	{
 		meshList[GEO_FRONT]->textureID = LoadTGA((map.skybox_loc[0]).std::string::c_str());
@@ -233,51 +213,71 @@ void SceneSearch::Update(double dt)
 		scene_change = false;
 	}
 
-	if (Application::IsKeyPressed('5'))
+	if (timer > 0)
 	{
-		lights[0].type = Light::LIGHT_POINT;
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-	}
-	else if (Application::IsKeyPressed('6'))
-	{
-		lights[0].type = Light::LIGHT_DIRECTIONAL;
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-	}
-	else if (Application::IsKeyPressed('7'))
-	{
-		lights[0].type = Light::LIGHT_SPOT;
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-	}
-	else if (Application::IsKeyPressed('8'))
-	{
-		lights[0].type = Light::LIGHT_MULTIPLE;
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-	}
+		if (game_start)
+		{
+			timer--;
+			if (press_count == 0)
+			{
+				if (Application::IsKeyPressed(VK_LEFT) || Application::IsKeyPressed(VK_RIGHT))
+				{
+					press_time++;
+					if (press_time == 1)
+					{
+						if (Application::IsKeyPressed(VK_LEFT))
+							current_target--;
+						if (Application::IsKeyPressed(VK_RIGHT))
+							current_target++;
 
-	if (Application::IsKeyPressed('5'))
-	{
-		lights[1].type = Light::LIGHT_POINT;
-		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
-	}
-	else if (Application::IsKeyPressed('6'))
-	{
-		lights[1].type = Light::LIGHT_DIRECTIONAL;
-		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
-	}
-	else if (Application::IsKeyPressed('7'))
-	{
-		lights[1].type = Light::LIGHT_SPOT;
-		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
-	}
-	else if (Application::IsKeyPressed('8'))
-	{
-		lights[1].type = Light::LIGHT_MULTIPLE;
-		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
-	}
+						if (current_target < 0)
+							current_target = 15;
+						if (current_target >= 16)
+							current_target = 0;
+					}
+				}
+				else
+					press_time = 0;
 
-	if (Application::IsKeyPressed(VK_SPACE))
-	{
+				camera = &targets[current_target];
+			}
 
+			if (press_count >= 25)
+				camera->progress = 25;
+			if (press_count >= 50)
+				camera->progress = 50;
+			if (press_count >= 75)
+				camera->progress = 75;
+			if (press_count >= 100)
+			{
+				camera->progress = 100;
+				press_count = 0;
+				passenger_count += camera->num_passengers;
+				camera->has_checked = true;
+			}
+		}
+
+		if (Application::IsKeyPressed(VK_SPACE))
+		{
+			spam_time++;
+			if (spam_time == 1)
+			{
+				if (game_start)
+				{
+					if (!camera->has_checked && press_count < 100)
+					{
+						std::string sound_file = "media/honk_" + std::to_string(rand() % 5 + 1) + ".wav";
+							sound.Engine()->play2D(sound_file.std::string::c_str());
+
+						press_count++;
+					}
+				}
+				else
+					game_start = true;
+			}
+		}
+		else
+			spam_time = 0;
 	}
 
 }
@@ -290,47 +290,28 @@ void SceneSearch::Render() //My Own Pattern
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	viewStack.LoadIdentity();
-	viewStack.LookAt(camera.position.x, camera.position.y,
-		camera.position.z, camera.target.x, camera.target.y,
-		camera.target.z, camera.up.x, camera.up.y, camera.up.z);
+	viewStack.LookAt(camera->position.x, camera->position.y,
+		camera->position.z, camera->target.x, camera->target.y,
+		camera->target.z, camera->up.x, camera->up.y, camera->up.z);
 	modelStack.LoadIdentity();
 
 	if (lights[0].type == Light::LIGHT_DIRECTIONAL)
 	{
 		Vector3 lightDir(lights[0].position.x, lights[0].position.y, lights[0].position.z);
-		Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
-		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightDirection_cameraspace.x);
+		Vector3 lightDirection_targetspace = viewStack.Top() * lightDir;
+		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightDirection_targetspace.x);
 	}
 	else if (lights[0].type == Light::LIGHT_SPOT)
 	{
-		Position lightPosition_cameraspace = viewStack.Top() * lights[0].position;
-		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
-		Vector3 spotDirection_cameraspace = viewStack.Top() * lights[0].spotDirection;
-		glUniform3fv(m_parameters[U_LIGHT0_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
+		Position lightPosition_targetspace = viewStack.Top() * lights[0].position;
+		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_targetspace.x);
+		Vector3 spotDirection_targetspace = viewStack.Top() * lights[0].spotDirection;
+		glUniform3fv(m_parameters[U_LIGHT0_SPOTDIRECTION], 1, &spotDirection_targetspace.x);
 	}
 	else
 	{
-		Position lightPosition_cameraspace = viewStack.Top() * lights[0].position;
-		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
-	}
-
-	if (lights[1].type == Light::LIGHT_DIRECTIONAL)
-	{
-		Vector3 lightDir(lights[1].position.x, lights[1].position.y, lights[1].position.z);
-		Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
-		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightDirection_cameraspace.x);
-	}
-	else if (lights[1].type == Light::LIGHT_SPOT)
-	{
-		Position lightPosition_cameraspace = viewStack.Top() * lights[1].position;
-		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightPosition_cameraspace.x);
-		Vector3 spotDirection_cameraspace = viewStack.Top() * lights[1].spotDirection;
-		glUniform3fv(m_parameters[U_LIGHT1_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
-	}
-	else
-	{
-		Position lightPosition_cameraspace = viewStack.Top() * lights[1].position;
-		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightPosition_cameraspace.x);
+		Position lightPosition_targetspace = viewStack.Top() * lights[0].position;
+		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_targetspace.x);
 	}
 
 	Mtx44 mvp = projectionStack.Top() * viewStack.Top() * modelStack.Top();
@@ -346,7 +327,25 @@ void SceneSearch::Render() //My Own Pattern
 
 	RenderCity();
 
-	RenderMeshOnScreen(meshList[GEO_QUAD], 80, 45, 10, 10);
+	if (game_start)
+	{
+		RenderMeshOnScreen(meshList[GEO_TARGET], 80, 45, 10, 10);
+
+		//bar_type (sets up the progress bar depending on the player's progress percentage)
+		std::string bar_type = "Assets//progress_" + std::to_string(camera->progress) + ".tga";
+		meshList[GEO_PROGRESS]->textureID = LoadTGA(bar_type.std::string::c_str());
+		RenderMeshOnScreen(meshList[GEO_PROGRESS], 80, 35, 20, 5);
+
+		std::ostringstream ss;
+		ss.precision(3);
+		ss << "Timer left:" << (timer/3600) <<"m " << (timer%3600)/60 << "s";
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 1), 3, 5, 85);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Passengers found:" + std::to_string(passenger_count), Color(0, 0, 1), 3, 5, 80);
+	}
+	else
+	{
+		RenderMeshOnScreen(meshList[GEO_INSTRUCTIONS], 80, 45, 120, 60);
+	}
 }
 
 void SceneSearch::Exit()
@@ -752,6 +751,7 @@ void SceneSearch::RenderText(Mesh* mesh, std::string text, Color color)
 	glEnable(GL_DEPTH_TEST);
 }
 
+
 void SceneSearch::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y)
 {
 	// Enable blending
@@ -783,7 +783,7 @@ void SceneSearch::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, 
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(0.5f + i * 1.0f, 0.5f, 0);
+		characterSpacing.SetToTranslation(i * .6f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 
@@ -809,7 +809,6 @@ void SceneSearch::RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int si
 	modelStack.PushMatrix();
 	modelStack.LoadIdentity();
 	modelStack.Translate(x, y, 0);
-	modelStack.Rotate(180, 1, 0, 0);
 	modelStack.Scale(sizex, sizey, 1);
 	RenderMesh(mesh, false); //UI should not have light
 	projectionStack.PopMatrix();

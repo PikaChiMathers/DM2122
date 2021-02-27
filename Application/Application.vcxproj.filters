@@ -115,13 +115,13 @@
     <ClCompile Include="Source\Border.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Camera5.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\DriveObjective.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Source\MainMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Target.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -249,9 +249,6 @@
     <ClInclude Include="Source\ColliderObj.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Camera5.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Source\CameraChase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -262,6 +259,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Source\MainMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Target.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
