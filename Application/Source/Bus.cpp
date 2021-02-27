@@ -2,6 +2,7 @@
 
 Bus::Bus()
 {
+	moneyCurrent = 0;
 	passengers = 0;
 	acceleration = 50;
 	brakePower = 5;
@@ -11,10 +12,30 @@ Bus::Bus()
 	AddCollider();
 	AddPhysics();
 	GetPhysics()->SetMass(300);
+
+	loopDelay = 0;
 }
+
+int Bus::money;
 
 Bus::~Bus()
 {
+	//Nothing.
+}
+
+void Bus::SetMoney(int amount)
+{
+	Bus::money = amount;
+}
+
+void Bus::AddMoney(int amount)
+{
+	Bus::money += amount;
+}
+
+int Bus::GetMoney()
+{
+	return Bus::money;
 }
 
 void Bus::SetPassengerCount(int count)
@@ -44,52 +65,62 @@ void Bus::SetBrakePower(float brake)
 
 void Bus::SetStop(bool stop)
 {
-	
+	this->stop = stop;
 }
 
 void Bus::GameObjectUpdate(double dt)
 {
-	SetPositionY(0); // fix y position
-	Vector3 velocity(0, 0, 0);
-	float rotation = 0;
-	GetPhysics()->SetDrag(1);
-	if (Application::IsKeyPressed('T'))
+	if (!stop)
 	{
-		sound.Engine()->play2D("media/bus.wav");
-		velocity += GetFoward() * acceleration * dt;
-	}
-	if (Application::IsKeyPressed('G'))
-	{
-		sound.Engine()->play2D("media/bus.wav");
-		velocity -= GetFoward() * acceleration * dt;
-	}
-	if (Application::IsKeyPressed('F'))
-	{
-		sound.Engine()->play2D("media/bus.wav");
-		if (GetPhysics()->GetVelocity().Dot(GetFoward()) > 8) rotation += 90 * dt;
-		else if (GetPhysics()->GetVelocity().Dot(GetFoward()) < -8) rotation -= 90 * dt;
-	}
-	if (Application::IsKeyPressed('H'))
-	{
-		sound.Engine()->play2D("media/bus.wav, true");
-		if (GetPhysics()->GetVelocity().Dot(GetFoward()) > 8) rotation -= 90 * dt;
-		else if (GetPhysics()->GetVelocity().Dot(GetFoward()) < -8) rotation += 90 * dt;
-	}
-	if (Application::IsKeyPressed('X'))
-	{
-		overSteerPct = 0;
-	}
-	else overSteerPct = overSteerPct < 1 ? overSteerPct + dt : 1;
+		SetPositionY(0); // fix y position
+		Vector3 velocity(0, 0, 0);
+		float rotation = 0;
+		GetPhysics()->SetDrag(1);
+		if (Application::IsKeyPressed('T'))
+		{
+			velocity += GetFoward() * acceleration * dt;
+		}
+		if (Application::IsKeyPressed('G'))
+		{
+			velocity -= GetFoward() * acceleration * dt;
+		}
+		if (Application::IsKeyPressed('F'))
+		{
+			if (GetPhysics()->GetVelocity().Dot(GetFoward()) > 8) rotation += 90 * dt;
+			else if (GetPhysics()->GetVelocity().Dot(GetFoward()) < -8) rotation -= 90 * dt;
+		}
+		if (Application::IsKeyPressed('H'))
+		{
+			if (GetPhysics()->GetVelocity().Dot(GetFoward()) > 8) rotation -= 90 * dt;
+			else if (GetPhysics()->GetVelocity().Dot(GetFoward()) < -8) rotation += 90 * dt;
+		}
+		if (Application::IsKeyPressed('X'))
+		{
+			overSteerPct = 0;
+		}
+		else overSteerPct = overSteerPct < 1 ? overSteerPct + dt : 1;
 
-	if (velocity.IsZero()) GetPhysics()->SetDrag(brakePower);
-	else
-	{
-		SetRotateY(GetRotateY() + rotation);
-		float centripetalForce = GetPhysics()->GetVelocity().Dot(GetRight()) * overSteerPct; // simulate tire grip
-		GetPhysics()->AddVelocity(GetRight() * -centripetalForce);
+		if (velocity.IsZero())
+		{
+			GetPhysics()->SetDrag(brakePower);
+			//if can try put sound for braking here. this will keep looping so make it only play once
+		}
+		else
+		{
+			SetRotateY(GetRotateY() + rotation);
+			float centripetalForce = GetPhysics()->GetVelocity().Dot(GetRight()) * overSteerPct; // simulate tire grip
+			GetPhysics()->AddVelocity(GetRight() * -centripetalForce);
 
-		if (velocity.Length() > acceleration) velocity *= (50 / velocity.Length()); // cap velocity
-		GetPhysics()->AddVelocity(velocity);
+			if (velocity.Length() > acceleration) velocity *= (50 / velocity.Length()); // cap velocity
+			GetPhysics()->AddVelocity(velocity);
+
+			if (loopDelay <= 0) // for sound
+			{
+				sound.Engine()->play2D("media/bus.wav");
+				loopDelay = 2.5;
+			}
+			else loopDelay -= dt;
+		}
 	}
 }
 

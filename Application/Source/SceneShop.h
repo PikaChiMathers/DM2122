@@ -119,7 +119,9 @@ private: //added (Step 2)
 	bool scene_change;
 
 	Shop shop;
-	bool displayShopUI;
+	bool displayShopUI0;
+	bool displayShopUI1;
+	bool displayShopUI2;
 	bool displayMessage;
 	int money;
 	double timer;
