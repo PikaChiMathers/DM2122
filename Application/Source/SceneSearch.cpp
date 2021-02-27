@@ -23,7 +23,9 @@ SceneSearch::~SceneSearch()
 
 void SceneSearch::Init()
 {
-	camera.Init(Vector3(0,240, -330), Vector3(7, 240, 332), Vector3(0, 1, 0.));
+	cameras[0].Init(Vector3(0, 240, -330), Vector3(.7f, 239.7f, -329), Vector3(0.1f, 1, 0.2f));
+	cameras[1].Init(Vector3(0, 240, -330), Vector3(.59f, 239.7f, -329), Vector3(0.1f, 1, 0.2f));
+	camera = cameras[1];
 
 	map.Set(Maps::SKYBOX_TYPE::SB_DAY);
 
@@ -45,8 +47,6 @@ void SceneSearch::Init()
 	UI_width = 160;
 	UI_height = 90;
 
-	meshList[GEO_TEST] = MeshBuilder::GenerateOBJ("test", "OBJ//bus.obj", Color(1, 1, 1));
-
 	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("Rsphere", Color(1, 0, 0), 30, 30, 1);
 	meshList[GEO_SPHERE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
 	meshList[GEO_SPHERE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
@@ -66,11 +66,8 @@ void SceneSearch::Init()
 	meshList[GEO_FLOOR] = MeshBuilder::GenerateQuad("floor", Color(1, 1, 1), 1.f, 1.f);
 	meshList[GEO_FLOOR]->textureID = LoadTGA("Image//HNS_map.tga");
 
-	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("ground", Color(.39f, .39f, .39f), 1.f, 1.f);
-	meshList[GEO_QUAD]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
-	meshList[GEO_QUAD]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	meshList[GEO_QUAD]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
-	meshList[GEO_QUAD]->material.kShininess = 1.f;
+	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("target", Color(1, 1, 1), 1.f, 1.f);
+	meshList[GEO_QUAD]->textureID = LoadTGA("Image//target.tga");
 
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(0, 0, 1), 1, 1, 1);
 	meshList[GEO_CUBE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
@@ -342,26 +339,14 @@ void SceneSearch::Render() //My Own Pattern
 	RenderMesh(meshList[GEO_AXES], false);
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-20, 0, -20);
-	modelStack.Scale(0.2, 0.2, 0.2);
-	RenderMesh(meshList[GEO_TEST], lights[0].isOn);
-	modelStack.PopMatrix();
-
-
-	modelStack.PushMatrix();
 	modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
 	RenderMesh(meshList[GEO_LIGHTBALL], false);
 	modelStack.PopMatrix();
 	RenderSkybox();
 
-	modelStack.PushMatrix();
-	modelStack.Translate(0, -.1f, 0);
-	modelStack.Rotate(90, 1, 0, 0);
-	modelStack.Scale(200, 200, 200);
-	RenderMesh(meshList[GEO_QUAD], lights[0].isOn);
-	modelStack.PopMatrix();
-
 	RenderCity();
+
+	RenderMeshOnScreen(meshList[GEO_QUAD], 80, 45, 10, 10);
 }
 
 void SceneSearch::Exit()

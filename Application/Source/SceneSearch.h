@@ -136,6 +136,10 @@ public:
 
 private: //added (Step 2)
 	Camera5 camera;
+
+	int current_cam = 0;
+	Camera5 cameras[16];
+
 	Light lights[NUM_LIGHTS];
 	Maps map;
 
