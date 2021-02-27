@@ -12,7 +12,7 @@
 #include "Application.h"
 
 
-SceneShop::SceneShop() : displayShopUI(false), displayMessage(false)
+SceneShop::SceneShop() : displayShopUI0(false), displayShopUI1(false), displayShopUI2(false), displayMessage(false)
 {
 }
 
@@ -184,6 +184,8 @@ void SceneShop::Init()
 
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
+
+	money = 9000;
 }
 
 void SceneShop::Update(double dt)
@@ -223,7 +225,7 @@ void SceneShop::Update(double dt)
 	bool canUpgrade2 = false;
 	if (camera.position.x > -13.5 && camera.position.z > -8.35 && camera.position.x < 13.5 && camera.position.z < 8.35)
 	{
-		displayShopUI = true;
+		displayShopUI0 = true;
 
 		if (shop.getUpgradeLevel(0) == 0)
 			meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 0.tga");
@@ -243,7 +245,7 @@ void SceneShop::Update(double dt)
 	}
 	else if (camera.position.x > 13.5 && camera.position.z > -4 && camera.position.x < 18.85 && camera.position.z < 4)
 	{
-		displayShopUI = true;
+		displayShopUI1 = true;
 
 		if (shop.getUpgradeLevel(1) == 0)
 			meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 0.tga");
@@ -263,7 +265,7 @@ void SceneShop::Update(double dt)
 	}
 	else if (camera.position.x > -18.85 && camera.position.z > -8.35 && camera.position.x < -13.5 && camera.position.z < 4)
 	{
-		displayShopUI = true;
+		displayShopUI2 = true;
 
 		if (shop.getUpgradeLevel(2) == 0)
 			meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 0.tga");
@@ -282,7 +284,11 @@ void SceneShop::Update(double dt)
 			canUpgrade2 = true;
 	}
 	else
-		displayShopUI = false;
+	{
+		displayShopUI0 = false;
+		displayShopUI1 = false;
+		displayShopUI2 = false;
+	}
 
 	if (timer > 0)
 		timer -= dt;
@@ -393,11 +399,48 @@ void SceneShop::Render()
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 87);
 
-	if (displayShopUI)
-		RenderMeshOnScreen(meshList[GEO_UI], 80, 15, 100, 30);
+	if (displayShopUI0)
+	{
+		RenderMeshOnScreen(meshList[GEO_UI], 80, 15, 130, 30);
+		if (shop.getUpgradeLevel(0) < 5)
+			RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(shop.getUpgradeCost(0)), Color(0, 0, 0), 3, 68, 15.2f);
 
-	if (displayMessage)
-		RenderTextOnScreen(meshList[GEO_TEXT], "Not enough money!", Color(1, 1, 1), 3, 55, 50);
+		if (displayMessage)
+		{
+			if (shop.getUpgradeLevel(0) == 5)
+				RenderTextOnScreen(meshList[GEO_TEXT], "Max upgrades reached!", Color(1, 1, 1), 3, 55, 50);
+			else
+				RenderTextOnScreen(meshList[GEO_TEXT], "Not enough money!", Color(1, 1, 1), 3, 55, 50);
+		}
+	}
+	if (displayShopUI1)
+	{
+		RenderMeshOnScreen(meshList[GEO_UI], 80, 15, 130, 30);
+		if (shop.getUpgradeLevel(1) < 5)
+			RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(shop.getUpgradeCost(1)), Color(0, 0, 0), 3, 68, 15.2f);
+
+		if (displayMessage)
+		{
+			if (shop.getUpgradeLevel(1) == 5)
+				RenderTextOnScreen(meshList[GEO_TEXT], "Max upgrades reached!", Color(1, 1, 1), 3, 55, 50);
+			else
+				RenderTextOnScreen(meshList[GEO_TEXT], "Not enough money!", Color(1, 1, 1), 3, 55, 50);
+		}
+	}
+	if (displayShopUI2)
+	{
+		RenderMeshOnScreen(meshList[GEO_UI], 80, 15, 130, 30);
+		if (shop.getUpgradeLevel(2) < 5)
+			RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(shop.getUpgradeCost(2)), Color(0, 0, 0), 3, 68, 15.2f);
+
+		if (displayMessage)
+		{
+			if (shop.getUpgradeLevel(2) == 5)
+				RenderTextOnScreen(meshList[GEO_TEXT], "Max upgrades reached!", Color(1, 1, 1), 3, 55, 50);
+			else
+				RenderTextOnScreen(meshList[GEO_TEXT], "Not enough money!", Color(1, 1, 1), 3, 55, 50);
+		}
+	}
 }
 
 void SceneShop::Exit()
