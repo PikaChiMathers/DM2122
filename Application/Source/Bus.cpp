@@ -7,7 +7,7 @@ Bus::Bus()
 	brakePower = 5;
 	stop = false;
 	overSteerPct = 0;
-	SetScale(Scale(3, 1, 12));
+	SetScale(Scale(3, 3, 12));
 	AddCollider();
 	AddPhysics();
 	GetPhysics()->SetMass(300);
@@ -49,6 +49,7 @@ void Bus::SetStop(bool stop)
 
 void Bus::GameObjectUpdate(double dt)
 {
+	SetPositionY(0); // fix y position
 	Vector3 velocity(0, 0, 0);
 	float rotation = 0;
 	GetPhysics()->SetDrag(1);

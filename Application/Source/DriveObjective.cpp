@@ -2,7 +2,7 @@
 
 DriveObjective::DriveObjective()
 {
-	player == nullptr;
+	player = nullptr;
 	requiredPassengerCount = 10;
 	pause = true;
 	timer = 60;
