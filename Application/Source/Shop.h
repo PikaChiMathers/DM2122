@@ -1,4 +1,5 @@
 #pragma once
+#include "Sound.h"
 
 class Shop
 {
@@ -14,4 +15,5 @@ public:
 
     int getUpgradeLevel(int upgradeType);
     int getUpgradeCost(int upgradeType);
+    Sound sound;
 };

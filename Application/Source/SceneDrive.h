@@ -153,6 +153,8 @@ private: //added (Step 2)
 	Bus bus;
 	DriveObjective endpoint;
 
+	ColliderObj temp;
+
 	GameObject* TestRef;
 	double toggleTime = 0;
 	bool toggleHitBox = false;

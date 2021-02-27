@@ -226,7 +226,7 @@ void SceneDrive::Init()
 	* type 4-5: 23,34.5
 	* type 6-8: 23,23
 	*/
-	manager.CreateGameObject(&bus);
+	//manager.CreateGameObject(&bus);
 	endpoint.SetPosition(Position(62.4, 0, 68.7));
 	endpoint.SetRotateY(81);
 	endpoint.SetScale(Scale(45, 1, 13));
@@ -477,7 +477,7 @@ void SceneDrive::Init()
 	cluster[41] = new ColliderObj;
 	cluster[41]->SetPosition(Position(117.82504, 0, -0.24954));
 	cluster[41]->SetRotateY(274.70874);
-	cluster[41]->SetScale(Scale(11.5, 1, 23));
+	cluster[41]->SetScale(Scale(23, 1, 23));
 	cluster[41]->SetTag("Type7");
 	manager.CreateGameObject(cluster[41]);
 	cluster[42] = new ColliderObj;
@@ -571,7 +571,10 @@ void SceneDrive::Init()
 	borderCol[3]->SetRotateY(90);
 	borderCol[3]->SetScale(Scale(300, 20, 20));
 	manager.CreateGameObject(borderCol[3]);
-	TestRef = &endpoint;
+
+	temp.SetTag("Temp");
+	manager.CreateGameObject(&temp);
+	TestRef = &temp;
 }
 
 void SceneDrive::Update(double dt)
@@ -603,7 +606,7 @@ void SceneDrive::Update(double dt)
 		map.Set(Maps::SKYBOX_TYPE::SB_NIGHT);
 	}*/
 
-	/*if (Application::IsKeyPressed('T'))
+	if (Application::IsKeyPressed('T'))
 	{
 		TestRef->SetPositionZ(TestRef->GetPositionZ() - 5 * multiplier * dt);
 	}
@@ -646,7 +649,7 @@ void SceneDrive::Update(double dt)
 	{
 		TestRef->SetRotateY(TestRef->GetRotateY() - 45);
 		toggleTime = .3;
-	}*/
+	}
 	/*else if (Application::IsMousePressed(2) && toggleTime <= 0)
 	{
 		clusterType++;
@@ -838,6 +841,12 @@ void SceneDrive::Render() //My Own Pattern
 						modelStack.Scale(gameObject->GetScaleX(), gameObject->GetScaleY(), gameObject->GetScaleZ());
 						RenderMesh(meshList[GEO_CUBE], false);
 					modelStack.PopMatrix();*/
+					if (gameObject->GetTag() == "Temp")
+					{
+						modelStack.PushMatrix();
+							RenderMesh(meshList[GEO_CUBE], false);
+						modelStack.PopMatrix();
+					}
 					if (gameObject->GetTag() == "Type1")
 					{
 						modelStack.PushMatrix();
@@ -1001,14 +1010,13 @@ void SceneDrive::Render() //My Own Pattern
 	ss << "FPS: " << fps;
 	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, Application::GetWindowHeight() * .1f);
 
-	
-	std::ostringstream mn;
-	mn << "Money:" << money.getMoney();
-	RenderTextOnScreen(meshList[GEO_TEXT], mn.str(), Color(1, 1, 0), 3, 130, 84);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Passengers:" + std::to_string(bus.GetPassengerCount()) + "/" + std::to_string(endpoint.GetRequiredPassengerCount()), Color(0, 0, 1), 3, 0, 81);
+
+	RenderTextOnScreen(meshList[GEO_TEXT], "Money:" + std::to_string(bus.GetMoney()), Color(1, 1, 0), 3, 0, 84);
 
 	std::ostringstream sc;
 	sc << "Score:" << score.getScore(0);
-	RenderTextOnScreen(meshList[GEO_TEXT], sc.str(), Color(1, 0, 0), 3, 130, 87);
+	RenderTextOnScreen(meshList[GEO_TEXT], sc.str(), Color(1, 0, 0), 3, 0, 87);
 
 	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(TestRef->GetPositionX()) + ", " + std::to_string(TestRef->GetPositionZ()) + ", " + std::to_string(TestRef->GetRotateY()) + ", " + TestRef->GetTag(), Color(1, 0, 1), 3, 0, 0);
 

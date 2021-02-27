@@ -25,6 +25,11 @@ void DriveObjective::SetReqiuredPassengerCount(int count)
 	requiredPassengerCount = count;
 }
 
+int DriveObjective::GetRequiredPassengerCount()
+{
+	return requiredPassengerCount;
+}
+
 void DriveObjective::SetTimer(double timer)
 {
 	this->timer = timer;
