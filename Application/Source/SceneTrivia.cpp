@@ -67,11 +67,11 @@ void SceneTrivia::Init()
 	T_B.SetPosition(Position(0, 0, 0));
 	T_C.SetPosition(Position(-5, 0, 0));
 
-	press_time = qn_num = score = 0;
-	Qn = new Dialogue("Dialogue//Trivia.txt", Dialogue::TRIVIA);
-	Qn_str = Qn->Update();
+	press_time = qn_num = score = 0;// press_time (ensures that spacebar is only captured once) qn_num (question number)
+	Qn = new Dialogue("Dialogue//Trivia.txt", Dialogue::TRIVIA); //Qn is a Dialogue ptr which will read the trivia txt file
+	Qn_str = Qn->Update(); //Qn_str will first be Updated to Show the Theme of Trivia
 
-	answer = "";
+	answer = ""; //Initializes answer to be blank
 
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
@@ -130,13 +130,6 @@ void SceneTrivia::Init()
 	meshList[GEO_QUAD]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
 	meshList[GEO_QUAD]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
 	meshList[GEO_QUAD]->material.kShininess = 1.f;
-
-	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(1, 1, 1), 1, 1, 1);
-	meshList[GEO_CUBE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
-	meshList[GEO_CUBE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	meshList[GEO_CUBE]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
-	meshList[GEO_CUBE]->material.kShininess = 1.f;
-	meshList[GEO_CUBE]->textureID = LoadTGA("Image//muscle_capoo.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//trebuchet.tga");
@@ -218,36 +211,6 @@ void SceneTrivia::Update(double dt)
 {
 	manager.GameObjectManagerUpdate(dt);
 
-	if (Application::IsKeyPressed('1'))
-		glEnable(GL_CULL_FACE);
-	if (Application::IsKeyPressed('2'))
-		glDisable(GL_CULL_FACE);
-	if (Application::IsKeyPressed('3'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //default fill mode
-	if (Application::IsKeyPressed('4'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
-
-	if (Application::IsKeyPressed('5'))
-	{
-		lights[0].type = Light::LIGHT_POINT;
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-	}
-	else if (Application::IsKeyPressed('6'))
-	{
-		lights[0].type = Light::LIGHT_DIRECTIONAL;
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-	}
-	else if (Application::IsKeyPressed('7'))
-	{
-		lights[0].type = Light::LIGHT_SPOT;
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-	}
-	else if (Application::IsKeyPressed('8'))
-	{
-		lights[0].type = Light::LIGHT_MULTIPLE;
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-	}
-
 	if (qn_num == 10 && score == 9) //To set the lighting to Spotlight for a grand finally to see whether the player can get 10/10 for trivia
 	{
 		if (dt/13 == 0)
@@ -327,8 +290,6 @@ void SceneTrivia::Render() //My Own Pattern
 	Mtx44 mvp = projectionStack.Top() * viewStack.Top() * modelStack.Top();
 	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &mvp.a[0]); //update the shader with new MVP
 
-	RenderMesh(meshList[GEO_AXES], false);
-
 	modelStack.PushMatrix();
 	modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
 	RenderMesh(meshList[GEO_LIGHTBALL], false);
@@ -391,8 +352,9 @@ void SceneTrivia::Render() //My Own Pattern
 	if (qn_num == 0)
 	{
 		RenderTextOnScreen(meshList[GEO_TEXT], Qn_str + " Trivia", Color(0, 1, 0), 10, 46, 64);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Use WASD to move to A, B or C", Color(0, 1, 0), 2.5f, 57, 59);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Spacebar to select & start", Color(0, 1, 0), 2.5f, 59, 52);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Instructions:", Color(.3f, 1, .3f), 5, 58, 55);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Use WASD to move to Podium A, B or C", Color(.3f, 1, .3f), 2.5f, 51, 50);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Spacebar to select & start", Color(.3f, 1, .3f), 2.5f, 57, 43);
 	}
 	else if (qn_num <= 10)
 	{

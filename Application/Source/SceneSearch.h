@@ -2,22 +2,14 @@
 #define SCENE_SEARCH
 
 #include "Scene.h"
-#include "Camera2.h"
-#include "Camera3.h"
+#include "Camera5.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Vertex.h"
 #include "Light.h"
 
-#include "GameObjectManager.h"
-#include "Goose.h"
-#include "Bus.h"
-#include "Person.h"
-#include "Money.h"
 #include "Maps.h"
-#include "Score.h"
-
-#include "Dialogue.h"
+#include "Sound.h"
 
 #include <sstream>
 
@@ -36,16 +28,7 @@ public:
 	float translateX, translateY;
 	float scaleAll;
 
-	float fps;
-
-	float x_value, y_value, z_value;
-
-	int translateXDir, translateYDir, rotateDir, scaleDir;
-
-	Color red, blue, green, pink, Lblue, purple, orange, yellow, cyan, magenta, moonshade;
-
 	bool scene_change;
-	bool coin_collect; // To stop rendering of coin after collected
 
 	int UI_height, UI_width;
 
@@ -152,20 +135,11 @@ public:
 
 
 private: //added (Step 2)
-	Camera3 camera;
+	Camera5 camera;
 	Light lights[NUM_LIGHTS];
-	GameObjectManager manager;
-	Person person;
-	Money money;
 	Maps map;
-	Score score;
 
-	Dialogue* dialogue;
-
-	//GameObject gameObject;
-	Goose goose;
-
-
+	Sound sound;
 
 	unsigned m_vertexArrayID;
 

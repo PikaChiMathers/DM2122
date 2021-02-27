@@ -2,7 +2,6 @@
 #define SCENE_TRIVIA
 
 #include "Scene.h"
-#include "Camera2.h"
 #include "Camera3.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
@@ -11,10 +10,6 @@
 
 #include "GameObjectManager.h"
 #include "TriggerCollider.h"
-#include "Bus.h"
-#include "Money.h"
-#include "Maps.h"
-#include "Score.h"
 #include "Objects.h"
 #include "Goose.h"
 #include "Sound.h"
@@ -46,8 +41,6 @@ public:
 		GEO_AXES = 0,
 		GEO_QUAD,
 
-		GEO_CUBE,
-
 		GEO_GOOSE,
 
 		GEO_TV,
@@ -57,8 +50,6 @@ public:
 		GEO_PODIUM_C,
 
 		GEO_LIGHTBALL,
-		GEO_SPHERE,
-		GEO_CIRCLE,
 
 		GEO_LEFT,
 		GEO_RIGHT,
