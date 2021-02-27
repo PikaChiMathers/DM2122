@@ -17,6 +17,7 @@
 #include "SceneTrivia.h"
 #include "SceneSearch.h"
 #include "SceneIntro.h"
+#include "MainMenu.h"
 #include "SceneDrive.h"
 
 GLFWwindow* m_window;
@@ -134,13 +135,13 @@ void Application::Init()
 
 void Application::Run()
 {
-	Scene* scene_ptr = new SceneDrive();
+	Scene* scene_ptr = new MainMenu();
 	scene_ptr->Init();
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
 	{ // stop removing this feature
-		if (IsKeyPressed(VK_F1) || IsKeyPressed(VK_F2) || IsKeyPressed(VK_F3) || IsKeyPressed(VK_F4) || IsKeyPressed(VK_F5) || IsKeyPressed(VK_F6))
+		if (IsKeyPressed(VK_F1) || IsKeyPressed(VK_F2) || IsKeyPressed(VK_F3) || IsKeyPressed(VK_F4) || IsKeyPressed(VK_F5) || IsKeyPressed(VK_F6) || IsKeyPressed(VK_F7))
 		{
 			scene_ptr->Exit();
 			delete scene_ptr;
@@ -151,6 +152,7 @@ void Application::Run()
 			if (IsKeyPressed(VK_F4)) scene_ptr = new SceneTrivia();
 			if (IsKeyPressed(VK_F5)) scene_ptr = new SceneSearch();
 			if (IsKeyPressed(VK_F6)) scene_ptr = new SceneShop();
+			if (IsKeyPressed(VK_F7)) scene_ptr = new MainMenu();
 
 			scene_ptr->Init();
 		}

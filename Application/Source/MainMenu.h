@@ -1,75 +1,48 @@
-#ifndef SCENE_DRIVE
-#define SCENE_DRIVE
+#ifndef MAIN_MENU
+#define MAIN_MENU
 
 #include "Scene.h"
-#include "Camera2.h"
-#include "Camera3.h"
-#include "CameraChase.h"
+#include "Camera4.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Vertex.h"
 #include "Light.h"
-
-#include "GameObjectManager.h"
-#include "Bus.h"
-#include "ColliderObj.h"
-#include "Border.h"
-#include "DriveObjective.h"
-
-#include "Test.h"
-#include "Person.h"
-#include "Money.h"
 #include "Maps.h"
-#include "Score.h"
-
-#include "Dialogue.h"
-
+#include "GameObject.h"
+#include "Shop.h"
 #include <sstream>
 
-class SceneDrive : public Scene
+class MainMenu : public Scene
 {
 public:
-	SceneDrive();
-	~SceneDrive();
+	MainMenu();
+	~MainMenu();
 
 	virtual void Init();
 	virtual void Update(double dt);
 	virtual void Render();
 	virtual void Exit();
 
+	float rotateAngle;
+	float translateX, translateY;
+	float scaleAll;
+
 	float fps;
+
+	int translateXDir, translateYDir, rotateDir, scaleDir;
 
 	Color red, blue, green, pink, Lblue, purple, orange, yellow, cyan, magenta, moonshade;
 
-	bool scene_change;
-
 	int UI_height, UI_width;
-
 
 	enum GEOMETRY_TYPE //added (Step 1)
 	{
 		GEO_AXES = 0,
 
+		GEO_BUS,
 		GEO_QUAD,
-		GEO_TEMPLATE,
-		GEO_BORDER,
-
-		GEO_CUBE,
-
-		GEO_COIN,
-		GEO_PASSPORT,
-		GEO_GOOSE,
-
-		GEO_BUILDING1,
-		GEO_BUILDING2,
-		GEO_BUILDING3,
-		GEO_BUILDING1B,
-		GEO_BUILDING2B,
-		GEO_BUILDING3B,
 
 		GEO_LIGHTBALL,
-		GEO_SPHERE,
-		GEO_CIRCLE,
 
 		GEO_LEFT,
 		GEO_RIGHT,
@@ -79,8 +52,7 @@ public:
 		GEO_BACK,
 
 		GEO_TEXT,
-
-		GEO_TEST,
+		GEO_UI,
 
 		NUM_GEOMETRY,
 	};
@@ -106,7 +78,6 @@ public:
 		U_LIGHT0_COSINNER,
 		U_LIGHT0_EXPONENT,
 
-
 		U_LIGHT1_POSITION,
 		U_LIGHT1_COLOR,
 		U_LIGHT1_POWER,
@@ -118,7 +89,6 @@ public:
 		U_LIGHT1_COSCUTOFF,
 		U_LIGHT1_COSINNER,
 		U_LIGHT1_EXPONENT,
-
 
 		U_LIGHTENABLED,
 		U_NUMLIGHTS,
@@ -141,38 +111,35 @@ public:
 
 
 private: //added (Step 2)
-	Camera3 camera;
-	//CameraChase camera;
+	Camera4 camera;
+	Light lights[NUM_LIGHTS];
 
 	Maps map;
 
-	GameObjectManager manager;
-	ColliderObj* cluster[51];
-	ColliderObj* borderCol[4];
-	Border* border[4];
-	Bus bus;
-	DriveObjective endpoint;
+	bool scene_change;
 
-	GameObject* TestRef;
-	double toggleTime = 0;
-	bool toggleHitBox = false;
-	float multiplier = 4;
-	int clusterType = 1;
+	Shop shop;
+	bool displayShopUI;
+	bool displayMessage;
+	int money;
+	double timer;
+	bool buttonPressed;
+	bool spacePressed;
 
-	Money money;
-	Score score;
-
-	
-
-	Light lights[NUM_LIGHTS];
 	unsigned m_vertexArrayID;
+
 	Mesh* meshList[NUM_GEOMETRY];
+
 	MS modelStack, viewStack, projectionStack;
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
+
 	void RenderSkybox();
+
 	void RenderText(Mesh* mesh, std::string text, Color color);
+
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
+
 	void RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int sizey);
 		
 	unsigned m_parameters[U_TOTAL];
