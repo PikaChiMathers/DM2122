@@ -242,6 +242,7 @@ void SceneSearch::Update(double dt)
 				camera = &targets[current_target];
 			}
 
+			//Updates the percentage of the building
 			if (press_count >= 25)
 				camera->progress = 25;
 			if (press_count >= 50)
@@ -266,6 +267,7 @@ void SceneSearch::Update(double dt)
 				{
 					if (!camera->has_checked && press_count < 100)
 					{
+						//Randomizes Honk sounds
 						std::string sound_file = "media/honk_" + std::to_string(rand() % 5 + 1) + ".wav";
 							sound.Engine()->play2D(sound_file.std::string::c_str());
 
