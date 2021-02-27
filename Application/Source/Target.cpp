@@ -1,4 +1,4 @@
-#include "Camera5.h"
+#include "Target.h"
 #include "Application.h"
 #include "Mtx44.h"
 
@@ -7,16 +7,18 @@
 
 static const float rotational_speed = 45.0f;
 
-Camera5::Camera5()
+Target::Target()
 {
 	multiplier = 1;
+	has_checked = false;
+	num_passengers = progress = 0;
 }
 
-Camera5::~Camera5()
+Target::~Target()
 {
 }
 
-void Camera5::Init(const Vector3& pos, const Vector3& target, const Vector3& up)
+void Target::Init(const Vector3& pos, const Vector3& target, const Vector3& up)
 {
     this->position = defaultPosition = pos;
     this->target = defaultTarget = target;
@@ -28,7 +30,7 @@ void Camera5::Init(const Vector3& pos, const Vector3& target, const Vector3& up)
 }
 
 //1st person
-void Camera5::Update(double dt)
+void Target::Update(double dt)
 {
     view = (target - position).Normalized();
     right = view.Cross(up);
@@ -71,7 +73,7 @@ void Camera5::Update(double dt)
 	target = position + view;
 }
 
-void Camera5::Reset()
+void Target::Reset()
 {
     position = defaultPosition;
     target = defaultTarget;

@@ -12,7 +12,7 @@
 #include "Application.h"
 
 
-SceneShop::SceneShop() : displayShopUI0(false), displayShopUI1(false), displayShopUI2(false), displayMessage(false)
+SceneShop::SceneShop()
 {
 }
 
@@ -185,7 +185,10 @@ void SceneShop::Init()
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 
-	money = 9000;
+	displayShopUI0 = false;
+	displayShopUI1 = false;
+	displayShopUI2 = false;
+	displayMessage = false;
 }
 
 void SceneShop::Update(double dt)
