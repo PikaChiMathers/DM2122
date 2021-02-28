@@ -73,7 +73,7 @@ void SceneMaster::Init()
 
 	//main menu meshes
 	{
-		meshList[GEO_UI]->textureID = LoadTGA("Assets//start_down.tga");
+		meshList[GEO_UI]->textureID = LoadTGA("Assets//start.tga");
 	}
 
 	//pause menu meshes
@@ -846,7 +846,7 @@ void SceneMaster::Update(double dt)
 				float posY = 60 - (y / 10);
 				if (posX > 44 && posX < 85 && posY > 1 && posY < 23)
 				{
-					meshList[GEO_UI]->textureID = LoadTGA("Assets//start.tga");
+					meshList[GEO_UI]->textureID = LoadTGA("Assets//start_down.tga");
 
 					if (timer_main_menu == 0)
 						timer_main_menu = 0.5;
