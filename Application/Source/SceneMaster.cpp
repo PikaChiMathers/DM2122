@@ -59,6 +59,13 @@ void SceneMaster::Init()
 	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left", Color(1, 1, 1), 1.f, 1.f);
 	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", Color(1, 1, 1), 1.f, 1.f);
 
+	meshList[GEO_FRONT_TRIVIA] = MeshBuilder::GenerateQuad("front", Color(.04f, .71f, 1), 1.f, 1.f);
+	meshList[GEO_BOTTOM_TRIVIA] = MeshBuilder::GenerateQuad("bottom", Color(.04f, .71f, 1), 1.f, 1.f);
+	meshList[GEO_BACK_TRIVIA] = MeshBuilder::GenerateQuad("back", Color(.04f, .71f, 1), 1.f, 1.f);
+	meshList[GEO_TOP_TRIVIA] = MeshBuilder::GenerateQuad("top", Color(.04f, .71f, 1), 1.f, 1.f);
+	meshList[GEO_LEFT_TRIVIA] = MeshBuilder::GenerateQuad("left", Color(.04f, .71f, 1), 1.f, 1.f);
+	meshList[GEO_RIGHT_TRIVIA] = MeshBuilder::GenerateQuad("right", Color(.04f, .71f, 1), 1.f, 1.f);
+
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//trebuchet.tga");
 
@@ -881,7 +888,16 @@ void SceneMaster::Update(double dt)
 				// if game ended
 				if (Application::IsKeyPressed(VK_SPACE))
 				{
-					//go to next scene
+					if (rand() % 2 == 0)
+					{
+						scene = TRIVIA;
+					}
+					else
+					{
+						scene_change = true;
+						scene = SEARCH;
+						map.Set(Maps::SKYBOX_TYPE::SB_DAY);
+					}
 				}
 			}
 			else
@@ -2117,41 +2133,41 @@ void SceneMaster::RenderSkybox()
 		modelStack.Translate(24, 0, 0);
 		modelStack.Rotate(-90, 0, 1, 0);
 		modelStack.Scale(50, 50, 50);
-		RenderMesh(meshList[GEO_FRONT], true);
+		RenderMesh(meshList[GEO_FRONT_TRIVIA], true);
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
 		modelStack.Translate(-24, 0, 0);
 		modelStack.Rotate(90, 0, 1, 0);
 		modelStack.Scale(50, 50, 50);
-		RenderMesh(meshList[GEO_BACK], true);
+		RenderMesh(meshList[GEO_BACK_TRIVIA], true);
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
 		modelStack.Translate(0, 0, 24);
 		modelStack.Rotate(180, 0, 1, 0);
 		modelStack.Scale(50, 50, 50);
-		RenderMesh(meshList[GEO_LEFT], true);
+		RenderMesh(meshList[GEO_LEFT_TRIVIA], true);
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
 		modelStack.Translate(0, 0, -24);
 		modelStack.Scale(50, 50, 50);
-		RenderMesh(meshList[GEO_RIGHT], true);
+		RenderMesh(meshList[GEO_RIGHT_TRIVIA], true);
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
 		modelStack.Translate(0, -24, 0);
 		modelStack.Rotate(90, 1, 0, 0);
 		modelStack.Scale(50, 50, 50);
-		RenderMesh(meshList[GEO_BOTTOM], true);
+		RenderMesh(meshList[GEO_BOTTOM_TRIVIA], true);
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
 		modelStack.Translate(0, 24, 0);
 		modelStack.Rotate(90, 1, 0, 0);
 		modelStack.Scale(50, 50, 50);
-		RenderMesh(meshList[GEO_TOP], true);
+		RenderMesh(meshList[GEO_TOP_TRIVIA], true);
 		modelStack.PopMatrix();
 	}
 	else if (scene == SEARCH)
