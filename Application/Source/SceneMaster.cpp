@@ -261,15 +261,15 @@ void SceneMaster::Update(double dt)
 	{
 
 	}
-	else if (scene == SCENE_INTRO)
+	else if (scene == INTRO)
 	{
 
 	}
-	else if (scene == SCENE_DRIVE)
+	else if (scene == DRIVING)
 	{
 
 	}
-	else if (scene == SCENE_TRIVIA)
+	else if (scene == TRIVIA)
 	{
 		manager.GameObjectManagerUpdate(dt);
 
@@ -345,11 +345,11 @@ void SceneMaster::Update(double dt)
 				passengers = score - 5; //gains passengers if tour is interesting
 		}
 	}
-	else if (scene == SCENE_SEARCH)
+	else if (scene == SEARCH)
 	{
 
 	}
-	else if (scene == SCENE_SHOP)
+	else if (scene == SHOP)
 	{
 		bool canUpgrade0 = false;
 		bool canUpgrade1 = false;
@@ -499,15 +499,15 @@ void SceneMaster::Render()
 	{
 
 	}
-	else if (scene == SCENE_INTRO)
+	else if (scene == INTRO)
 	{
 
 	}
-	else if (scene == SCENE_DRIVE)
+	else if (scene == DRIVING)
 	{
 
 	}
-	else if (scene == SCENE_TRIVIA)
+	else if (scene == TRIVIA)
 	{
 		RenderRoom();
 
@@ -552,11 +552,11 @@ void SceneMaster::Render()
 		if ((qn_num > 10) && (score >= 8))
 			RenderMeshOnScreen(meshList[GEO_CONFETTI_TRIVIA], 80, 45, 1, 1);
 	}
-	else if (scene == SCENE_SEARCH)
+	else if (scene == SEARCH)
 	{
 
 	}
-	else if (scene == SCENE_SHOP)
+	else if (scene == SHOP)
 	{
 		//render model
 		modelStack.PushMatrix();
@@ -753,7 +753,7 @@ void SceneMaster::RenderMesh(Mesh* mesh, bool enableLight)
 
 void SceneMaster::RenderSkybox()
 {
-	if (scene == SCENE_TRIVIA)
+	if (scene == TRIVIA)
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(24, 0, 0);
@@ -796,7 +796,7 @@ void SceneMaster::RenderSkybox()
 		RenderMesh(meshList[GEO_TOP], true);
 		modelStack.PopMatrix();
 	}
-	else if (scene == SCENE_SHOP)
+	else if (scene == SHOP)
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(18.99f, 4.99f, 0);
