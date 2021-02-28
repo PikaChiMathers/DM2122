@@ -21,13 +21,7 @@ SceneMaster::~SceneMaster()
 
 void SceneMaster::Init()
 {
-	camera3.Init(Vector3(0, 9.2f, -23), Vector3(0, 9.15f, -22), Vector3(0, 1, 0.05f));
-
-	camera4.Init(Vector3(9.5f, 3, 6), Vector3(0, 3, 0), Vector3(0, 1, 0));
-	camera4.setShopBound(Vector3(-18.85f, 2, -8.35f), Vector3(18.85f, 4, 8.35f));
-	camera4.setBusBound(Vector3(-13.5f, 2, -4), Vector3(13.5f, 4, 4));
-
-	map.Set(Maps::SKYBOX_TYPE::SB_SHOP);
+	map.Set(Maps::SKYBOX_TYPE::SB_SHOP); //to be changed
 
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
@@ -162,6 +156,8 @@ void SceneMaster::Init()
 
 	//trivia init
 	{
+		camera3.Init(Vector3(0, 9.2f, -23), Vector3(0, 9.15f, -22), Vector3(0, 1, 0.05f));
+
 		manager.CreateGameObject(&goose);
 
 		//Initializes the Podiums A, B & C
@@ -249,6 +245,10 @@ void SceneMaster::Init()
 
 	//shop init
 	{
+		camera4.Init(Vector3(9.5f, 3, 6), Vector3(0, 3, 0), Vector3(0, 1, 0));
+		camera4.setShopBound(Vector3(-18.85f, 2, -8.35f), Vector3(18.85f, 4, 8.35f));
+		camera4.setBusBound(Vector3(-13.5f, 2, -4), Vector3(13.5f, 4, 4));
+
 		displayShopUI0 = false;
 		displayShopUI1 = false;
 		displayShopUI2 = false;
