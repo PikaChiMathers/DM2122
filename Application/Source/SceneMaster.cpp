@@ -175,6 +175,8 @@ void SceneMaster::Init()
 		meshList[GEO_MALL_SEARCH]->textureID = LoadTGA("Image//stadium.tga");
 		meshList[GEO_TREE1_SEARCH] = MeshBuilder::GenerateOBJ("tree1", "OBJ//tree_large.obj", Color(0.184314, 0.309804, 0.184314));
 		meshList[GEO_TREE2_SEARCH] = MeshBuilder::GenerateOBJ("tree2", "OBJ//tree_small.obj", Color(0.184314, 0.309804, 0.184314));
+		meshList[GEO_FLOOR_SEARCH] = MeshBuilder::GenerateQuad("floor", Color(1, 1, 1), 1.f, 1.f);
+		meshList[GEO_FLOOR_SEARCH]->textureID = LoadTGA("Image//HNS_map.tga");
 	}
 
 	//shop meshes
@@ -1777,6 +1779,13 @@ void SceneMaster::RenderRoom()
 
 void SceneMaster::RenderCity()
 {
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Rotate(-90, 1, 0, 0);
+	modelStack.Scale(1000, 1000, 1000);
+	RenderMesh(meshList[GEO_FLOOR], lights[0].isOn);
+	modelStack.PopMatrix();
+
 	modelStack.PushMatrix();
 	modelStack.Translate(350, 0, 425);
 	modelStack.Rotate(-90, 0, 1, 0);
