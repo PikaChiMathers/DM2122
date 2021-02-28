@@ -1,23 +1,26 @@
 #ifndef SCENE_MASTER
 #define SCENE_MASTER
 
-#include "Scene.h"
 #include "Camera3.h"
 #include "Camera4.h"
-#include "Mesh.h"
-#include "MatrixStack.h"
-#include "Vertex.h"
-#include "Light.h"
-#include "Maps.h"
-#include "GameObject.h"
-#include "Shop.h"
-#include "GameObjectManager.h"
-#include "TriggerCollider.h"
-#include "Objects.h"
-#include "Goose.h"
-#include "Sound.h"
 #include "Dialogue.h"
+#include "GameObject.h"
+#include "GameObjectManager.h"
+#include "Goose.h"
+#include "Light.h"
+#include "MatrixStack.h"
+#include "Mesh.h"
+#include "Maps.h"
+#include "Objects.h"
+#include "Scene.h"
+#include "Shop.h"
+#include "Sound.h"
+#include "Target.h"
+#include "TriggerCollider.h"
+#include "Vertex.h"
+
 #include <sstream>
+#include <stdlib.h>
 
 class SceneMaster : public Scene
 {
@@ -46,8 +49,6 @@ public:
 
 		GEO_QUAD,
 
-		GEO_BUS_SHOP,
-
 		GEO_GOOSE_TRIVIA,
 		GEO_CONFETTI_TRIVIA,
 		GEO_TV_TRIVIA,
@@ -55,6 +56,24 @@ public:
 		GEO_PODIUM_A_TRIVIA,
 		GEO_PODIUM_B_TRIVIA,
 		GEO_PODIUM_C_TRIVIA,
+
+		GEO_TARGET_SEARCH,
+		GEO_PROGRESS_SEARCH,
+		GEO_MALL_SEARCH,
+		GEO_BUILDING1_SEARCH,
+		GEO_BUILDING2_SEARCH,
+		GEO_BUILDING3_SEARCH,
+		GEO_BUILDING4_SEARCH,
+		GEO_BUILDING5_SEARCH,
+		GEO_BUILDING6_SEARCH,
+		GEO_BUILDING7_SEARCH,
+		GEO_BUILDING8_SEARCH,
+		GEO_BUSSTOP_SEARCH,
+		GEO_TREE1_SEARCH,
+		GEO_TREE2_SEARCH,
+		GEO_FLOOR_SEARCH,
+
+		GEO_BUS_SHOP,
 
 		GEO_LIGHTBALL,
 
@@ -146,7 +165,7 @@ private:
 
 	//trivia variables
 	std::string Qn_str;
-	int press_time; //number of times press spacebar is registered (helps to prevent multiple registered keypresses)
+	int press_time_trivia; //number of times press spacebar is registered (helps to prevent multiple registered keypresses)
 	int qn_num; //current question number
 
 	int score;
@@ -162,6 +181,26 @@ private:
 
 	void RenderRoom();
 
+	//search variables
+	int colCount = 0;
+	bool colEnter = false;
+
+	Target* camera;
+
+	bool game_start;
+
+	int current_target;
+	int press_time_search; //ensures that A or D key presses are only registered as 1 press each time
+	int spam_time; //ensures that spacebar presses are only registered as 1 press each time
+	int press_count; //counts the number of spacebar presses the player has done
+	int passenger_count; //number of passengers found
+
+	int timer_search;
+
+	Target targets[16];
+
+	void RenderCity();
+
 	//shop variables
 	Shop shop;
 
@@ -171,7 +210,7 @@ private:
 	bool displayMessage;
 
 	int money;
-	double timer;
+	double timer_shop;
 	bool spacePressed;
 
 	//shared
