@@ -36,6 +36,7 @@ void SceneIntro::Init()
 	honk_count = 1;
 	IsSpacePressed = false;
 	displayUI = false;
+	//TextCounter = 0;
 
 	camera.Init(Vector3(-0.7, 39, -68), Vector3(-0.67, 38.65, -67), Vector3(0, 1, 0));
 	map.Set(Maps::SKYBOX_TYPE::SB_INTRO);
@@ -328,39 +329,18 @@ void SceneIntro::Update(double dt)
 		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
 	}
 
-
-	/*if (IsSpacePressed == false && Application::IsKeyPressed(VK_SPACE))
-		IsSpacePressed = true;*/
-
 	if (IsSpacePressed == true && !Application::IsKeyPressed(VK_SPACE))
 	{
 		IsSpacePressed = false;
- 		/*if (bosscollider.IsTriggered())
-		{
-			std::cout << "triggerd";
-			if (dialogue->getCurrentLine() < dialogue->getTotalLines())
-			{
-				dialogue->Update();
-				displayUI = true;
-			}
-			else
-			{
-				displayUI = false;
-			}
-
-			if (dialogue->getPersonTalking() == "Boss Goose")
-			{
-				meshList[GEO_UI]->textureID = LoadTGA("Assets//Boss Dialogue Box.tga");
-			}
-		}
-		IsSpacePressed = false;*/
+ 	
 	}
 		
 	if (bosscollider.IsTriggered() && IsSpacePressed == false)
 	{
 		IsSpacePressed = true;
 		std::cout << "triggerd";
-		if (dialogue->getCurrentLine() < dialogue->getTotalLines())
+		displayUI = true;
+		/*if (dialogue->getCurrentLine() < dialogue->getTotalLines())
 		{
 			dialogue->Update();
 			displayUI = true;
@@ -373,8 +353,8 @@ void SceneIntro::Update(double dt)
 		if (dialogue->getPersonTalking() == "Boss Goose")
 		{
 			meshList[GEO_UI]->textureID = LoadTGA("Assets//Boss_Dialogue_Box.tga");
-		}
-	}
+		}*/
+	};
 	
 }
 
@@ -384,12 +364,6 @@ void SceneIntro::Render() //My Own Pattern
 
 	//Clear color & depth buffer every frame
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	/*Mtx44 translate, rotate, scale;
-	Mtx44 model;
-	Mtx44 model2;*/
-	//Mtx44 view;
-	//Mtx44 projection;
-	//Mtx44 MVP;
 
 	viewStack.LoadIdentity();
 	viewStack.LookAt(camera.position.x, camera.position.y,
@@ -438,7 +412,6 @@ void SceneIntro::Render() //My Own Pattern
 	Mtx44 mvp = projectionStack.Top() * viewStack.Top() * modelStack.Top();
 	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &mvp.a[0]); //update the shader with new MVP
 
-
 	modelStack.PushMatrix();
 	modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
 	RenderMesh(meshList[GEO_LIGHTBALL], false);
@@ -458,6 +431,8 @@ void SceneIntro::Render() //My Own Pattern
 	modelStack.Rotate(90, 0, 1, 0);
 	RenderMesh(meshList[GEO_BOSS], true);
 	modelStack.PopMatrix();
+
+	RenderTextOnScreen(meshList[GEO_TEXT], "WASD to move, talk to the other goose with spacebar", Color(0, 0, 0), 3, 5, 87);
 
 	modelStack.PushMatrix();
 	modelStack.Translate(goose.GetPositionX() * 2, goose.GetPositionY(), goose.GetPositionZ() * 2);
@@ -490,8 +465,27 @@ void SceneIntro::Render() //My Own Pattern
 	modelStack.PopMatrix();
 
 	if(displayUI == true)
-		RenderMeshOnScreen(meshList[GEO_UI], 80, 10, 90, 50);
+		RenderMeshOnScreen(meshList[GEO_UI], 80, 45, 160, 90);
 
+	if (displayUI == true)
+	{
+		RenderTextOnScreen(meshList[GEO_TEXT], "Hey there bucko, ya need money fast? Well... I have just the job for you!", Color(0, 0, 0.9f), 3, 3, 56);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Welcome to Goose Tours! Here at goose tours you will be kidnapping tourists", Color(0, 0, 0.9f), 3, 3, 54);
+		RenderTextOnScreen(meshList[GEO_TEXT], "and bringing them around our city for a nice tour. After that they will need to pay us, then boom. Profit", Color(0, 0, 0.9f), 3, 3, 52);
+		RenderTextOnScreen(meshList[GEO_TEXT], "After that they will need to pay us, then boom. Profit", Color(0, 0, 0.9f), 3, 3, 50);
+		RenderTextOnScreen(meshList[GEO_TEXT], "You know how to drive a bus right? You use WASD to move and spacebar to honk and hold left shift to start drifting", Color(0, 0, 0.9f), 3, 3, 48);
+		RenderTextOnScreen(meshList[GEO_TEXT], "When the day begins, the first thing you need to do is find our victi- ", Color(0, 0, 0.9f), 3, 3, 46);
+		RenderTextOnScreen(meshList[GEO_TEXT], "I mean our customers, and pick them up by driving over them. Try to collect coins along to way too to maximise profits", Color(0, 0, 0.9f), 3, 3, 44);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Collect as many passengers as possible before the timer runs out", Color(0, 0, 0.9f), 3, 3, 42);
+		RenderTextOnScreen(meshList[GEO_TEXT], "At the bird park, there will be a quiz to show off your extensive bird knowledge off. Get a high score to earn more passengers", Color(0, 0, 0.9f), 3, 3, 40);
+		RenderTextOnScreen(meshList[GEO_TEXT], "After that, you may want to evict some humans out of their homes to further increase your passanger count.", Color(0, 0, 0.9f), 3, 3, 38);
+		RenderTextOnScreen(meshList[GEO_TEXT], "You can do so by rapidly honking at them until they go insane", Color(0, 0, 0.9f), 3, 3, 36);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Use your hard earned money from your passenger's wallets to buy upgrades for your bus at the end of the day and repeat the cycle", Color(0, 0, 0.9f), 3, 3, 34);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Simple enough right? Lets get to it!", Color(0, 0, 0.9f), 3, 3, 32);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Press Space to Continue", Color(0, 0, 0.9f), 5, 3, 26);
+
+	}
+	
 
 	/*RenderMeshOnScreen(meshList[GEO_SPLASH], 1, 1, 10, 10);*/
 }
@@ -662,7 +656,7 @@ void SceneIntro::RenderTextOnScreen(Mesh* mesh, std::string text, Color color, f
 	for (unsigned i = 0; i < text.length(); ++i)
 	{
 		Mtx44 characterSpacing;
-		characterSpacing.SetToTranslation(0.5f + i * 1.0f, 0.5f, 0);
+		characterSpacing.SetToTranslation(i * .7f, 0.5f, 0);
 		Mtx44 MVP = projectionStack.Top() * viewStack.Top() * modelStack.Top() * characterSpacing;
 		glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &MVP.a[0]);
 
