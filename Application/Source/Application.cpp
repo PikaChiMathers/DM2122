@@ -139,7 +139,7 @@ void Application::Run()
 	scene_ptr->Init();
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
-	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
+	while (!glfwWindowShouldClose(m_window) && !(IsKeyPressed(VK_ESCAPE) && IsKeyPressed(VK_SHIFT)))
 	{ // stop removing this feature
 		if (IsKeyPressed(VK_F1) || IsKeyPressed(VK_F2) || IsKeyPressed(VK_F3) || IsKeyPressed(VK_F4) || IsKeyPressed(VK_F5) || IsKeyPressed(VK_F6) || IsKeyPressed(VK_F7))
 		{
