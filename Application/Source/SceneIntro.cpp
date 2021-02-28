@@ -29,11 +29,11 @@ void SceneIntro::Init()
 	manager.CreateGameObject(&goose);
 	goose.SetPosition(Position (-15, -3, 0));
 	manager.CreateGameObject(&boss);
-	boss.SetPosition(Position(15, -4, 0));
-	boss.SetScale(Scale(1, 3, 1));
+	boss.SetPosition(Position(0, -4, 0));
+	boss.SetScale(Scale(2, 4, 2));
 	manager.CreateGameObject(&bosscollider);
-	bosscollider.SetPosition(Position(15, -4, 0));
-	bosscollider.SetScale(Scale(1.1f, 3.1f, 1.1f));
+	bosscollider.SetPosition(Position(0, -4, 0));
+	bosscollider.SetScale(Scale(7, 9, 7));
 
 	camera.Init(Vector3(-0.7, 39, -68), Vector3(-0.67, 38.65, -67), Vector3(0, 1, 0));
 	map.Set(Maps::SKYBOX_TYPE::SB_INTRO);
@@ -347,6 +347,10 @@ void SceneIntro::Update(double dt)
 	{
 		std::cout << "boss triggered" ;
 	}
+
+	//if (dialogue->getPersonTalking() = 2)
+	//{
+	//}
 }
 
 void SceneIntro::Render() //My Own Pattern
