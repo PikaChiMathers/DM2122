@@ -1175,19 +1175,19 @@ void SceneMaster::Update(double dt)
 			{
 				spacePressed = true;
 
-				if (canUpgrade0 == true && money >= shop.getUpgradeCost(0))
+				if (canUpgrade0 == true && Bus::GetMoney() >= shop.getUpgradeCost(0))
 				{
-					money -= shop.getUpgradeCost(0);
+					Bus::ReduceMoney(shop.getUpgradeCost(0));
 					shop.upgrade(0);
 				}
-				else if (canUpgrade1 == true && money >= shop.getUpgradeCost(1))
+				else if (canUpgrade1 == true && Bus::GetMoney() >= shop.getUpgradeCost(1))
 				{
-					money -= shop.getUpgradeCost(1);
+					Bus::ReduceMoney(shop.getUpgradeCost(1));
 					shop.upgrade(1);
 				}
-				else if (canUpgrade2 == true && money >= shop.getUpgradeCost(2))
+				else if (canUpgrade2 == true && Bus::GetMoney() >= shop.getUpgradeCost(2))
 				{
-					money -= shop.getUpgradeCost(2);
+					Bus::ReduceMoney(shop.getUpgradeCost(2));
 					shop.upgrade(2);
 				}
 				else

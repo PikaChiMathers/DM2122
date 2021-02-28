@@ -277,7 +277,6 @@ private:
 	bool displayShopUI2;
 	bool displayMessage;
 
-	int money;
 	double timer_shop;
 	bool spacePressed;
 
