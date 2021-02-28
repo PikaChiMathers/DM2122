@@ -39,6 +39,11 @@ void Bus::AddMoney(int amount)
 	moneyCurrent += amount;
 }
 
+void Bus::ReduceMoney(int amount)
+{
+	Bus::money -= amount;
+}
+
 int Bus::GetMoney()
 {
 	return Bus::money;

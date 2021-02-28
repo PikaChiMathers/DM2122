@@ -1142,7 +1142,7 @@ void SceneDrive::Render() //My Own Pattern
 
 	RenderTextOnScreen(meshList[GEO_TEXT], "Passengers:" + std::to_string(bus.GetPassengerCount()) + "/" + std::to_string(endpoint.GetRequiredPassengerCount()), Color(0, 0, 1), 3, 0, 81);
 
-	RenderTextOnScreen(meshList[GEO_TEXT], "Total Money:" + std::to_string(bus.GetMoney()), Color(1, 1, 0), 3, 0, 87);
+	RenderTextOnScreen(meshList[GEO_TEXT], "Total Money:" + std::to_string(Bus::GetMoney()), Color(1, 1, 0), 3, 0, 87);
 
 	RenderTextOnScreen(meshList[GEO_TEXT], "Money Collected:" + std::to_string(bus.GetMoneyCurrent()), Color(1, 0, 0), 3, 0, 84);
 
