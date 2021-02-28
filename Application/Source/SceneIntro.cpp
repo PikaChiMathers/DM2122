@@ -344,8 +344,9 @@ void SceneIntro::Update(double dt)
 			meshList[GEO_UI]->textureID = LoadTGA("Assets//Boss_Dialogue_Box.tga");
 		}*/
 	};
-	if (displayUI == true && Application::IsKeyPressed(VK_SPACE);)
+	if (displayUI == true && Application::IsKeyPressed(VK_SPACE) && IsSpacePressed == true)
 	{
+		nextScene = true;
 	}
 	
 }
