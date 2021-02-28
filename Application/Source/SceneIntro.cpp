@@ -222,18 +222,6 @@ void SceneIntro::Update(double dt)
 	if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
 
-	//for testing purposes
-	if (Application::IsKeyPressed('V'))
-	{
-		scene_change = true;
-		map.Set(Maps::SKYBOX_TYPE::SB_DAY);
-	}
-	if (Application::IsKeyPressed('B'))
-	{
-		scene_change = true;
-		map.Set(Maps::SKYBOX_TYPE::SB_NIGHT);
-	}
-
 
 	if (scene_change) //to ensure that the skybox only updates when the scene changes
 	{
@@ -340,6 +328,7 @@ void SceneIntro::Update(double dt)
 		IsSpacePressed = true;
 		std::cout << "triggerd";
 		displayUI = true;
+
 		/*if (dialogue->getCurrentLine() < dialogue->getTotalLines())
 		{
 			dialogue->Update();
@@ -355,6 +344,9 @@ void SceneIntro::Update(double dt)
 			meshList[GEO_UI]->textureID = LoadTGA("Assets//Boss_Dialogue_Box.tga");
 		}*/
 	};
+	if (displayUI == true && Application::IsKeyPressed(VK_SPACE);)
+	{
+	}
 	
 }
 
