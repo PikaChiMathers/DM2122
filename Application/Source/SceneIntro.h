@@ -148,6 +148,8 @@ private: //added (Step 2)
 	MS modelStack, viewStack, projectionStack;
 	TriggerCollider bosscollider;
 
+	bool IsSpacePressed;
+	bool displayUI;
 	void RenderMesh(Mesh* mesh, bool enableLight);
 
 	void RenderSkybox();
