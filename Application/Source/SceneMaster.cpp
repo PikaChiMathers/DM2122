@@ -1212,6 +1212,49 @@ void SceneMaster::RenderSkybox()
 		RenderMesh(meshList[GEO_TOP], true);
 		modelStack.PopMatrix();
 	}
+	else if (scene == SEARCH)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(499, 0, 0);
+		modelStack.Rotate(-90, 0, 1, 0);
+		modelStack.Scale(1000, 1000, 1000);
+		RenderMesh(meshList[GEO_FRONT], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(-499, 0, 0);
+		modelStack.Rotate(90, 0, 1, 0);
+		modelStack.Scale(1000, 1000, 1000);
+		RenderMesh(meshList[GEO_BACK], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(0, 0, 499);
+		modelStack.Rotate(180, 0, 1, 0);
+		modelStack.Scale(1000, 1000, 1000);
+		RenderMesh(meshList[GEO_LEFT], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(0, 0, -499);
+		modelStack.Scale(1000, 1000, 1000);
+		RenderMesh(meshList[GEO_RIGHT], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(0, -499, 0);
+		modelStack.Rotate(90, 1, 0, 0);
+		modelStack.Scale(1000, 1000, 1000);
+		RenderMesh(meshList[GEO_BOTTOM], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(0, 499, 0);
+		modelStack.Rotate(90, 1, 0, 0);
+		modelStack.Scale(1000, 1000, 1000);
+		RenderMesh(meshList[GEO_TOP], false);
+		modelStack.PopMatrix();
+	}
 	else if (scene == SHOP)
 	{
 		modelStack.PushMatrix();
