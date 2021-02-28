@@ -24,8 +24,8 @@ SceneDrive::~SceneDrive()
 
 void SceneDrive::Init() 
 {
-	//camera.Init(Vector3(40, 30, 30), Vector3(0, 0, 0), Vector3(0, 1, 0));
-	camera.Init(&bus, Vector3(0, 1, 0));
+	//camera.Init(Vector3(40, 30, 30), Vector3(0, 0, 0), Vector3(0, 1, 0)); //init for camera3
+	camera.Init(&bus, Vector3(0, 1, 0)); // init for cameraChase
 
 	map.Set(Maps::SKYBOX_TYPE::SB_DAY);
 
@@ -229,7 +229,6 @@ void SceneDrive::Init()
 	* type 6-8: 23,23
 	*/
 	bus.SetPosition(Position(63, 0, 40));
-	//bus.SetRotateY(-550);
 	manager.CreateGameObject(&bus);
 	endpoint.SetPosition(Position(62.4, 0, 68.7));
 	endpoint.SetRotateY(81);
@@ -584,26 +583,26 @@ void SceneDrive::Init()
 		manager.CreateGameObject(coins[i]);
 	}
 	coins[0]->SetPosition(Position(61.7, 0, -6.2));
-	coins[1]->SetPosition(Position(50.8, 0, -39.3));
-	coins[2]->SetPosition(Position(70.6, 0, -40.4));
-	coins[3]->SetPosition(Position(86.8, 0, -31.3));
-	coins[4]->SetPosition(Position(94.6, 0, -9.5));
-	coins[5]->SetPosition(Position(93.3, 0, 5.87));
-	coins[6]->SetPosition(Position(75.4, 0, 22.4));
-	coins[7]->SetPosition(Position(55.4, 0, 24));
-	coins[8]->SetPosition(Position(35.5, 0, 13.8));
-	coins[9]->SetPosition(Position(30, 0, -2.8));
-	coins[10]->SetPosition(Position(30.5, 0, -18.1));
-	coins[11]->SetPosition(Position(38, 0, -30.6));
-	coins[12]->SetPosition(Position(84.6, 0, 100.6));
-	coins[13]->SetPosition(Position(103, 0, 73.1));
-	coins[14]->SetPosition(Position(124.8, 0, 53.8));
-	coins[15]->SetPosition(Position(138.5, 0, 24.9));
-	coins[16]->SetPosition(Position(145.8, 0, -12.1));
-	coins[17]->SetPosition(Position(134.5, 0, -49.6));
-	coins[18]->SetPosition(Position(114, 0, -75.1));
-	coins[19]->SetPosition(Position(97.5, 0, -91.2));
-	coins[20]->SetPosition(Position(80.7, 0, -110));
+	//coins[1]->SetPosition(Position(50.8, 0, -39.3));
+	coins[1]->SetPosition(Position(70.6, 0, -40.4));
+	//coins[3]->SetPosition(Position(86.8, 0, -31.3));
+	coins[2]->SetPosition(Position(94.6, 0, -9.5));
+	//coins[5]->SetPosition(Position(93.3, 0, 5.87));
+	coins[3]->SetPosition(Position(75.4, 0, 22.4));
+	//coins[7]->SetPosition(Position(55.4, 0, 24));
+	coins[4]->SetPosition(Position(35.5, 0, 13.8));
+	//coins[9]->SetPosition(Position(30, 0, -2.8));
+	coins[5]->SetPosition(Position(30.5, 0, -18.1));
+	//coins[11]->SetPosition(Position(38, 0, -30.6));
+	coins[6]->SetPosition(Position(84.6, 0, 100.6));
+	coins[7]->SetPosition(Position(103, 0, 73.1));
+	coins[8]->SetPosition(Position(124.8, 0, 53.8));
+	coins[9]->SetPosition(Position(138.5, 0, 24.9));
+	coins[10]->SetPosition(Position(145.8, 0, -12.1));
+	coins[11]->SetPosition(Position(134.5, 0, -49.6));
+	coins[12]->SetPosition(Position(114, 0, -75.1));
+	coins[13]->SetPosition(Position(97.5, 0, -91.2));
+	coins[14]->SetPosition(Position(80.7, 0, -110));
 	//coins[21]->SetPosition(Position(136.1, 0, -146.2));
 	//coins[22]->SetPosition(Position(86.6, 0, -146.2));
 	//coins[23]->SetPosition(Position(46.4, 0, -146.2));
@@ -612,28 +611,28 @@ void SceneDrive::Init()
 	//coins[26]->SetPosition(Position(-60.9, 0, -146.2));
 	//coins[27]->SetPosition(Position(-103.1, 0, -146.2));
 	//coins[28]->SetPosition(Position(-139.4, 0, -146.2));
-	coins[21]->SetPosition(Position(136.1, 0, -120));
-	coins[22]->SetPosition(Position(46.4, 0, -108));
-	coins[23]->SetPosition(Position(7.9, 0, -102.8));
-	coins[24]->SetPosition(Position(-27.7, 0, -102.8));
-	coins[25]->SetPosition(Position(-60.9, 0, -102.8));
-	coins[26]->SetPosition(Position(-103.1, 0, -102.8));
-	coins[27]->SetPosition(Position(-139.4, 0, -102.8));
-	coins[28]->SetPosition(Position(-60.9, 0, -58));
-	coins[29]->SetPosition(Position(-103.1, 0, -58));
-	coins[30]->SetPosition(Position(-139.4, 0, -58));
-	coins[31]->SetPosition(Position(-60.9, 0, -31));
-	coins[32]->SetPosition(Position(-103.1, 0, -31));
-	coins[33]->SetPosition(Position(-139.4, 0, -31));
-	coins[34]->SetPosition(Position(-60.9, 0, 5));
-	coins[35]->SetPosition(Position(-103.1, 0, 5));
-	coins[36]->SetPosition(Position(-139.4, 0, 5));
-	coins[37]->SetPosition(Position(-60.9, 0, 41));
-	coins[38]->SetPosition(Position(-103.1, 0, 41));
-	coins[39]->SetPosition(Position(-139.4, 0, 41));
-	coins[40]->SetPosition(Position(-60.9, 0, 89));
-	coins[41]->SetPosition(Position(-103.1, 0, 89));
-	coins[42]->SetPosition(Position(-139.4, 0, 89));
+	coins[15]->SetPosition(Position(136.1, 0, -120));
+	coins[16]->SetPosition(Position(46.4, 0, -108));
+	coins[17]->SetPosition(Position(7.9, 0, -102.8));
+	coins[18]->SetPosition(Position(-27.7, 0, -102.8));
+	coins[19]->SetPosition(Position(-60.9, 0, -102.8));
+	coins[20]->SetPosition(Position(-103.1, 0, -102.8));
+	//coins[27]->SetPosition(Position(-139.4, 0, -102.8));
+	coins[21]->SetPosition(Position(-60.9, 0, -58));
+	coins[22]->SetPosition(Position(-103.1, 0, -58));
+	//coins[30]->SetPosition(Position(-139.4, 0, -58));
+	coins[23]->SetPosition(Position(-60.9, 0, -31));
+	coins[24]->SetPosition(Position(-103.1, 0, -31));
+	//coins[33]->SetPosition(Position(-139.4, 0, -31));
+	coins[25]->SetPosition(Position(-60.9, 0, 5));
+	coins[26]->SetPosition(Position(-103.1, 0, 5));
+	//coins[36]->SetPosition(Position(-139.4, 0, 5));
+	coins[27]->SetPosition(Position(-60.9, 0, 41));
+	coins[28]->SetPosition(Position(-103.1, 0, 41));
+	//coins[39]->SetPosition(Position(-139.4, 0, 41));
+	coins[29]->SetPosition(Position(-60.9, 0, 89));
+	coins[30]->SetPosition(Position(-103.1, 0, 89));
+	//coins[42]->SetPosition(Position(-139.4, 0, 89));
 	//coins[51]->SetPosition(Position(-60.9, 0, 147));
 	//coins[52]->SetPosition(Position(-103.1, 0, 147));
 	//coins[53]->SetPosition(Position(-139.4, 0, 147));
@@ -641,13 +640,13 @@ void SceneDrive::Init()
 	//coins[55]->SetPosition(Position(44.5, 0, 147));
 	//coins[56]->SetPosition(Position(89, 0, 147));
 	//coins[57]->SetPosition(Position(136, 0, 147));
-	coins[43]->SetPosition(Position(44.5, 0, 106.5));
-	coins[44]->SetPosition(Position(136, 0, 106.5));
-	coins[45]->SetPosition(Position(-9.3, 0, -58.5));
-	coins[46]->SetPosition(Position(-18.6, 0, -28.5));
-	coins[47]->SetPosition(Position(-19.4, 0, 4));
-	coins[48]->SetPosition(Position(-11.7, 0, 37.2));
-	coins[49]->SetPosition(Position(-0.5, 0, 90));
+	coins[31]->SetPosition(Position(44.5, 0, 106.5));
+	coins[32]->SetPosition(Position(136, 0, 106.5));
+	coins[33]->SetPosition(Position(-9.3, 0, -58.5));
+	coins[34]->SetPosition(Position(-18.6, 0, -28.5));
+	coins[35]->SetPosition(Position(-19.4, 0, 4));
+	coins[36]->SetPosition(Position(-11.7, 0, 37.2));
+	coins[37]->SetPosition(Position(-0.5, 0, 90));
 
 	//temp.SetTag("Temp");
 	//manager.CreateGameObject(&temp);
@@ -658,7 +657,7 @@ void SceneDrive::Update(double dt)
 {
 	manager.GameObjectManagerUpdate(dt);
 	camera.Update(dt);
-	camera.SetChase(&bus);
+	camera.SetChase(&bus); // use only for cameraChase
 
 	fps = 1.0f / dt;
 
@@ -954,11 +953,12 @@ void SceneDrive::Render() //My Own Pattern
 				}
 				else if (gameObject->Type() == "ColliderObj")
 				{
-
-					/*modelStack.PushMatrix();
-						modelStack.Scale(gameObject->GetScaleX(), gameObject->GetScaleY(), gameObject->GetScaleZ());
-						RenderMesh(meshList[GEO_CUBE], false);
-					modelStack.PopMatrix();*/
+					if (abs((Vector3(gameObject->GetPositionX(), gameObject->GetPositionY(), gameObject->GetPositionZ()) - Vector3(bus.GetPositionX(), bus.GetPositionY(), bus.GetPositionZ())).Length()) > 100)
+					{ // dont render if GO is aprox. out of view
+						modelStack.PopMatrix();
+						modelStack.PopMatrix();
+						continue;
+					}
 					if (gameObject->GetTag() == "Temp")
 					{
 						modelStack.PushMatrix();
@@ -1119,6 +1119,12 @@ void SceneDrive::Render() //My Own Pattern
 				}
 				else if (gameObject->Type() == "Money")
 				{
+					if (abs((Vector3(gameObject->GetPositionX(), gameObject->GetPositionY(), gameObject->GetPositionZ()) - Vector3(bus.GetPositionX(), bus.GetPositionY(), bus.GetPositionZ())).Length()) > 100)
+					{ // dont render if GO is aprox. out of view
+						modelStack.PopMatrix();
+						modelStack.PopMatrix();
+						continue;
+					}
 					modelStack.Scale(10, 10, 10);
 					modelStack.Rotate(coinRot, 0, 1, 0);
 					RenderMesh(meshList[GEO_COIN], true);

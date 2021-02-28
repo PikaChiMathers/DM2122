@@ -152,7 +152,7 @@ private: //added (Step 2)
 	ColliderObj* cluster[51];
 	ColliderObj* borderCol[4];
 	Border* border[4];
-	Money* coins[50];
+	Money* coins[38];
 	Bus bus;
 	DriveObjective endpoint;
 

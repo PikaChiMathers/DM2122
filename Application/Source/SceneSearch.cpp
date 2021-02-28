@@ -25,6 +25,7 @@ void SceneSearch::Init()
 {
 	srand(time(NULL)); //to initialize random seed
 
+	//keeps trach of the locations of the different buildings
 	targets[0].Init(Vector3(0, 240, -330), Vector3(.73f, 239.7f, -329), Vector3(0.1f, 1, 0.2f));
 	targets[1].Init(Vector3(0, 240, -330), Vector3(.59f, 239.7f, -329), Vector3(0.1f, 1, 0.2f));
 	targets[2].Init(Vector3(0, 240, -330), Vector3(.48f, 239.73f, -329), Vector3(0.1f, 1, 0.2f));
@@ -100,8 +101,8 @@ void SceneSearch::Init()
 
 	meshList[GEO_PROGRESS] = MeshBuilder::GenerateRevQuad("progress", Color(1, 1, 1), 1.f, 1.f);
 
-	meshList[GEO_INSTRUCTIONS] = MeshBuilder::GenerateRevQuad("Instructions", Color(1, 1, 1), 1, 1);
-	meshList[GEO_INSTRUCTIONS]->textureID = LoadTGA("Assets//search_instructions.tga");
+	meshList[GEO_POPUP] = MeshBuilder::GenerateRevQuad("Instructions", Color(1, 1, 1), 1, 1);
+	meshList[GEO_POPUP]->textureID = LoadTGA("Assets//search_instructions.tga");
 
 
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(0, 0, 1), 1, 1, 1);
@@ -221,7 +222,7 @@ void SceneSearch::Update(double dt)
 			if (press_count == 0)
 			{
 				if (Application::IsKeyPressed(VK_LEFT) || Application::IsKeyPressed(VK_RIGHT))
-				{
+				{ //changes location
 					press_time++;
 					if (press_time == 1)
 					{
@@ -340,14 +341,26 @@ void SceneSearch::Render() //My Own Pattern
 
 		std::ostringstream ss;
 		ss.precision(3);
-		ss << "Timer left:" << (timer/3600) <<"m " << (timer%3600)/60 << "s";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 1), 3, 5, 85);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Passengers found:" + std::to_string(passenger_count), Color(0, 0, 1), 3, 5, 80);
+		ss << "Time left:" << (timer/3600) <<"m " << (timer%3600)/60 << "s";
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 3, 5, 85);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Passengers found:" + std::to_string(passenger_count), Color(0, 0, 0), 3, 5, 80);
 	}
 	else
-	{
-		RenderMeshOnScreen(meshList[GEO_INSTRUCTIONS], 80, 45, 120, 60);
+	{ //Renders the Intructions
+		RenderMeshOnScreen(meshList[GEO_POPUP], 80, 45, 120, 60);
 	}
+
+	if (timer <= 0)
+	{//Renders the final results of the Search Minigame
+		meshList[GEO_POPUP]->textureID = LoadTGA("Assets//search_results.tga");
+		RenderMeshOnScreen(meshList[GEO_POPUP], 80, 45, 120, 60);
+		if (passenger_count > 0)
+			RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(passenger_count) + " passenger(s) joined the rest of the tour!", Color(0, 0, 0), 4, 30, 45);
+		else
+			RenderTextOnScreen(meshList[GEO_TEXT], "You could not find anyone to join the tour.", Color(0, 0, 0), 4, 30, 45);
+	}
+
+
 }
 
 void SceneSearch::Exit()
@@ -452,7 +465,6 @@ void SceneSearch::RenderSkybox()
 
 void SceneSearch::RenderCity()
 {
-
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0, 0);
 	modelStack.Rotate(-90, 1, 0, 0);
