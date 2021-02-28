@@ -91,6 +91,7 @@ public:
 		GEO_BUSSTOP_SEARCH,
 		GEO_TREE1_SEARCH,
 		GEO_TREE2_SEARCH,
+		GEO_FLOOR_SEARCH,
 
 		GEO_BUS_SHOP,
 
@@ -102,6 +103,13 @@ public:
 		GEO_BOTTOM,
 		GEO_FRONT,
 		GEO_BACK,
+
+		GEO_LEFT_TRIVIA,
+		GEO_RIGHT_TRIVIA,
+		GEO_TOP_TRIVIA,
+		GEO_BOTTOM_TRIVIA,
+		GEO_FRONT_TRIVIA,
+		GEO_BACK_TRIVIA,
 
 		GEO_TEXT,
 		GEO_UI,
@@ -270,7 +278,6 @@ private:
 	bool displayShopUI2;
 	bool displayMessage;
 
-	int money;
 	double timer_shop;
 	bool spacePressed;
 

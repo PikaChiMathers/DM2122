@@ -59,6 +59,13 @@ void SceneMaster::Init()
 	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left", Color(1, 1, 1), 1.f, 1.f);
 	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", Color(1, 1, 1), 1.f, 1.f);
 
+	meshList[GEO_FRONT_TRIVIA] = MeshBuilder::GenerateQuad("front", Color(.04f, .71f, 1), 1.f, 1.f);
+	meshList[GEO_BOTTOM_TRIVIA] = MeshBuilder::GenerateQuad("bottom", Color(.04f, .71f, 1), 1.f, 1.f);
+	meshList[GEO_BACK_TRIVIA] = MeshBuilder::GenerateQuad("back", Color(.04f, .71f, 1), 1.f, 1.f);
+	meshList[GEO_TOP_TRIVIA] = MeshBuilder::GenerateQuad("top", Color(.04f, .71f, 1), 1.f, 1.f);
+	meshList[GEO_LEFT_TRIVIA] = MeshBuilder::GenerateQuad("left", Color(.04f, .71f, 1), 1.f, 1.f);
+	meshList[GEO_RIGHT_TRIVIA] = MeshBuilder::GenerateQuad("right", Color(.04f, .71f, 1), 1.f, 1.f);
+
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//trebuchet.tga");
 
@@ -66,7 +73,7 @@ void SceneMaster::Init()
 
 	//main menu meshes
 	{
-		meshList[GEO_UI]->textureID = LoadTGA("Assets//start_down.tga");
+		meshList[GEO_UI]->textureID = LoadTGA("Assets//start.tga");
 	}
 
 	//pause menu meshes
@@ -168,6 +175,8 @@ void SceneMaster::Init()
 		meshList[GEO_MALL_SEARCH]->textureID = LoadTGA("Image//stadium.tga");
 		meshList[GEO_TREE1_SEARCH] = MeshBuilder::GenerateOBJ("tree1", "OBJ//tree_large.obj", Color(0.184314, 0.309804, 0.184314));
 		meshList[GEO_TREE2_SEARCH] = MeshBuilder::GenerateOBJ("tree2", "OBJ//tree_small.obj", Color(0.184314, 0.309804, 0.184314));
+		meshList[GEO_FLOOR_SEARCH] = MeshBuilder::GenerateQuad("floor", Color(1, 1, 1), 1.f, 1.f);
+		meshList[GEO_FLOOR_SEARCH]->textureID = LoadTGA("Image//HNS_map.tga");
 	}
 
 	//shop meshes
@@ -839,7 +848,7 @@ void SceneMaster::Update(double dt)
 				float posY = 60 - (y / 10);
 				if (posX > 44 && posX < 85 && posY > 1 && posY < 23)
 				{
-					meshList[GEO_UI]->textureID = LoadTGA("Assets//start.tga");
+					meshList[GEO_UI]->textureID = LoadTGA("Assets//start_down.tga");
 
 					if (timer_main_menu == 0)
 						timer_main_menu = 0.5;
@@ -881,7 +890,16 @@ void SceneMaster::Update(double dt)
 				// if game ended
 				if (Application::IsKeyPressed(VK_SPACE))
 				{
-					//go to next scene
+					if (rand() % 2 == 0)
+					{
+						scene = TRIVIA;
+					}
+					else
+					{
+						scene_change = true;
+						scene = SEARCH;
+						map.Set(Maps::SKYBOX_TYPE::SB_DAY);
+					}
 				}
 			}
 			else
@@ -1159,19 +1177,19 @@ void SceneMaster::Update(double dt)
 			{
 				spacePressed = true;
 
-				if (canUpgrade0 == true && money >= shop.getUpgradeCost(0))
+				if (canUpgrade0 == true && Bus::GetMoney() >= shop.getUpgradeCost(0))
 				{
-					money -= shop.getUpgradeCost(0);
+					Bus::ReduceMoney(shop.getUpgradeCost(0));
 					shop.upgrade(0);
 				}
-				else if (canUpgrade1 == true && money >= shop.getUpgradeCost(1))
+				else if (canUpgrade1 == true && Bus::GetMoney() >= shop.getUpgradeCost(1))
 				{
-					money -= shop.getUpgradeCost(1);
+					Bus::ReduceMoney(shop.getUpgradeCost(1));
 					shop.upgrade(1);
 				}
-				else if (canUpgrade2 == true && money >= shop.getUpgradeCost(2))
+				else if (canUpgrade2 == true && Bus::GetMoney() >= shop.getUpgradeCost(2))
 				{
-					money -= shop.getUpgradeCost(2);
+					Bus::ReduceMoney(shop.getUpgradeCost(2));
 					shop.upgrade(2);
 				}
 				else
@@ -1201,16 +1219,16 @@ void SceneMaster::Update(double dt)
 		}
 
 		if (!Application::IsKeyPressed('P') && pausePressed == true)
-			pausePressed == false;
+			pausePressed = false;
 
 		if (Application::IsKeyPressed('P') && pausePressed == false && scene != MAIN_MENU)
 		{
 			game_pause = true;
-			pausePressed == true;
+			pausePressed = true;
 			prePausedScene = scene;
 		}
 	}
-}
+	}
 
 void SceneMaster::Render()
 {
@@ -1762,6 +1780,13 @@ void SceneMaster::RenderRoom()
 void SceneMaster::RenderCity()
 {
 	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Rotate(-90, 1, 0, 0);
+	modelStack.Scale(1000, 1000, 1000);
+	RenderMesh(meshList[GEO_FLOOR_SEARCH], lights[0].isOn);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
 	modelStack.Translate(350, 0, 425);
 	modelStack.Rotate(-90, 0, 1, 0);
 	modelStack.Scale(4, 4, 4);
@@ -2117,41 +2142,41 @@ void SceneMaster::RenderSkybox()
 		modelStack.Translate(24, 0, 0);
 		modelStack.Rotate(-90, 0, 1, 0);
 		modelStack.Scale(50, 50, 50);
-		RenderMesh(meshList[GEO_FRONT], true);
+		RenderMesh(meshList[GEO_FRONT_TRIVIA], true);
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
 		modelStack.Translate(-24, 0, 0);
 		modelStack.Rotate(90, 0, 1, 0);
 		modelStack.Scale(50, 50, 50);
-		RenderMesh(meshList[GEO_BACK], true);
+		RenderMesh(meshList[GEO_BACK_TRIVIA], true);
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
 		modelStack.Translate(0, 0, 24);
 		modelStack.Rotate(180, 0, 1, 0);
 		modelStack.Scale(50, 50, 50);
-		RenderMesh(meshList[GEO_LEFT], true);
+		RenderMesh(meshList[GEO_LEFT_TRIVIA], true);
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
 		modelStack.Translate(0, 0, -24);
 		modelStack.Scale(50, 50, 50);
-		RenderMesh(meshList[GEO_RIGHT], true);
+		RenderMesh(meshList[GEO_RIGHT_TRIVIA], true);
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
 		modelStack.Translate(0, -24, 0);
 		modelStack.Rotate(90, 1, 0, 0);
 		modelStack.Scale(50, 50, 50);
-		RenderMesh(meshList[GEO_BOTTOM], true);
+		RenderMesh(meshList[GEO_BOTTOM_TRIVIA], true);
 		modelStack.PopMatrix();
 
 		modelStack.PushMatrix();
 		modelStack.Translate(0, 24, 0);
 		modelStack.Rotate(90, 1, 0, 0);
 		modelStack.Scale(50, 50, 50);
-		RenderMesh(meshList[GEO_TOP], true);
+		RenderMesh(meshList[GEO_TOP_TRIVIA], true);
 		modelStack.PopMatrix();
 	}
 	else if (scene == SEARCH)

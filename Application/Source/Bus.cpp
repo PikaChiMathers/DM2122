@@ -17,6 +17,7 @@ Bus::Bus()
 }
 
 int Bus::money;
+int Bus::passengerPrev;
 
 Bus::~Bus()
 {
@@ -49,6 +50,11 @@ int Bus::GetMoney()
 	return Bus::money;
 }
 
+int Bus::GetPassengerCountPrev()
+{
+	return Bus::passengerPrev;
+}
+
 int Bus::GetMoneyCurrent()
 {
 	return moneyCurrent;
@@ -62,6 +68,7 @@ void Bus::SetPassengerCount(int count)
 void Bus::AddPassengerCount()
 {
 	passengers++;
+	Bus::passengerPrev = passengers;
 }
 
 int Bus::GetPassengerCount()
