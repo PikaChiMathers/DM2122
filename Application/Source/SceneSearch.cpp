@@ -25,6 +25,7 @@ void SceneSearch::Init()
 {
 	srand(time(NULL)); //to initialize random seed
 
+	//keeps trach of the locations of the different buildings
 	targets[0].Init(Vector3(0, 240, -330), Vector3(.73f, 239.7f, -329), Vector3(0.1f, 1, 0.2f));
 	targets[1].Init(Vector3(0, 240, -330), Vector3(.59f, 239.7f, -329), Vector3(0.1f, 1, 0.2f));
 	targets[2].Init(Vector3(0, 240, -330), Vector3(.48f, 239.73f, -329), Vector3(0.1f, 1, 0.2f));
@@ -221,7 +222,7 @@ void SceneSearch::Update(double dt)
 			if (press_count == 0)
 			{
 				if (Application::IsKeyPressed(VK_LEFT) || Application::IsKeyPressed(VK_RIGHT))
-				{
+				{ //changes location
 					press_time++;
 					if (press_time == 1)
 					{
@@ -345,12 +346,12 @@ void SceneSearch::Render() //My Own Pattern
 		RenderTextOnScreen(meshList[GEO_TEXT], "Passengers found:" + std::to_string(passenger_count), Color(0, 0, 0), 3, 5, 80);
 	}
 	else
-	{
+	{ //Renders the Intructions
 		RenderMeshOnScreen(meshList[GEO_POPUP], 80, 45, 120, 60);
 	}
 
 	if (timer <= 0)
-	{
+	{//Renders the final results of the Search Minigame
 		meshList[GEO_POPUP]->textureID = LoadTGA("Assets//search_results.tga");
 		RenderMeshOnScreen(meshList[GEO_POPUP], 80, 45, 120, 60);
 		if (passenger_count > 0)
@@ -464,7 +465,6 @@ void SceneSearch::RenderSkybox()
 
 void SceneSearch::RenderCity()
 {
-
 	modelStack.PushMatrix();
 	modelStack.Translate(0, 0, 0);
 	modelStack.Rotate(-90, 1, 0, 0);
