@@ -8,6 +8,7 @@
 class Bus : public GameObject
 {
 	static int money;
+	static int passengerPrev;
 
 	int moneyCurrent;
 	float acceleration, brakePower;
@@ -31,6 +32,7 @@ public:
 	void AddMoney(int amount);
 	static void ReduceMoney(int amount);
 	static int GetMoney();
+	static int GetPassengerCountPrev();
 	int GetMoneyCurrent();
 	// set the number of passengers collected
 	void SetPassengerCount(int count);

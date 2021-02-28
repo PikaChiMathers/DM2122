@@ -13,7 +13,7 @@ public:
 		S_INTRO,
 		S_DRIVE,
 		S_TRIVIA,
-		S_CHASE,
+		S_SEARCH,
 		S_SHOP
 	};
 
@@ -28,13 +28,12 @@ public:
 	static void GetCursorPos(double* xpos, double* ypos);
 	static int GetWindowWidth();
 	static int GetWindowHeight();
-	static void changeScene(ENUM_SCENE scene);
+	static void ChangeScene(ENUM_SCENE scene);
 	static unsigned m_width;
 	static unsigned m_height;
 
-	//static void changeScene(int scene);
 
-
+	static bool changeScene;
 	static ENUM_SCENE scene;
 
 private:

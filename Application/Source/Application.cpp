@@ -81,9 +81,12 @@ int Application::GetWindowHeight()
 	return m_height;
 }
 
-void Application::changeScene(ENUM_SCENE scene)
+bool Application::changeScene = false;
+Application::ENUM_SCENE Application::scene;
+void Application::ChangeScene(ENUM_SCENE scene)
 {
-	Application::scene = S_MAIN;
+	Application::scene = scene;
+	Application::changeScene = true;
 }
 
 
@@ -148,7 +151,7 @@ void Application::Run()
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 	while (!glfwWindowShouldClose(m_window) && !(IsKeyPressed(VK_ESCAPE) && IsKeyPressed(VK_SHIFT)))
 	{ // stop removing this feature
-		if (IsKeyPressed(VK_F1) || IsKeyPressed(VK_F2) || IsKeyPressed(VK_F3) || IsKeyPressed(VK_F4) || IsKeyPressed(VK_F5) || IsKeyPressed(VK_F6) || IsKeyPressed(VK_F7))
+		/*if (IsKeyPressed(VK_F1) || IsKeyPressed(VK_F2) || IsKeyPressed(VK_F3) || IsKeyPressed(VK_F4) || IsKeyPressed(VK_F5) || IsKeyPressed(VK_F6) || IsKeyPressed(VK_F7))
 		{
 			scene_ptr->Exit();
 			delete scene_ptr;
@@ -162,6 +165,32 @@ void Application::Run()
 			if (IsKeyPressed(VK_F7)) scene_ptr = new MainMenu();
 
 			scene_ptr->Init();
+		}*/
+		if (Application::changeScene)
+		{
+			switch (scene)
+			{
+			case Application::S_MAIN:
+				scene_ptr = new MainMenu;
+				break;
+			case Application::S_INTRO:
+				scene_ptr = new SceneIntro;
+				break;
+			case Application::S_DRIVE:
+				scene_ptr = new SceneDrive;
+				break;
+			case Application::S_TRIVIA:
+				scene_ptr = new SceneTrivia;
+				break;
+			case Application::S_CHASE:
+				scene_ptr = new SceneSearch;
+				break;
+			case Application::S_SHOP:
+				scene_ptr = new MainMenu;
+				break;
+			default:
+				break;
+			}
 		}
 		scene_ptr->Update(m_timer.getElapsedTime());
 		scene_ptr->Render();
