@@ -1783,7 +1783,7 @@ void SceneMaster::RenderCity()
 	modelStack.Translate(0, 0, 0);
 	modelStack.Rotate(-90, 1, 0, 0);
 	modelStack.Scale(1000, 1000, 1000);
-	RenderMesh(meshList[GEO_FLOOR], lights[0].isOn);
+	RenderMesh(meshList[GEO_FLOOR_SEARCH], lights[0].isOn);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
