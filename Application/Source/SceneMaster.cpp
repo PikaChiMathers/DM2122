@@ -784,6 +784,7 @@ void SceneMaster::Update(double dt)
 		{
 			game_pause = false;
 			scene = prePausedScene;
+			pausePressed = true;
 		}
 
 		if (pausePressed && !Application::IsKeyPressed('P'))
@@ -1199,7 +1200,10 @@ void SceneMaster::Update(double dt)
 			scene_change = false;
 		}
 
-		if (Application::IsKeyPressed('P') && scene != MAIN_MENU)
+		if (!Application::IsKeyPressed('P') && pausePressed == true)
+			pausePressed == false;
+
+		if (Application::IsKeyPressed('P') && pausePressed == false && scene != MAIN_MENU)
 		{
 			game_pause = true;
 			pausePressed == true;
