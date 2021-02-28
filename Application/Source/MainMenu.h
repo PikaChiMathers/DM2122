@@ -22,38 +22,12 @@ public:
 	virtual void Update(double dt);
 	virtual void Render();
 	virtual void Exit();
-
-	float rotateAngle;
-	float translateX, translateY;
-	float scaleAll;
-
-	float fps;
-
-	int translateXDir, translateYDir, rotateDir, scaleDir;
-
-	Color red, blue, green, pink, Lblue, purple, orange, yellow, cyan, magenta, moonshade;
-
 	int UI_height, UI_width;
 
 	enum GEOMETRY_TYPE //added (Step 1)
 	{
 		GEO_AXES = 0,
-
-		GEO_BUS,
-		GEO_QUAD,
-
-		GEO_LIGHTBALL,
-
-		GEO_LEFT,
-		GEO_RIGHT,
-		GEO_TOP,
-		GEO_BOTTOM,
-		GEO_FRONT,
-		GEO_BACK,
-
-		GEO_TEXT,
 		GEO_UI,
-
 		NUM_GEOMETRY,
 	};
 
@@ -78,18 +52,6 @@ public:
 		U_LIGHT0_COSINNER,
 		U_LIGHT0_EXPONENT,
 
-		U_LIGHT1_POSITION,
-		U_LIGHT1_COLOR,
-		U_LIGHT1_POWER,
-		U_LIGHT1_KC,
-		U_LIGHT1_KL,
-		U_LIGHT1_KQ,
-		U_LIGHT1_TYPE,
-		U_LIGHT1_SPOTDIRECTION,
-		U_LIGHT1_COSCUTOFF,
-		U_LIGHT1_COSINNER,
-		U_LIGHT1_EXPONENT,
-
 		U_LIGHTENABLED,
 		U_NUMLIGHTS,
 
@@ -105,7 +67,6 @@ public:
 	enum LIGHT_TYPES
 	{
 		LIGHT1 = 0,
-		LIGHT2,
 		NUM_LIGHTS,
 	};
 
@@ -117,12 +78,6 @@ private: //added (Step 2)
 	Maps map;
 
 	bool scene_change;
-
-	Shop shop;
-	bool displayShopUI;
-	bool displayMessage;
-	int money;
-	double timer;
 	bool buttonPressed;
 	bool spacePressed;
 
@@ -133,12 +88,6 @@ private: //added (Step 2)
 	MS modelStack, viewStack, projectionStack;
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
-
-	void RenderSkybox();
-
-	void RenderText(Mesh* mesh, std::string text, Color color);
-
-	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 
 	void RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int sizey);
 		
