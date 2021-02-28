@@ -217,6 +217,7 @@ void SceneMaster::Init()
 
 	//driving init
 	{
+		driving = new SceneDrive(0;)
 		driving->Init();
 	}
 
