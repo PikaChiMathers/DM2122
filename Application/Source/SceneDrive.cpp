@@ -14,6 +14,7 @@
 
 SceneDrive::SceneDrive()
 {
+	honk_count = 1;
 	coinRot = 0;
 }
 
@@ -671,6 +672,45 @@ void SceneDrive::Update(double dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //default fill mode
 	if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
+
+	if (Application::IsKeyPressed(VK_SPACE) && honk_count == 1 && !honkerdonker)
+	{
+		honkerdonker = true;
+		sound.Engine()->play2D("media/honk_1.wav");
+		honk_count++;
+	}
+
+	else if (Application::IsKeyPressed(VK_SPACE) && honk_count == 2 && !honkerdonker)
+	{
+		honkerdonker = true;
+		sound.Engine()->play2D("media/honk_2.wav");
+		honk_count++;
+	}
+
+	else if (Application::IsKeyPressed(VK_SPACE) && honk_count == 3 && !honkerdonker)
+	{
+		honkerdonker = true;
+		sound.Engine()->play2D("media/honk_3.wav");
+		honk_count++;
+	}
+
+	else if (Application::IsKeyPressed(VK_SPACE) && honk_count == 4 && !honkerdonker)
+	{
+		honkerdonker = true;
+		sound.Engine()->play2D("media/honk_4.wav");
+		honk_count++;
+	}
+
+	else if (Application::IsKeyPressed(VK_SPACE) && honk_count == 5 && !honkerdonker)
+	{
+		honkerdonker = true;
+		sound.Engine()->play2D("media/honk_5.wav");
+		honk_count = 1;
+	}
+	else if (!Application::IsKeyPressed(VK_SPACE) && honkerdonker)
+	{
+		honkerdonker = false;
+	}
 
 	//for testing purposes
 	/*if (Application::IsKeyPressed('V'))
