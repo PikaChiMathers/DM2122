@@ -1,9 +1,13 @@
 #ifndef SCENE_MASTER
 #define SCENE_MASTER
 
+#include "Border.h"
 #include "Camera3.h"
 #include "Camera4.h"
+#include "CameraChase.h"
+#include "ColliderObj.h"
 #include "Dialogue.h"
+#include "DriveObjective.h"
 #include "GameObject.h"
 #include "GameObjectManager.h"
 #include "Goose.h"
@@ -11,12 +15,14 @@
 #include "MatrixStack.h"
 #include "Mesh.h"
 #include "Maps.h"
+#include "Money.h"
 #include "Objects.h"
 #include "Scene.h"
 #include "Shop.h"
 #include "Sound.h"
 #include "Target.h"
 #include "TriggerCollider.h"
+#include "Person.h"
 #include "Vertex.h"
 
 #include <sstream>
@@ -48,6 +54,21 @@ public:
 		GEO_AXES = 0,
 
 		GEO_QUAD,
+
+		GEO_TEMPLATE_DRIVING,
+		GEO_BORDER_DRIVING,
+		GEO_OVERLAY_DRIVING,
+		GEO_CUBE_DRIVING,
+		GEO_COIN_DRIVING,
+		GEO_GOOSE_DRIVING,
+		GEO_NPC_DRIVING,
+		GEO_BUILDING1_DRIVING,
+		GEO_BUILDING2_DRIVING,
+		GEO_BUILDING3_DRIVING,
+		GEO_BUILDING1B_DRIVING,
+		GEO_BUILDING2B_DRIVING,
+		GEO_BUILDING3B_DRIVING,
+		GEO_TEST_DRIVING,
 
 		GEO_GOOSE_TRIVIA,
 		GEO_CONFETTI_TRIVIA,
@@ -150,6 +171,9 @@ private:
 	//scene type
 	unsigned scene;
 
+	//driving camera
+	CameraChase camera_driving;
+
 	//trivia camera
 	Camera3 camera_trivia;
 
@@ -163,9 +187,36 @@ private:
 	Dialogue* dialogue;
 
 	Sound sound;
-	bool play_once; //ensures sound is played only once
 
 	int passengers;
+
+	//driving variables
+	int honk_count;
+	bool honkerdonker = false;
+
+	GameObjectManager manager_driving;
+	ColliderObj* cluster[51];
+	ColliderObj* borderCol[4];
+	Border* border[4];
+	Money* coins[38];
+
+	Person* npc[15];
+	Position npcSpawn[15];
+
+	Bus bus;
+	DriveObjective endpoint;
+
+	ColliderObj temp;
+
+	GameObject* TestRef;
+	double toggleTime = 0;
+	bool toggleHitBox = false;
+	float multiplier = 4;
+	int clusterType = 1;
+
+	float coinRot;
+
+	bool startGame, endGame, paused;
 
 	//trivia variables
 	std::string Qn_str;
@@ -174,8 +225,9 @@ private:
 
 	int score;
 	std::string answer;
+	bool play_once; //ensures sound is played only once
 
-	GameObjectManager manager;
+	GameObjectManager manager_trivia;
 	Goose goose;
 	Objects P_A, P_B, P_C; //Podium A, B & C
 	Objects C_F, C_B, C_L, C_R; //Collider front, back, left & right
