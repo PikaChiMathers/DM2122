@@ -42,6 +42,7 @@ public:
 	Sound sound;
 
 
+
 	enum GEOMETRY_TYPE //added (Step 1)
 	{
 		GEO_AXES = 0,
@@ -145,7 +146,7 @@ private: //added (Step 2)
 	Mesh* meshList[NUM_GEOMETRY];
 
 	MS modelStack, viewStack, projectionStack;
-
+	TriggerCollider bosscollider;
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
 

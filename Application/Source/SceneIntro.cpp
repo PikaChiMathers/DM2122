@@ -30,6 +30,10 @@ void SceneIntro::Init()
 	goose.SetPosition(Position (-15, -3, 0));
 	manager.CreateGameObject(&boss);
 	boss.SetPosition(Position(15, -4, 0));
+	boss.SetScale(Scale(1, 3, 1));
+	manager.CreateGameObject(&bosscollider);
+	bosscollider.SetPosition(Position(15, -4, 0));
+	bosscollider.SetScale(Scale(1.1f, 3.1f, 1.1f));
 
 	camera.Init(Vector3(-0.7, 39, -68), Vector3(-0.67, 38.65, -67), Vector3(0, 1, 0));
 	map.Set(Maps::SKYBOX_TYPE::SB_INTRO);
@@ -185,10 +189,6 @@ void SceneIntro::Init()
 	glUniform1f(m_parameters[U_LIGHT0_COSCUTOFF], lights[0].cosCutoff);
 	glUniform1f(m_parameters[U_LIGHT0_COSINNER], lights[0].cosInner);
 	glUniform1f(m_parameters[U_LIGHT0_EXPONENT], lights[0].exponent);
-
-
-
-
 	glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
 	glUniform3fv(m_parameters[U_LIGHT1_COLOR], 1, &lights[1].color.r);
 	glUniform1f(m_parameters[U_LIGHT1_POWER], lights[1].power);
@@ -341,6 +341,11 @@ void SceneIntro::Update(double dt)
 			{
 				meshList[GEO_UI]->textureID = LoadTGA("Assets//Duck Dialogue Box.tga");
 			}
+	}
+
+	if (bosscollider.IsTriggered())
+	{
+		std::cout << "boss triggered" ;
 	}
 }
 
