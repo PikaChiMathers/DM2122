@@ -753,7 +753,50 @@ void SceneMaster::RenderMesh(Mesh* mesh, bool enableLight)
 
 void SceneMaster::RenderSkybox()
 {
-	if (scene == SCENE_SHOP)
+	if (scene == SCENE_TRIVIA)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(24, 0, 0);
+		modelStack.Rotate(-90, 0, 1, 0);
+		modelStack.Scale(50, 50, 50);
+		RenderMesh(meshList[GEO_FRONT], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(-24, 0, 0);
+		modelStack.Rotate(90, 0, 1, 0);
+		modelStack.Scale(50, 50, 50);
+		RenderMesh(meshList[GEO_BACK], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(0, 0, 24);
+		modelStack.Rotate(180, 0, 1, 0);
+		modelStack.Scale(50, 50, 50);
+		RenderMesh(meshList[GEO_LEFT], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(0, 0, -24);
+		modelStack.Scale(50, 50, 50);
+		RenderMesh(meshList[GEO_RIGHT], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(0, -24, 0);
+		modelStack.Rotate(90, 1, 0, 0);
+		modelStack.Scale(50, 50, 50);
+		RenderMesh(meshList[GEO_BOTTOM], true);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(0, 24, 0);
+		modelStack.Rotate(90, 1, 0, 0);
+		modelStack.Scale(50, 50, 50);
+		RenderMesh(meshList[GEO_TOP], true);
+		modelStack.PopMatrix();
+	}
+	else if (scene == SCENE_SHOP)
 	{
 		modelStack.PushMatrix();
 		modelStack.Translate(18.99f, 4.99f, 0);
