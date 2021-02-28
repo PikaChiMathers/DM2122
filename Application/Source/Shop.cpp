@@ -25,3 +25,10 @@ int Shop::getUpgradeCost(int upgradeType)
 {
     return upgradeCost[upgradeType];
 }
+
+void Shop::setUpgradeLevel(int speed, int capacity, int spawn)
+{
+    upgradeLevel[0] = speed;
+    upgradeLevel[1] = capacity;
+    upgradeLevel[2] = spawn;
+}

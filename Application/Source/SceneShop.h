@@ -27,10 +27,6 @@ public:
 	float translateX, translateY;
 	float scaleAll;
 
-	int translateXDir, translateYDir, rotateDir, scaleDir;
-
-	Color red, blue, green, pink, Lblue, purple, orange, yellow, cyan, magenta, moonshade;
-
 	int UI_height, UI_width;
 
 	enum GEOMETRY_TYPE //added (Step 1)

@@ -15,5 +15,8 @@ public:
 
     int getUpgradeLevel(int upgradeType);
     int getUpgradeCost(int upgradeType);
+
+    void setUpgradeLevel(int speed, int capacity, int spawn);
+
     Sound sound;
 };

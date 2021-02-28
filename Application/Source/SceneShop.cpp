@@ -46,18 +46,6 @@ void SceneShop::Init()
 	UI_width = 160;
 	UI_height = 90;
 
-	red.Set(1, 0, 0);
-	green.Set(0, 1, 0);
-	blue.Set(0, 0, 1);
-	pink.Set(1.0f, 0.55f, 0.6f);
-	Lblue.Set(0.1f, 0.1f, 1.0f);
-	purple.Set(0.6f, 0.5f, 1.0f);
-	orange.Set(0.89f, 0.66f, 0.41f);
-	yellow.Set(1, 1, 0);
-	cyan.Set(0, 1, 1);
-	magenta.Set(1, 0, 1);
-	moonshade.Set(0.93f, 0.93f, 0.88f);
-
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1000, 1000, 1000);
 
 	meshList[GEO_LIGHTBALL] = MeshBuilder::GenerateSphere("lightball", lights[0].color, 30, 30, 1);
@@ -189,16 +177,13 @@ void SceneShop::Init()
 	displayShopUI1 = false;
 	displayShopUI2 = false;
 	displayMessage = false;
+
+	shop.setUpgradeLevel(speed_level, capacity_level, spawn_level);
 }
 
 void SceneShop::Update(double dt)
 {
 	camera.Update(dt);
-
-	rotateAngle += (float)( 50 * dt);
-	translateX += (float)(translateXDir * 10 * dt);
-	translateY += (float)(translateYDir * 50 * dt);
-	scaleAll += (float)(scaleDir * 2 * dt);
 
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
@@ -326,7 +311,12 @@ void SceneShop::Update(double dt)
 		spacePressed = false;
 
 	if (Application::IsKeyPressed(VK_SHIFT))
+	{
+		speed_level = shop.getUpgradeLevel(0);
+		capacity_level = shop.getUpgradeLevel(1);
+		spawn_level = shop.getUpgradeLevel(2);
 		nextScene = true;
+	}
 }
 
 void SceneShop::Render()
