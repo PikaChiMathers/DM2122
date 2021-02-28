@@ -100,8 +100,8 @@ void SceneSearch::Init()
 
 	meshList[GEO_PROGRESS] = MeshBuilder::GenerateRevQuad("progress", Color(1, 1, 1), 1.f, 1.f);
 
-	meshList[GEO_INSTRUCTIONS] = MeshBuilder::GenerateRevQuad("Instructions", Color(1, 1, 1), 1, 1);
-	meshList[GEO_INSTRUCTIONS]->textureID = LoadTGA("Assets//search_instructions.tga");
+	meshList[GEO_POPUP] = MeshBuilder::GenerateRevQuad("Instructions", Color(1, 1, 1), 1, 1);
+	meshList[GEO_POPUP]->textureID = LoadTGA("Assets//search_instructions.tga");
 
 
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", Color(0, 0, 1), 1, 1, 1);
@@ -340,14 +340,26 @@ void SceneSearch::Render() //My Own Pattern
 
 		std::ostringstream ss;
 		ss.precision(3);
-		ss << "Timer left:" << (timer/3600) <<"m " << (timer%3600)/60 << "s";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 1), 3, 5, 85);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Passengers found:" + std::to_string(passenger_count), Color(0, 0, 1), 3, 5, 80);
+		ss << "Time left:" << (timer/3600) <<"m " << (timer%3600)/60 << "s";
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 3, 5, 85);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Passengers found:" + std::to_string(passenger_count), Color(0, 0, 0), 3, 5, 80);
 	}
 	else
 	{
-		RenderMeshOnScreen(meshList[GEO_INSTRUCTIONS], 80, 45, 120, 60);
+		RenderMeshOnScreen(meshList[GEO_POPUP], 80, 45, 120, 60);
 	}
+
+	if (timer <= 0)
+	{
+		meshList[GEO_POPUP]->textureID = LoadTGA("Assets//search_results.tga");
+		RenderMeshOnScreen(meshList[GEO_POPUP], 80, 45, 120, 60);
+		if (passenger_count > 0)
+			RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(passenger_count) + " passenger(s) joined the rest of the tour!", Color(0, 0, 0), 4, 30, 45);
+		else
+			RenderTextOnScreen(meshList[GEO_TEXT], "You could not find anyone to join the tour.", Color(0, 0, 0), 4, 30, 45);
+	}
+
+
 }
 
 void SceneSearch::Exit()
