@@ -43,6 +43,13 @@ void SceneMaster::Init()
 
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1000, 1000, 1000);
 
+	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("floor", Color(.39f, .39f, .39f), 1.f, 1.f);
+	meshList[GEO_QUAD]->textureID = LoadTGA("Image//carpet.tga");
+	meshList[GEO_QUAD]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	meshList[GEO_QUAD]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
+	meshList[GEO_QUAD]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
+	meshList[GEO_QUAD]->material.kShininess = 1.f;
+
 	meshList[GEO_LIGHTBALL] = MeshBuilder::GenerateSphere("lightball", lights[0].color, 30, 30, 1);
 
 	meshList[GEO_FRONT] = MeshBuilder::GenerateQuad("front", Color(1, 1, 1), 1.f, 1.f);
@@ -52,8 +59,20 @@ void SceneMaster::Init()
 	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left", Color(1, 1, 1), 1.f, 1.f);
 	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", Color(1, 1, 1), 1.f, 1.f);
 
+	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
+	meshList[GEO_TEXT]->textureID = LoadTGA("Image//trebuchet.tga");
+
+	meshList[GEO_UI] = MeshBuilder::GenerateRevQuad("UI", Color(1, 1, 1), 1.f, 1.f);
+
+	//main menu meshes
+	{
+		meshList[GEO_UI]->textureID = LoadTGA("Assets//start_down.tga");
+	}
+
 	//driving meshes
 	{
+		meshList[GEO_TEST_DRIVING] = MeshBuilder::GenerateOBJ("test", "OBJ//bus.obj", Color(1, 0, 0));
+
 		meshList[GEO_TEMPLATE_DRIVING] = MeshBuilder::GenerateQuad("template", Color(1, 1, 1), 1.f, 1.f);
 		meshList[GEO_TEMPLATE_DRIVING]->textureID = LoadTGA("Image//map_template.tga");
 
@@ -150,11 +169,6 @@ void SceneMaster::Init()
 		meshList[GEO_BUS_SHOP] = MeshBuilder::GenerateOBJ("bus", "OBJ//bus.obj", Color(0, 1, 1));
 	}
 
-	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
-	meshList[GEO_TEXT]->textureID = LoadTGA("Image//trebuchet.tga");
-
-	meshList[GEO_UI] = MeshBuilder::GenerateRevQuad("UI", Color(1, 1, 1), 1.f, 1.f);
-
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -216,6 +230,13 @@ void SceneMaster::Init()
 	glUniform1f(m_parameters[U_LIGHT0_EXPONENT], lights[0].exponent);
 
 	glEnable(GL_DEPTH_TEST);
+
+	//main menu init
+	{
+		buttonState = false;
+		timer_main_menu = 0;
+		timerTriggered = false;
+	}
 
 	//driving init
 	{
@@ -775,24 +796,40 @@ void SceneMaster::Update(double dt)
 	if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	if (scene_change) //skybox changes when scene changes
-	{
-		if (scene != TRIVIA)
-		{
-			meshList[GEO_FRONT]->textureID = LoadTGA((map.skybox_loc[0]).std::string::c_str());
-			meshList[GEO_BACK]->textureID = LoadTGA((map.skybox_loc[1]).std::string::c_str());
-			meshList[GEO_LEFT]->textureID = LoadTGA((map.skybox_loc[2]).std::string::c_str());
-			meshList[GEO_RIGHT]->textureID = LoadTGA((map.skybox_loc[3]).std::string::c_str());
-			meshList[GEO_TOP]->textureID = LoadTGA((map.skybox_loc[4]).std::string::c_str());
-			meshList[GEO_BOTTOM]->textureID = LoadTGA((map.skybox_loc[5]).std::string::c_str());
-		}
-
-		scene_change = false;
-	}
-
 	if (scene == MAIN_MENU)
 	{
+		if (timer_main_menu > 0)
+			timer_main_menu -= dt;
 
+		if (!buttonState && Application::IsMousePressed(0))
+		{
+			buttonState = true;
+		}
+		else if (buttonState && !Application::IsMousePressed(0))
+		{
+			buttonState = false;
+			double x, y;
+			Application::GetCursorPos(&x, &y);
+			int w = Application::GetWindowWidth();
+			int h = Application::GetWindowHeight();
+			float posX = x / 10;
+			float posY = 60 - (y / 10);
+			if (posX > 44 && posX < 85 && posY > 1 && posY < 23)
+			{
+				meshList[GEO_UI]->textureID = LoadTGA("Assets//start.tga");
+
+				if (timer_main_menu == 0)
+					timer_main_menu = 0.5;
+
+				timerTriggered = true;
+			}
+		}
+
+		if (timer_main_menu <= 0 && timerTriggered == true)
+		{
+			scene_change = true;
+			scene = DRIVING;
+		}
 	}
 	else if (scene == PAUSE_MENU)
 	{
@@ -1133,6 +1170,21 @@ void SceneMaster::Update(double dt)
 		if (spacePressed == true && !Application::IsKeyPressed(VK_SPACE))
 			spacePressed = false;
 	}
+
+	if (scene_change) //skybox changes when scene changes
+	{
+		if (scene != TRIVIA)
+		{
+			meshList[GEO_FRONT]->textureID = LoadTGA((map.skybox_loc[0]).std::string::c_str());
+			meshList[GEO_BACK]->textureID = LoadTGA((map.skybox_loc[1]).std::string::c_str());
+			meshList[GEO_LEFT]->textureID = LoadTGA((map.skybox_loc[2]).std::string::c_str());
+			meshList[GEO_RIGHT]->textureID = LoadTGA((map.skybox_loc[3]).std::string::c_str());
+			meshList[GEO_TOP]->textureID = LoadTGA((map.skybox_loc[4]).std::string::c_str());
+			meshList[GEO_BOTTOM]->textureID = LoadTGA((map.skybox_loc[5]).std::string::c_str());
+		}
+
+		scene_change = false;
+	}
 }
 
 void SceneMaster::Render()
@@ -1174,13 +1226,14 @@ void SceneMaster::Render()
 	Mtx44 mvp = projectionStack.Top() * viewStack.Top() * modelStack.Top();
 	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &mvp.a[0]); //update the shader with new MVP
 
-	RenderMesh(meshList[GEO_AXES], false);
-
-	RenderSkybox();
+	if (scene != MAIN_MENU && scene != PAUSE_MENU)
+	{
+		RenderSkybox();
+	}
 
 	if (scene == MAIN_MENU)
 	{
-
+		RenderMeshOnScreen(meshList[GEO_UI], 80, 45, 160, 90);
 	}
 	else if (scene == PAUSE_MENU)
 	{
@@ -1682,13 +1735,6 @@ void SceneMaster::RenderRoom()
 
 void SceneMaster::RenderCity()
 {
-	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);
-	modelStack.Rotate(-90, 1, 0, 0);
-	modelStack.Scale(1000, 1000, 1000);
-	RenderMesh(meshList[GEO_FLOOR_SEARCH], true);
-	modelStack.PopMatrix();
-
 	modelStack.PushMatrix();
 	modelStack.Translate(350, 0, 425);
 	modelStack.Rotate(-90, 0, 1, 0);
