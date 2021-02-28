@@ -173,7 +173,7 @@ private: //added (Step 2)
 	//Score score;
 	float coinRot;
 
-	bool startGame, endGame;
+	bool startGame, endGame, paused;
 
 
 	Light lights[NUM_LIGHTS];
