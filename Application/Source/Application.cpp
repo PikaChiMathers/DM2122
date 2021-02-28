@@ -54,6 +54,8 @@ Application::~Application()
 unsigned Application::m_width;
 unsigned Application::m_height;
 
+Application::ENUM_SCENE scene;
+
 void resize_callback(GLFWwindow* window, int w, int h)
 {
 	glViewport(0, 0, w, h); //update opengl the new window size
@@ -77,6 +79,14 @@ int Application::GetWindowWidth()
 int Application::GetWindowHeight()
 {
 	return m_height;
+}
+
+bool Application::changeScene = false;
+Application::ENUM_SCENE Application::scene;
+void Application::ChangeScene(ENUM_SCENE scene)
+{
+	Application::scene = scene;
+	Application::changeScene = true;
 }
 
 
@@ -156,6 +166,32 @@ void Application::Run()
 
 			scene_ptr->Init();
 		}
+		/*if (Application::changeScene)
+		{
+			switch (scene)
+			{
+			case Application::S_MAIN:
+				scene_ptr = new MainMenu;
+				break;
+			case Application::S_INTRO:
+				scene_ptr = new SceneIntro;
+				break;
+			case Application::S_DRIVE:
+				scene_ptr = new SceneDrive;
+				break;
+			case Application::S_TRIVIA:
+				scene_ptr = new SceneTrivia;
+				break;
+			case Application::S_SEARCH:
+				scene_ptr = new SceneSearch;
+				break;
+			case Application::S_SHOP:
+				scene_ptr = new MainMenu;
+				break;
+			default:
+				break;
+			}
+		}*/
 		scene_ptr->Update(m_timer.getElapsedTime());
 		scene_ptr->Render();
 		//Swap buffers

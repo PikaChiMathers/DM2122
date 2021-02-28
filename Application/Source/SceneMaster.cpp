@@ -1277,7 +1277,7 @@ void SceneMaster::Update(double dt)
 			prePausedScene = scene;
 		}
 	}
-}
+	}
 
 void SceneMaster::Render()
 {
