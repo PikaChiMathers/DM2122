@@ -16,7 +16,6 @@
 
 SceneIntro::SceneIntro()
 {
-	honk_count = 1;
 }
 
 SceneIntro::~SceneIntro()
@@ -32,8 +31,11 @@ void SceneIntro::Init()
 	boss.SetPosition(Position(0, -4, 0));
 	boss.SetScale(Scale(2, 4, 2));
 	manager.CreateGameObject(&bosscollider);
-	bosscollider.SetPosition(Position(0, -4, 0));
-	bosscollider.SetScale(Scale(7, 9, 7));
+	bosscollider.SetPosition(Position(0, 0, 0));
+	bosscollider.SetScale(Scale(8, 20, 8)); // 7 9 7 
+	honk_count = 1;
+	IsSpacePressed = false;
+	displayUI = false;
 
 	camera.Init(Vector3(-0.7, 39, -68), Vector3(-0.67, 38.65, -67), Vector3(0, 1, 0));
 	map.Set(Maps::SKYBOX_TYPE::SB_INTRO);
@@ -326,31 +328,54 @@ void SceneIntro::Update(double dt)
 		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
 	}
 
-	if (Application::IsKeyPressed(VK_SPACE))
-		if (dialogue->getCurrentLine() < dialogue->getTotalLines())
-			std::cout << dialogue->Update() << std::endl;
 
-	if (Application::IsKeyPressed(VK_SPACE))
+	/*if (IsSpacePressed == false && Application::IsKeyPressed(VK_SPACE))
+		IsSpacePressed = true;*/
+
+	if (IsSpacePressed == true && !Application::IsKeyPressed(VK_SPACE))
 	{
-		dialogue->Update();
+		IsSpacePressed = false;
+ 		/*if (bosscollider.IsTriggered())
+		{
+			std::cout << "triggerd";
+			if (dialogue->getCurrentLine() < dialogue->getTotalLines())
+			{
+				dialogue->Update();
+				displayUI = true;
+			}
+			else
+			{
+				displayUI = false;
+			}
+
 			if (dialogue->getPersonTalking() == "Boss Goose")
 			{
 				meshList[GEO_UI]->textureID = LoadTGA("Assets//Boss Dialogue Box.tga");
 			}
-			else if (dialogue->getPersonTalking() == "Boss Duck")
-			{
-				meshList[GEO_UI]->textureID = LoadTGA("Assets//Duck Dialogue Box.tga");
-			}
+		}
+		IsSpacePressed = false;*/
 	}
-
-	if (bosscollider.IsTriggered())
+		
+	if (bosscollider.IsTriggered() && IsSpacePressed == false)
 	{
-		std::cout << "boss triggered" ;
-	}
+		IsSpacePressed = true;
+		std::cout << "triggerd";
+		if (dialogue->getCurrentLine() < dialogue->getTotalLines())
+		{
+			dialogue->Update();
+			displayUI = true;
+		}
+		else
+		{
+			displayUI = false;
+		}
 
-	//if (dialogue->getPersonTalking() = 2)
-	//{
-	//}
+		if (dialogue->getPersonTalking() == "Boss Goose")
+		{
+			meshList[GEO_UI]->textureID = LoadTGA("Assets//Boss_Dialogue_Box.tga");
+		}
+	}
+	
 }
 
 void SceneIntro::Render() //My Own Pattern
@@ -435,7 +460,7 @@ void SceneIntro::Render() //My Own Pattern
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(goose.GetPositionX()*2, goose.GetPositionY(), goose.GetPositionZ()*2);
+	modelStack.Translate(goose.GetPositionX() * 2, goose.GetPositionY(), goose.GetPositionZ() * 2);
 	modelStack.Rotate(goose.GetRotateX(), 1, 0, 0);
 	modelStack.Rotate(goose.GetRotateY(), 0, 1, 0);
 	modelStack.Rotate(goose.GetRotateZ(), 0, 0, 1);
@@ -463,6 +488,9 @@ void SceneIntro::Render() //My Own Pattern
 	modelStack.Scale(3, 3, 3);
 	RenderMesh(meshList[GEO_PINKLILY], true);
 	modelStack.PopMatrix();
+
+	if(displayUI == true)
+		RenderMeshOnScreen(meshList[GEO_UI], 80, 10, 90, 50);
 
 
 	/*RenderMeshOnScreen(meshList[GEO_SPLASH], 1, 1, 10, 10);*/
