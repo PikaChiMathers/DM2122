@@ -104,6 +104,7 @@ void SceneDrive::Init()
 
 	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("goose", "OBJ//goose.obj", Color(1 ,1, 1));
 	meshList[GEO_PASSPORT] = MeshBuilder::GenerateOBJMTL("passport", "OBJ//passport.obj", "OBJ//passport.mtl");
+	meshList[GEO_NPC] = MeshBuilder::GenerateOBJ("npc", "OBJ//among_us.obj", Color(.2, .9, .6));
 
 	meshList[GEO_BUILDING1] = MeshBuilder::GenerateOBJMTL("building1", "OBJ//short_apartment.obj", "OBJ//short_apartment.mtl");
 	meshList[GEO_BUILDING1]->textureID = LoadTGA("Image//apartment.tga");
@@ -1161,8 +1162,8 @@ void SceneDrive::Render() //My Own Pattern
 						modelStack.PopMatrix();
 						continue;
 					}					
-					modelStack.Scale(gameObject->GetScaleX(), gameObject->GetScaleY(), gameObject->GetScaleZ());
-					RenderMesh(meshList[GEO_CUBE], false);
+					modelStack.Scale(.03f, .03f, .03f);
+					RenderMesh(meshList[GEO_NPC], true);
 				}
 			modelStack.PopMatrix();
 			modelStack.Scale(gameObject->GetScaleX(), gameObject->GetScaleY(), gameObject->GetScaleZ());
