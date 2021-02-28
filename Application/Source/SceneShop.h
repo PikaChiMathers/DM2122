@@ -27,8 +27,6 @@ public:
 	float translateX, translateY;
 	float scaleAll;
 
-	float fps;
-
 	int translateXDir, translateYDir, rotateDir, scaleDir;
 
 	Color red, blue, green, pink, Lblue, purple, orange, yellow, cyan, magenta, moonshade;

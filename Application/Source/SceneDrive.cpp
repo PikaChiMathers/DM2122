@@ -45,26 +45,7 @@ void SceneDrive::Init()
 	UI_width = 160;
 	UI_height = 90;
 
-	red.Set(1, 0, 0);
-	green.Set(0, 1, 0);
-	blue.Set(0, 0, 1);
-	pink.Set(1.0f, 0.55f, 0.6f);
-	Lblue.Set(0.1f, 0.1f, 1.0f);
-	purple.Set(0.6f, 0.5f, 1.0f);
-	orange.Set(0.89f, 0.66f, 0.41f);
-	yellow.Set(1, 1, 0);
-	cyan.Set(0, 1, 1);
-	magenta.Set(1, 0, 1);
-
-	moonshade.Set(0.93f, 0.93f, 0.88f);
-
 	meshList[GEO_TEST] = MeshBuilder::GenerateOBJ("test", "OBJ//bus.obj", Color(1, 0, 0));
-
-	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("Rsphere", red, 30, 30, 1);
-	meshList[GEO_SPHERE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
-	meshList[GEO_SPHERE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	meshList[GEO_SPHERE]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
-	meshList[GEO_SPHERE]->material.kShininess = 1.f;
 
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1000, 1000, 1000);
 
@@ -91,13 +72,6 @@ void SceneDrive::Init()
 
 	meshList[GEO_OVERLAY] = MeshBuilder::GenerateRevQuad("overlay", Color(1, 1, 1), 1.f, 1.f);
 	meshList[GEO_OVERLAY]->textureID = LoadTGA("Image//overlay.tga");
-
-	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", blue, 1, 1, 1);
-	meshList[GEO_CUBE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
-	meshList[GEO_CUBE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	meshList[GEO_CUBE]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
-	meshList[GEO_CUBE]->material.kShininess = 1.f;
-	meshList[GEO_CUBE]->textureID = LoadTGA("Image//muscle_capoo.tga");
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//trebuchet.tga");
@@ -689,8 +663,6 @@ void SceneDrive::Update(double dt)
 	camera.Update(dt);
 	camera.SetChase(&bus); // use only for cameraChase
 
-	fps = 1.0f / dt;
-
 	coinRot += coinRot > 360 ? (180 * dt) - 360 : 180 * dt;
 
 	if (!startGame) // not yet started. show how to play
@@ -1064,10 +1036,6 @@ void SceneDrive::Render() //My Own Pattern
 			if (toggleHitBox) RenderMesh(meshList[GEO_CUBE], false); // hitbox
 		modelStack.PopMatrix();
 	}
-
-	std::ostringstream ss;
-	ss.precision(5);
-	ss << "FPS: " << fps;
 	
 	if (endGame)
 	{
@@ -1102,7 +1070,6 @@ void SceneDrive::Render() //My Own Pattern
 	}
 	else
 	{
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, Application::GetWindowHeight() * .1f);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Passengers:" + std::to_string(bus.GetPassengerCount()), Color(0, 0, 1), 3, 0, 87);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Money Collected:" + std::to_string(bus.GetMoneyCurrent()), Color(1, 0, 0), 3, 0, 84);
 		RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(static_cast<int>(endpoint.GetTime())), Color(1, 0, 0), 8, 74, 82);
