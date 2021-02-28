@@ -153,6 +153,10 @@ private: //added (Step 2)
 	ColliderObj* borderCol[4];
 	Border* border[4];
 	Money* coins[38];
+
+	Person* npc[15];
+	Position npcSpawn[15];
+
 	Bus bus;
 	DriveObjective endpoint;
 

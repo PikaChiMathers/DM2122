@@ -648,6 +648,30 @@ void SceneDrive::Init()
 	coins[36]->SetPosition(Position(-11.7, 0, 37.2));
 	coins[37]->SetPosition(Position(-0.5, 0, 90));
 
+	npcSpawn[0] = Position(-64, 0, 123);
+	npcSpawn[1] = Position(-64, 0, 63);
+	npcSpawn[2] = Position(-64, 0, 19);
+	npcSpawn[3] = Position(-64, 0, -15);
+	npcSpawn[4] = Position(-64, 0, -80);
+	npcSpawn[5] = Position(-64, 0, -126);
+	npcSpawn[6] = Position(-121, 0, 89);
+	npcSpawn[7] = Position(-85, 0, 39);
+	npcSpawn[8] = Position(-85, 0, -57);
+	npcSpawn[9] = Position(-7, 0, -88);
+	npcSpawn[10] = Position(103, 0, 52);
+	npcSpawn[11] = Position(106, 0, 100);
+	npcSpawn[12] = Position(-10, 0, 103);
+	npcSpawn[13] = Position(39, 0, 32);
+	npcSpawn[14] = Position(-26, 0, -43);
+	for (int i = 0; i < sizeof(npc) / sizeof(*npc); i++)
+	{
+		npc[i] = new Person;
+		npc[i]->SetPosition(npcSpawn[i]);
+		npc[i]->SetPlayer(&bus);
+		npc[i]->SetScale(Scale(3.5f, 3.5f, 3.5f));
+		manager.CreateGameObject(npc[i]);
+	}
+
 	//temp.SetTag("Temp");
 	//manager.CreateGameObject(&temp);
 	TestRef = &bus;
@@ -1128,6 +1152,17 @@ void SceneDrive::Render() //My Own Pattern
 					modelStack.Scale(10, 10, 10);
 					modelStack.Rotate(coinRot, 0, 1, 0);
 					RenderMesh(meshList[GEO_COIN], true);
+				}
+				else if (gameObject->Type() == "Person")
+				{
+					if (abs((Vector3(gameObject->GetPositionX(), gameObject->GetPositionY(), gameObject->GetPositionZ()) - Vector3(bus.GetPositionX(), bus.GetPositionY(), bus.GetPositionZ())).Length()) > 100)
+					{ // dont render if GO is aprox. out of view
+						modelStack.PopMatrix();
+						modelStack.PopMatrix();
+						continue;
+					}					
+					modelStack.Scale(gameObject->GetScaleX(), gameObject->GetScaleY(), gameObject->GetScaleZ());
+					RenderMesh(meshList[GEO_CUBE], false);
 				}
 			modelStack.PopMatrix();
 			modelStack.Scale(gameObject->GetScaleX(), gameObject->GetScaleY(), gameObject->GetScaleZ());

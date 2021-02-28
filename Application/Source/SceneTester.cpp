@@ -12,7 +12,7 @@
 #include "Application.h"
 
 
-SceneTester::SceneTester() : person(Vector3(0, 0, 0))
+SceneTester::SceneTester()// : person(Vector3(0, 0, 0))
 {
 }
 
@@ -251,7 +251,7 @@ void SceneTester::Update(double dt)
 	manager.GameObjectManagerUpdate(dt);
 	camera.Update(dt);
 
-	person.Update(dt);
+	//person.Update(dt);
 
 	fps = 1.0f / dt;
 
