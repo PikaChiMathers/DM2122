@@ -337,8 +337,6 @@ void SceneSearch::Render() //My Own Pattern
 	Mtx44 mvp = projectionStack.Top() * viewStack.Top() * modelStack.Top();
 	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &mvp.a[0]); //update the shader with new MVP
 
-	RenderMesh(meshList[GEO_AXES], false);
-
 	modelStack.PushMatrix();
 	modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
 	RenderMesh(meshList[GEO_LIGHTBALL], false);
