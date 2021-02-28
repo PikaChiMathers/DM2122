@@ -33,9 +33,6 @@ public:
 
 	int UI_height, UI_width;
 
-	int colCount = 0;
-	bool colEnter = false;
-
 
 	enum GEOMETRY_TYPE //added (Step 1)
 	{
@@ -124,13 +121,15 @@ private: //added (Step 2)
 	Target* camera;
 
 	bool game_start;
+	bool game_pause;
 
 	int current_target;
 	// press_time (ensures that A or D key presses are only registered as 1 press each time)
 	// spam_time (ensures that spacebar presses are only registered as 1 press each time)
+	// esc_time (ensures that the esc button press is only registered as 1 press each time)
 	//press_count (counts the number of spacebar presses the player has done)
 	//passenger_count (stores the number of passengers found)
-	int press_time, spam_time, press_count, passenger_count;
+	int press_time, spam_time, esc_time, press_count, passenger_count;
 
 	int timer;
 
