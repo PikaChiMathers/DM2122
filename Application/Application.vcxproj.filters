@@ -88,9 +88,6 @@
     <ClCompile Include="Source\SceneIntro.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SceneMaster.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\SceneSearch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -220,9 +217,6 @@
       <Filter>Header FIles</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneIntro.h">
-      <Filter>Header FIles</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\SceneMaster.h">
       <Filter>Header FIles</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneSearch.h">
