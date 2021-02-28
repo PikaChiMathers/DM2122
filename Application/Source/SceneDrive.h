@@ -9,7 +9,7 @@
 #include "MatrixStack.h"
 #include "Vertex.h"
 #include "Light.h"
-
+#include "Sound.h"
 #include "GameObjectManager.h"
 #include "Bus.h"
 #include "ColliderObj.h"
@@ -44,7 +44,9 @@ public:
 	bool scene_change;
 
 	int UI_height, UI_width;
-
+	int honk_count;
+	bool honkerdonker = false;
+	Sound sound;
 
 	enum GEOMETRY_TYPE //added (Step 1)
 	{
@@ -150,7 +152,7 @@ private: //added (Step 2)
 	ColliderObj* cluster[51];
 	ColliderObj* borderCol[4];
 	Border* border[4];
-	Money* coins[50];
+	Money* coins[38];
 	Bus bus;
 	DriveObjective endpoint;
 

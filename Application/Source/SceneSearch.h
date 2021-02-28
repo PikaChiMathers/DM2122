@@ -46,7 +46,7 @@ public:
 
 		GEO_CUBE,
 
-		GEO_INSTRUCTIONS,
+		GEO_POPUP,
 
 		GEO_MALL,
 		GEO_BUILDING1,
