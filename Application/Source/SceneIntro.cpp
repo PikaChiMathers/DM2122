@@ -235,7 +235,7 @@ void SceneIntro::Init()
 void SceneIntro::Update(double dt)
 {
 	
-	goose.GameObjectUpdate(dt);
+	manager.GameObjectManagerUpdate(dt);
 	camera.Update(dt);
 	
 
