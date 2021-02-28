@@ -1,4 +1,3 @@
-#define LSPEED 10.f
 #include "SceneMaster.h"
 #include "GL\glew.h"
 
@@ -22,9 +21,9 @@ SceneMaster::~SceneMaster()
 
 void SceneMaster::Init()
 {
-	camera.Init(Vector3(9.5f, 3, 6), Vector3(0, 3, 0), Vector3(0, 1, 0));
-	camera.setShopBound(Vector3(-18.85f, 2, -8.35f), Vector3(18.85f, 4, 8.35f));
-	camera.setBusBound(Vector3(-13.5f, 2, -4), Vector3(13.5f, 4, 4));
+	camera4.Init(Vector3(9.5f, 3, 6), Vector3(0, 3, 0), Vector3(0, 1, 0));
+	camera4.setShopBound(Vector3(-18.85f, 2, -8.35f), Vector3(18.85f, 4, 8.35f));
+	camera4.setBusBound(Vector3(-13.5f, 2, -4), Vector3(13.5f, 4, 4));
 
 	map.Set(Maps::SKYBOX_TYPE::SB_SHOP);
 
@@ -45,18 +44,6 @@ void SceneMaster::Init()
 
 	UI_width = 160;
 	UI_height = 90;
-
-	red.Set(1, 0, 0);
-	green.Set(0, 1, 0);
-	blue.Set(0, 0, 1);
-	pink.Set(1.0f, 0.55f, 0.6f);
-	Lblue.Set(0.1f, 0.1f, 1.0f);
-	purple.Set(0.6f, 0.5f, 1.0f);
-	orange.Set(0.89f, 0.66f, 0.41f);
-	yellow.Set(1, 1, 0);
-	cyan.Set(0, 1, 1);
-	magenta.Set(1, 0, 1);
-	moonshade.Set(0.93f, 0.93f, 0.88f);
 
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1000, 1000, 1000);
 
@@ -101,18 +88,6 @@ void SceneMaster::Init()
 	m_parameters[U_LIGHT0_COSCUTOFF] = glGetUniformLocation(m_programID, "lights[0].cosCutoff");
 	m_parameters[U_LIGHT0_COSINNER] = glGetUniformLocation(m_programID, "lights[0].cosInner");
 	m_parameters[U_LIGHT0_EXPONENT] = glGetUniformLocation(m_programID, "lights[0].exponent");
-
-	m_parameters[U_LIGHT1_POSITION] = glGetUniformLocation(m_programID, "lights[1].position_cameraspace");
-	m_parameters[U_LIGHT1_COLOR] = glGetUniformLocation(m_programID, "lights[1].color");
-	m_parameters[U_LIGHT1_POWER] = glGetUniformLocation(m_programID, "lights[1].power");
-	m_parameters[U_LIGHT1_KC] = glGetUniformLocation(m_programID, "lights[1].kC");
-	m_parameters[U_LIGHT1_KL] = glGetUniformLocation(m_programID, "lights[1].kL");
-	m_parameters[U_LIGHT1_KQ] = glGetUniformLocation(m_programID, "lights[1].kQ");
-	m_parameters[U_LIGHT1_TYPE] = glGetUniformLocation(m_programID, "lights[1].type");
-	m_parameters[U_LIGHT1_SPOTDIRECTION] = glGetUniformLocation(m_programID, "lights[1].spotDirection");
-	m_parameters[U_LIGHT1_COSCUTOFF] = glGetUniformLocation(m_programID, "lights[1].cosCutoff");
-	m_parameters[U_LIGHT1_COSINNER] = glGetUniformLocation(m_programID, "lights[1].cosInner");
-	m_parameters[U_LIGHT1_EXPONENT] = glGetUniformLocation(m_programID, "lights[1].exponent");
 
 	m_parameters[U_LIGHTENABLED] = glGetUniformLocation(m_programID, "lightEnabled");
 	m_parameters[U_NUMLIGHTS] = glGetUniformLocation(m_programID, "numLights");
@@ -160,16 +135,6 @@ void SceneMaster::Init()
 	glUniform1f(m_parameters[U_LIGHT0_COSINNER], lights[0].cosInner);
 	glUniform1f(m_parameters[U_LIGHT0_EXPONENT], lights[0].exponent);
 
-	glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
-	glUniform3fv(m_parameters[U_LIGHT1_COLOR], 1, &lights[1].color.r);
-	glUniform1f(m_parameters[U_LIGHT1_POWER], lights[1].power);
-	glUniform1f(m_parameters[U_LIGHT1_KC], lights[1].kC);
-	glUniform1f(m_parameters[U_LIGHT1_KL], lights[1].kL);
-	glUniform1f(m_parameters[U_LIGHT1_KQ], lights[1].kQ);
-	glUniform1f(m_parameters[U_LIGHT1_COSCUTOFF], lights[1].cosCutoff);
-	glUniform1f(m_parameters[U_LIGHT1_COSINNER], lights[1].cosInner);
-	glUniform1f(m_parameters[U_LIGHT1_EXPONENT], lights[1].exponent);
-
 	glEnable(GL_DEPTH_TEST);
 
 	//shop init
@@ -183,7 +148,7 @@ void SceneMaster::Init()
 
 void SceneMaster::Update(double dt)
 {
-	camera.Update(dt);
+	camera4.Update(dt);
 
 	fps = 1.0f / dt;
 
@@ -242,7 +207,7 @@ void SceneMaster::Update(double dt)
 		bool canUpgrade0 = false;
 		bool canUpgrade1 = false;
 		bool canUpgrade2 = false;
-		if (camera.position.x > -13.5 && camera.position.z > -8.35 && camera.position.x < 13.5 && camera.position.z < 8.35)
+		if (camera4.position.x > -13.5 && camera4.position.z > -8.35 && camera4.position.x < 13.5 && camera4.position.z < 8.35)
 		{
 			displayShopUI0 = true;
 
@@ -262,7 +227,7 @@ void SceneMaster::Update(double dt)
 			if (shop.getUpgradeLevel(0) < 5)
 				canUpgrade0 = true;
 		}
-		else if (camera.position.x > 13.5 && camera.position.z > -4 && camera.position.x < 18.85 && camera.position.z < 4)
+		else if (camera4.position.x > 13.5 && camera4.position.z > -4 && camera4.position.x < 18.85 && camera4.position.z < 4)
 		{
 			displayShopUI1 = true;
 
@@ -282,7 +247,7 @@ void SceneMaster::Update(double dt)
 			if (shop.getUpgradeLevel(1) != 5)
 				canUpgrade1 = true;
 		}
-		else if (camera.position.x > -18.85 && camera.position.z > -8.35 && camera.position.x < -13.5 && camera.position.z < 4)
+		else if (camera4.position.x > -18.85 && camera4.position.z > -8.35 && camera4.position.x < -13.5 && camera4.position.z < 4)
 		{
 			displayShopUI2 = true;
 
@@ -350,9 +315,7 @@ void SceneMaster::Render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	viewStack.LoadIdentity();
-	viewStack.LookAt(camera.position.x,	camera.position.y,	camera.position.z,
-					 camera.target.x,	camera.target.y,	camera.target.z,
-					 camera.up.x,		camera.up.y,		camera.up.z		  );
+	viewStack.LookAt(camera4.position.x, camera4.position.y, camera4.position.z, camera4.target.x, camera4.target.y, camera4.target.z,camera4.up.x,	camera4.up.y, camera4.up.z);
 	modelStack.LoadIdentity();
 
 	if (lights[0].type == Light::LIGHT_DIRECTIONAL)
@@ -372,25 +335,6 @@ void SceneMaster::Render()
 	{
 		Position lightPosition_cameraspace = viewStack.Top() * lights[0].position;
 		glUniform3fv(m_parameters[U_LIGHT0_POSITION], 1, &lightPosition_cameraspace.x);
-	}
-
-	if (lights[1].type == Light::LIGHT_DIRECTIONAL)
-	{
-		Vector3 lightDir(lights[1].position.x, lights[1].position.y, lights[1].position.z);
-		Vector3 lightDirection_cameraspace = viewStack.Top() * lightDir;
-		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightDirection_cameraspace.x);
-	}
-	else if (lights[1].type == Light::LIGHT_SPOT)
-	{
-		Position lightPosition_cameraspace = viewStack.Top() * lights[1].position;
-		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightPosition_cameraspace.x);
-		Vector3 spotDirection_cameraspace = viewStack.Top() * lights[1].spotDirection;
-		glUniform3fv(m_parameters[U_LIGHT1_SPOTDIRECTION], 1, &spotDirection_cameraspace.x);
-	}
-	else
-	{
-		Position lightPosition_cameraspace = viewStack.Top() * lights[1].position;
-		glUniform3fv(m_parameters[U_LIGHT1_POSITION], 1, &lightPosition_cameraspace.x);
 	}
 
 	Mtx44 mvp = projectionStack.Top() * viewStack.Top() * modelStack.Top();
@@ -435,7 +379,7 @@ void SceneMaster::Render()
 		modelStack.PushMatrix();
 		modelStack.Rotate(90, 0, 1, 0);
 		modelStack.Scale(0.07f, 0.07f, 0.07f);
-		RenderMesh(meshList[GEO_BUS_SHOP], lights[0].isOn);
+		RenderMesh(meshList[GEO_BUS_SHOP], true);
 		modelStack.PopMatrix();
 
 		//render UI
