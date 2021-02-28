@@ -195,6 +195,7 @@ private:
 	//pause menu variables
 	bool game_pause;
 	bool pausePressed;
+	unsigned prePausedScene;
 
 	//driving variables
 	int honk_count;
