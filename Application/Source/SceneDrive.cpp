@@ -89,7 +89,7 @@ void SceneDrive::Init()
 	meshList[GEO_BORDER] = MeshBuilder::GenerateQuad("border", Color(1, 1, 1), 1.f, 1.f);
 	meshList[GEO_BORDER]->textureID = LoadTGA("Image//border.tga");
 
-	meshList[GEO_OVERLAY] = MeshBuilder::GenerateQuad("overlay", Color(1, 1, 1), 1.f, 1.f);
+	meshList[GEO_OVERLAY] = MeshBuilder::GenerateRevQuad("overlay", Color(1, 1, 1), 1.f, 1.f);
 	meshList[GEO_OVERLAY]->textureID = LoadTGA("Image//overlay.tga");
 
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", blue, 1, 1, 1);
@@ -680,7 +680,7 @@ void SceneDrive::Init()
 	//manager.CreateGameObject(&temp);
 	TestRef = &bus;
 
-	startGame = endGame = false;
+	startGame = endGame = paused = false;
 }
 
 void SceneDrive::Update(double dt)
@@ -698,7 +698,7 @@ void SceneDrive::Update(double dt)
 		if (Application::IsKeyPressed(VK_SPACE)) 
 		{// starts the game
 			startGame = true;
-			endpoint.SetTimer(60);
+			endpoint.SetTimer(30);
 			endpoint.StartTimer();
 		}
 	}
@@ -713,10 +713,14 @@ void SceneDrive::Update(double dt)
 	else
 	{// ongoing game
 		endGame = (endpoint.GetTime() <= 0); // end game if timer ends
-		if (Application::IsKeyPressed('Q'))
+		if (Application::IsKeyPressed('P') && toggleTime <= 0)
 		{
-			endpoint.SetTimer(1);
+			paused = !paused;
+			if (paused) endpoint.PauseTimer();
+			else endpoint.StartTimer();
+			toggleTime = .3;
 		}
+		else if (toggleTime > 0) toggleTime -= dt;
 	}
 
 	if (Application::IsKeyPressed(VK_SPACE) && honk_count == 1 && !honkerdonker)
@@ -1070,10 +1074,29 @@ void SceneDrive::Render() //My Own Pattern
 		RenderTextOnScreen(meshList[GEO_TEXT], "Passengers:" + std::to_string(bus.GetPassengerCount()), Color(0, 0, 1), 4, 50, 50);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Money Collected:" + std::to_string(bus.GetMoneyCurrent()), Color(1, 0, 0), 4, 40, 46);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Total Money:" + std::to_string(Bus::GetMoney()), Color(1, 1, 0), 4, 45, 42);
+
+		RenderTextOnScreen(meshList[GEO_TEXT], "Press Space to Continue", Color(1, 0, 0), 7, 0, 0);
 	}
 	else if (!startGame)
 	{
+		RenderMeshOnScreen(meshList[GEO_OVERLAY], 80, 45, 1000, 1000);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Insert Title", Color(1, 0, 0), 8, 50, 82);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Objective: pick up as many passengers", Color(0, 1, 0), 4, 5, 54);
+		RenderTextOnScreen(meshList[GEO_TEXT], "as you can before time runs out", Color(0, 1, 0), 4, 20, 50);
+		RenderTextOnScreen(meshList[GEO_TEXT], "pick up coins while you're at it", Color(0, 1, 0), 4, 15, 46);
+		RenderTextOnScreen(meshList[GEO_TEXT], "W - S: move Foward/Backward", Color(0, 1, .5), 3, 55, 30);
+		RenderTextOnScreen(meshList[GEO_TEXT], "A - D: steer", Color(0, 1, .5), 3, 55, 27);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Shift: drift", Color(0, 1, .5), 3, 55, 24);
+
 		RenderTextOnScreen(meshList[GEO_TEXT], "Press Space to Begin", Color(1, 0, 0), 8, 0, 0);
+	}
+	else if (paused)
+	{
+		RenderMeshOnScreen(meshList[GEO_OVERLAY], 80, 45, 1000, 1000);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Paused", Color(1, 0, 0), 8, 53, 82);
+		RenderTextOnScreen(meshList[GEO_TEXT], "W - S: move Foward/Backward", Color(0, 1, .5), 3, 55, 30);
+		RenderTextOnScreen(meshList[GEO_TEXT], "A - D: steer", Color(0, 1, .5), 3, 55, 27);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Shift: drift", Color(0, 1, .5), 3, 55, 24);
 	}
 	else
 	{
@@ -1275,7 +1298,7 @@ void SceneDrive::RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int siz
 	modelStack.PushMatrix();
 	modelStack.LoadIdentity();
 	modelStack.Translate(x, y, 0);
-	modelStack.Rotate(180, 1, 0, 0);
+	//modelStack.Rotate(180, 1, 0, 0);
 	modelStack.Scale(sizex, sizey, 1);
 	RenderMesh(mesh, false); //UI should not have light
 	projectionStack.PopMatrix();
