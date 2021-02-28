@@ -1050,7 +1050,7 @@ void SceneDrive::Render() //My Own Pattern
 	else if (!startGame)
 	{
 		RenderMeshOnScreen(meshList[GEO_OVERLAY], 80, 45, 1000, 1000);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Insert Title", Color(1, 0, 0), 8, 50, 82);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Drive", Color(1, 0, 0), 8, 50, 82);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Objective: pick up as many passengers", Color(0, 1, 0), 4, 5, 54);
 		RenderTextOnScreen(meshList[GEO_TEXT], "as you can before time runs out", Color(0, 1, 0), 4, 20, 50);
 		RenderTextOnScreen(meshList[GEO_TEXT], "pick up coins while you're at it", Color(0, 1, 0), 4, 15, 46);
