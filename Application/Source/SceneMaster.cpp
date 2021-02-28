@@ -729,6 +729,9 @@ void SceneMaster::Init()
 		Qn_str = dialogue->Update(); //Qn_str will first be Updated to Show the Theme of Trivia
 
 		answer = ""; //Initializes answer to be blank
+
+		timer_minigame = 0;
+		minigameTimerTriggered = false;
 	}
 
 	//search init
@@ -1022,6 +1025,22 @@ void SceneMaster::Update(double dt)
 					passengers = -(5 - score); //loses passengers if wrong info was given
 				if (score >= 8)
 					passengers = score - 5; //gains passengers if tour is interesting
+
+				if (timer_minigame <= 0)
+				{
+					scene_change = true;
+					scene = SHOP;
+					map.Set(Maps::SKYBOX_TYPE::SB_SHOP);
+				}
+
+				if (timer_minigame > 0)
+					timer_minigame -= dt;
+
+				if (minigameTimerTriggered == false)
+				{
+					timer_minigame = 3;
+					minigameTimerTriggered = true;
+				}
 			}
 		}
 		else if (scene == SEARCH)
@@ -1094,6 +1113,24 @@ void SceneMaster::Update(double dt)
 				}
 				else
 					spam_time = 0;
+			}
+			else
+			{
+				if (timer_minigame <= 0)
+				{
+					scene_change = true;
+					scene = SHOP;
+					map.Set(Maps::SKYBOX_TYPE::SB_SHOP);
+				}
+
+				if (timer_minigame > 0)
+					timer_minigame -= dt;
+
+				if (minigameTimerTriggered == false)
+				{
+					timer_minigame = 3;
+					minigameTimerTriggered = true;
+				}
 			}
 		}
 		else if (scene == SHOP)
@@ -1201,6 +1238,18 @@ void SceneMaster::Update(double dt)
 
 			if (spacePressed == true && !Application::IsKeyPressed(VK_SPACE))
 				spacePressed = false;
+
+			if (enterPressed == false && Application::IsKeyPressed(VK_LSHIFT))
+			{
+				enterPressed == true;
+
+				scene_change = true;
+				scene = DRIVING;
+				map.Set(Maps::SKYBOX_TYPE::SB_DAY);
+			}
+
+			if (enterPressed == true && !Application::IsKeyPressed(VK_LSHIFT))
+				enterPressed == false;
 		}
 
 		if (scene_change) //skybox changes when scene changes
