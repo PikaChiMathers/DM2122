@@ -195,6 +195,9 @@ private:
 
 	int passengers;
 
+	double timer_minigame; //for swapping scene
+	bool minigameTimerTriggered;
+
 	//main menu variables
 	bool buttonState;
 	double timer_main_menu;
@@ -280,6 +283,7 @@ private:
 
 	double timer_shop;
 	bool spacePressed;
+	bool enterPressed;
 
 	//shared
 	void RenderMesh(Mesh* mesh, bool enableLight);
