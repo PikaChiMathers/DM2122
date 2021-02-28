@@ -770,420 +770,418 @@ void SceneMaster::Init()
 
 void SceneMaster::Update(double dt)
 {
-	if (scene == DRIVING)
+	if (game_pause == true)
 	{
-		camera_driving.Update(dt);
-		camera_driving.SetChase(&bus); // use only for cameraChase
+		
 	}
-	if (scene == TRIVIA)
-		camera_trivia.Update(dt);
-	if (scene == SHOP)
-		camera_shop.Update(dt);
-
-	fps = 1.0 / dt;
-
-	rotateAngle += (float)( 50 * dt);
-	translateX += (float)(translateXDir * 10 * dt);
-	translateY += (float)(translateYDir * 50 * dt);
-	scaleAll += (float)(scaleDir * 2 * dt);
-
-	if (Application::IsKeyPressed('1'))
-		glEnable(GL_CULL_FACE);
-	if (Application::IsKeyPressed('2'))
-		glDisable(GL_CULL_FACE);
-	if (Application::IsKeyPressed('3'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	if (Application::IsKeyPressed('4'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	if (scene == MAIN_MENU)
+	else
 	{
-		if (timer_main_menu > 0)
-			timer_main_menu -= dt;
-
-		if (!buttonState && Application::IsMousePressed(0))
+		if (scene == DRIVING)
 		{
-			buttonState = true;
+			camera_driving.Update(dt);
+			camera_driving.SetChase(&bus);
 		}
-		else if (buttonState && !Application::IsMousePressed(0))
+		if (scene == TRIVIA)
+			camera_trivia.Update(dt);
+		if (scene == SHOP)
+			camera_shop.Update(dt);
+
+		fps = 1.0 / dt;
+
+		rotateAngle += (float)(50 * dt);
+		translateX += (float)(translateXDir * 10 * dt);
+		translateY += (float)(translateYDir * 50 * dt);
+		scaleAll += (float)(scaleDir * 2 * dt);
+
+		if (Application::IsKeyPressed('1'))
+			glEnable(GL_CULL_FACE);
+		if (Application::IsKeyPressed('2'))
+			glDisable(GL_CULL_FACE);
+		if (Application::IsKeyPressed('3'))
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		if (Application::IsKeyPressed('4'))
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+		if (scene == MAIN_MENU)
 		{
-			buttonState = false;
-			double x, y;
-			Application::GetCursorPos(&x, &y);
-			int w = Application::GetWindowWidth();
-			int h = Application::GetWindowHeight();
-			float posX = x / 10;
-			float posY = 60 - (y / 10);
-			if (posX > 44 && posX < 85 && posY > 1 && posY < 23)
+			if (timer_main_menu > 0)
+				timer_main_menu -= dt;
+
+			if (!buttonState && Application::IsMousePressed(0))
 			{
-				meshList[GEO_UI]->textureID = LoadTGA("Assets//start.tga");
-
-				if (timer_main_menu == 0)
-					timer_main_menu = 0.5;
-
-				timerTriggered = true;
+				buttonState = true;
 			}
-		}
-
-		if (timer_main_menu <= 0 && timerTriggered == true)
-		{
-			scene_change = true;
-			scene = DRIVING;
-		}
-	}
-	else if (scene == PAUSE_MENU)
-	{
-
-	}
-	else if (scene == INTRO)
-	{
-
-	}
-	else if (scene == DRIVING)
-	{
-		manager_driving.GameObjectManagerUpdate(dt);
-
-		coinRot += coinRot > 360 ? (180 * dt) - 360 : 180 * dt;
-
-		if (!startGame) // not yet started. show how to play
-		{
-			if (Application::IsKeyPressed(VK_SPACE))
+			else if (buttonState && !Application::IsMousePressed(0))
 			{
-				// starts the game
-				startGame = true;
-				endpoint.SetTimer(30);
-				endpoint.StartTimer();
-			}
-		}
-
-		if (endGame)
-		{
-			// if game ended
-			if (Application::IsKeyPressed(VK_SPACE))
-			{
-				//go to next scene
-			}
-		}
-		else
-		{
-			// ongoing game
-			endGame = (endpoint.GetTime() <= 0); // end game if timer ends
-			if (Application::IsKeyPressed('P') && toggleTime <= 0)
-			{
-				paused = !paused;
-				if (paused) endpoint.PauseTimer();
-				else endpoint.StartTimer();
-				toggleTime = .3;
-			}
-			else if (toggleTime > 0) toggleTime -= dt;
-		}
-
-		if (Application::IsKeyPressed(VK_SPACE) && honk_count == 1 && !honkerdonker)
-		{
-			honkerdonker = true;
-			sound.Engine()->play2D("media/honk_1.wav");
-			honk_count++;
-		}
-
-		else if (Application::IsKeyPressed(VK_SPACE) && honk_count == 2 && !honkerdonker)
-		{
-			honkerdonker = true;
-			sound.Engine()->play2D("media/honk_2.wav");
-			honk_count++;
-		}
-
-		else if (Application::IsKeyPressed(VK_SPACE) && honk_count == 3 && !honkerdonker)
-		{
-			honkerdonker = true;
-			sound.Engine()->play2D("media/honk_3.wav");
-			honk_count++;
-		}
-
-		else if (Application::IsKeyPressed(VK_SPACE) && honk_count == 4 && !honkerdonker)
-		{
-			honkerdonker = true;
-			sound.Engine()->play2D("media/honk_4.wav");
-			honk_count++;
-		}
-
-		else if (Application::IsKeyPressed(VK_SPACE) && honk_count == 5 && !honkerdonker)
-		{
-			honkerdonker = true;
-			sound.Engine()->play2D("media/honk_5.wav");
-			honk_count = 1;
-		}
-		else if (!Application::IsKeyPressed(VK_SPACE) && honkerdonker)
-		{
-			honkerdonker = false;
-		}
-	}
-	else if (scene == TRIVIA)
-	{
-		manager_trivia.GameObjectManagerUpdate(dt);
-
-		if (qn_num == 10) //To set the spotlight and drumroll for the final qn
-		{
-			if (!sound.Engine()->isCurrentlyPlaying(("media/drumroll.ogg"))) //loops drumroll until players answers qn
-				sound.Engine()->play2D("media/drumroll.ogg");
-			lights[0].type = Light::LIGHT_SPOT;
-			glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-		}
-		else if (qn_num > 10)
-		{
-			if (!play_once)
-			{
-				sound.Engine()->stopAllSounds();
-				if (score >= 8)
+				buttonState = false;
+				double x, y;
+				Application::GetCursorPos(&x, &y);
+				int w = Application::GetWindowWidth();
+				int h = Application::GetWindowHeight();
+				float posX = x / 10;
+				float posY = 60 - (y / 10);
+				if (posX > 44 && posX < 85 && posY > 1 && posY < 23)
 				{
-					sound.Engine()->play2D("media/hooray.ogg");
-				}
-				else if (score < 5)
-					sound.Engine()->play2D("media/sad_trumbone.ogg");
-				else
-					sound.Engine()->play2D("media/slow_clap.ogg");
+					meshList[GEO_UI]->textureID = LoadTGA("Assets//start.tga");
 
-				play_once = true;
+					if (timer_main_menu == 0)
+						timer_main_menu = 0.5;
+
+					timerTriggered = true;
+				}
+			}
+
+			if (timer_main_menu <= 0 && timerTriggered == true)
+			{
+				scene_change = true;
+				scene = DRIVING;
+				map.Set(Maps::SKYBOX_TYPE::SB_DAY);
 			}
 		}
-
-		if (Application::IsKeyPressed(VK_SPACE))
+		else if (scene == INTRO)
 		{
-			press_time_trivia++;
-			if (press_time_trivia == 1) // To ensure that the Spacebar is only pressed once
+
+		}
+		else if (scene == DRIVING)
+		{
+			manager_driving.GameObjectManagerUpdate(dt);
+
+			coinRot += coinRot > 360 ? (180 * dt) - 360 : 180 * dt;
+
+			if (!startGame) // not yet started. show how to play
 			{
+				if (Application::IsKeyPressed(VK_SPACE))
+				{
+					// starts the game
+					startGame = true;
+					endpoint.SetTimer(30);
+					endpoint.StartTimer();
+				}
+			}
+
+			if (endGame)
+			{
+				// if game ended
+				if (Application::IsKeyPressed(VK_SPACE))
+				{
+					//go to next scene
+				}
+			}
+			else
+			{
+				// ongoing game
+				endGame = (endpoint.GetTime() <= 0); // end game if timer ends
+				if (toggleTime > 0) toggleTime -= dt;
+			}
+
+			if (Application::IsKeyPressed(VK_SPACE) && honk_count == 1 && !honkerdonker)
+			{
+				honkerdonker = true;
 				sound.Engine()->play2D("media/honk_1.wav");
+				honk_count++;
+			}
 
-				if (qn_num <= 10)
-				{
-					//checks which answer was chosen
-					if (T_A.IsTriggered())
-						answer = dialogue->getChoice1();
+			else if (Application::IsKeyPressed(VK_SPACE) && honk_count == 2 && !honkerdonker)
+			{
+				honkerdonker = true;
+				sound.Engine()->play2D("media/honk_2.wav");
+				honk_count++;
+			}
 
-					else if (T_B.IsTriggered())
-						answer = dialogue->getChoice2();
+			else if (Application::IsKeyPressed(VK_SPACE) && honk_count == 3 && !honkerdonker)
+			{
+				honkerdonker = true;
+				sound.Engine()->play2D("media/honk_3.wav");
+				honk_count++;
+			}
 
-					else if (T_C.IsTriggered())
-						answer = dialogue->getChoice3();
+			else if (Application::IsKeyPressed(VK_SPACE) && honk_count == 4 && !honkerdonker)
+			{
+				honkerdonker = true;
+				sound.Engine()->play2D("media/honk_4.wav");
+				honk_count++;
+			}
 
-					else
-						answer = "";
-
-					if (answer != "")
-					{ //changes the qn and checks if the answer is correct
-						qn_num++;
-						if (qn_num != 0)
-							Check_Answer();
-					}
-
-					if (qn_num == 0)
-					{
-						qn_num++;
-						Qn_str = dialogue->Update();
-					}
-				}
+			else if (Application::IsKeyPressed(VK_SPACE) && honk_count == 5 && !honkerdonker)
+			{
+				honkerdonker = true;
+				sound.Engine()->play2D("media/honk_5.wav");
+				honk_count = 1;
+			}
+			else if (!Application::IsKeyPressed(VK_SPACE) && honkerdonker)
+			{
+				honkerdonker = false;
 			}
 		}
-		else press_time_trivia = 0;
+		else if (scene == TRIVIA)
+		{
+			manager_trivia.GameObjectManagerUpdate(dt);
 
-		if (qn_num > 10) // to check if all 10 qns were answered
-		{
-			if (score < 5)
-				passengers = -(5 - score); //loses passengers if wrong info was given
-			if (score >= 8)
-				passengers = score - 5; //gains passengers if tour is interesting
-		}
-	}
-	else if (scene == SEARCH)
-	{
-		if (timer_search > 0)
-		{
-			if (game_start)
+			if (qn_num == 10) //To set the spotlight and drumroll for the final qn
 			{
-				timer_search--;
-				if (press_count == 0)
+				if (!sound.Engine()->isCurrentlyPlaying(("media/drumroll.ogg"))) //loops drumroll until players answers qn
+					sound.Engine()->play2D("media/drumroll.ogg");
+				lights[0].type = Light::LIGHT_SPOT;
+				glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
+			}
+			else if (qn_num > 10)
+			{
+				if (!play_once)
 				{
-					if (Application::IsKeyPressed(VK_LEFT) || Application::IsKeyPressed(VK_RIGHT))
-					{ //changes location
-						press_time_search++;
-						if (press_time_search == 1)
-						{
-							if (Application::IsKeyPressed(VK_LEFT))
-								current_target--;
-							if (Application::IsKeyPressed(VK_RIGHT))
-								current_target++;
-
-							if (current_target < 0)
-								current_target = 15;
-							if (current_target >= 16)
-								current_target = 0;
-						}
+					sound.Engine()->stopAllSounds();
+					if (score >= 8)
+					{
+						sound.Engine()->play2D("media/hooray.ogg");
 					}
+					else if (score < 5)
+						sound.Engine()->play2D("media/sad_trumbone.ogg");
 					else
-						press_time_search = 0;
+						sound.Engine()->play2D("media/slow_clap.ogg");
 
-					camera_search = &targets[current_target];
-				}
-
-				//Updates the percentage of the building
-				if (press_count >= 25)
-					camera_search->progress = 25;
-				if (press_count >= 50)
-					camera_search->progress = 50;
-				if (press_count >= 75)
-					camera_search->progress = 75;
-				if (press_count >= 100)
-				{
-					camera_search->progress = 100;
-					press_count = 0;
-					passenger_count += camera_search->num_passengers;
-					camera_search->has_checked = true;
+					play_once = true;
 				}
 			}
 
 			if (Application::IsKeyPressed(VK_SPACE))
 			{
-				spam_time++;
-				if (spam_time == 1)
+				press_time_trivia++;
+				if (press_time_trivia == 1) // To ensure that the Spacebar is only pressed once
 				{
-					if (game_start)
-					{
-						if (!camera_search->has_checked && press_count < 100)
-						{
-							//Randomizes Honk sounds
-							std::string sound_file = "media/honk_" + std::to_string(rand() % 5 + 1) + ".wav";
-							sound.Engine()->play2D(sound_file.std::string::c_str());
+					sound.Engine()->play2D("media/honk_1.wav");
 
-							press_count++;
+					if (qn_num <= 10)
+					{
+						//checks which answer was chosen
+						if (T_A.IsTriggered())
+							answer = dialogue->getChoice1();
+
+						else if (T_B.IsTriggered())
+							answer = dialogue->getChoice2();
+
+						else if (T_C.IsTriggered())
+							answer = dialogue->getChoice3();
+
+						else
+							answer = "";
+
+						if (answer != "")
+						{ //changes the qn and checks if the answer is correct
+							qn_num++;
+							if (qn_num != 0)
+								Check_Answer();
+						}
+
+						if (qn_num == 0)
+						{
+							qn_num++;
+							Qn_str = dialogue->Update();
 						}
 					}
-					else
-						game_start = true;
 				}
 			}
+			else press_time_trivia = 0;
+
+			if (qn_num > 10) // to check if all 10 qns were answered
+			{
+				if (score < 5)
+					passengers = -(5 - score); //loses passengers if wrong info was given
+				if (score >= 8)
+					passengers = score - 5; //gains passengers if tour is interesting
+			}
+		}
+		else if (scene == SEARCH)
+		{
+			if (timer_search > 0)
+			{
+				if (game_start)
+				{
+					timer_search--;
+					if (press_count == 0)
+					{
+						if (Application::IsKeyPressed(VK_LEFT) || Application::IsKeyPressed(VK_RIGHT))
+						{
+							//changes location
+							press_time_search++;
+							if (press_time_search == 1)
+							{
+								if (Application::IsKeyPressed(VK_LEFT))
+									current_target--;
+								if (Application::IsKeyPressed(VK_RIGHT))
+									current_target++;
+
+								if (current_target < 0)
+									current_target = 15;
+								if (current_target >= 16)
+									current_target = 0;
+							}
+						}
+						else
+							press_time_search = 0;
+
+						camera_search = &targets[current_target];
+					}
+
+					//Updates the percentage of the building
+					if (press_count >= 25)
+						camera_search->progress = 25;
+					if (press_count >= 50)
+						camera_search->progress = 50;
+					if (press_count >= 75)
+						camera_search->progress = 75;
+					if (press_count >= 100)
+					{
+						camera_search->progress = 100;
+						press_count = 0;
+						passenger_count += camera_search->num_passengers;
+						camera_search->has_checked = true;
+					}
+				}
+
+				if (Application::IsKeyPressed(VK_SPACE))
+				{
+					spam_time++;
+					if (spam_time == 1)
+					{
+						if (game_start)
+						{
+							if (!camera_search->has_checked && press_count < 100)
+							{
+								//Randomizes Honk sounds
+								std::string sound_file = "media/honk_" + std::to_string(rand() % 5 + 1) + ".wav";
+								sound.Engine()->play2D(sound_file.std::string::c_str());
+
+								press_count++;
+							}
+						}
+						else
+							game_start = true;
+					}
+				}
+				else
+					spam_time = 0;
+			}
+		}
+		else if (scene == SHOP)
+		{
+			bool canUpgrade0 = false;
+			bool canUpgrade1 = false;
+			bool canUpgrade2 = false;
+			if (camera_shop.position.x > -13.5 && camera_shop.position.z > -8.35 && camera_shop.position.x < 13.5 && camera_shop.position.z < 8.35)
+			{
+				displayShopUI0 = true;
+
+				if (shop.getUpgradeLevel(0) == 0)
+					meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 0.tga");
+				else if (shop.getUpgradeLevel(0) == 1)
+					meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 1.tga");
+				else if (shop.getUpgradeLevel(0) == 2)
+					meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 2.tga");
+				else if (shop.getUpgradeLevel(0) == 3)
+					meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 3.tga");
+				else if (shop.getUpgradeLevel(0) == 4)
+					meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 4.tga");
+				else if (shop.getUpgradeLevel(0) == 5)
+					meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 5.tga");
+
+				if (shop.getUpgradeLevel(0) < 5)
+					canUpgrade0 = true;
+			}
+			else if (camera_shop.position.x > 13.5 && camera_shop.position.z > -4 && camera_shop.position.x < 18.85 && camera_shop.position.z < 4)
+			{
+				displayShopUI1 = true;
+
+				if (shop.getUpgradeLevel(1) == 0)
+					meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 0.tga");
+				else if (shop.getUpgradeLevel(1) == 1)
+					meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 1.tga");
+				else if (shop.getUpgradeLevel(1) == 2)
+					meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 2.tga");
+				else if (shop.getUpgradeLevel(1) == 3)
+					meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 3.tga");
+				else if (shop.getUpgradeLevel(1) == 4)
+					meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 4.tga");
+				else if (shop.getUpgradeLevel(1) == 5)
+					meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 5.tga");
+
+				if (shop.getUpgradeLevel(1) != 5)
+					canUpgrade1 = true;
+			}
+			else if (camera_shop.position.x > -18.85 && camera_shop.position.z > -8.35 && camera_shop.position.x < -13.5 && camera_shop.position.z < 4)
+			{
+				displayShopUI2 = true;
+
+				if (shop.getUpgradeLevel(2) == 0)
+					meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 0.tga");
+				else if (shop.getUpgradeLevel(2) == 1)
+					meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 1.tga");
+				else if (shop.getUpgradeLevel(2) == 2)
+					meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 2.tga");
+				else if (shop.getUpgradeLevel(2) == 3)
+					meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 3.tga");
+				else if (shop.getUpgradeLevel(2) == 4)
+					meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 4.tga");
+				else if (shop.getUpgradeLevel(2) == 5)
+					meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 5.tga");
+
+				if (shop.getUpgradeLevel(2) != 5)
+					canUpgrade2 = true;
+			}
 			else
-				spam_time = 0;
-		}
-	}
-	else if (scene == SHOP)
-	{
-		bool canUpgrade0 = false;
-		bool canUpgrade1 = false;
-		bool canUpgrade2 = false;
-		if (camera_shop.position.x > -13.5 && camera_shop.position.z > -8.35 && camera_shop.position.x < 13.5 && camera_shop.position.z < 8.35)
-		{
-			displayShopUI0 = true;
-
-			if (shop.getUpgradeLevel(0) == 0)
-				meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 0.tga");
-			else if (shop.getUpgradeLevel(0) == 1)
-				meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 1.tga");
-			else if (shop.getUpgradeLevel(0) == 2)
-				meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 2.tga");
-			else if (shop.getUpgradeLevel(0) == 3)
-				meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 3.tga");
-			else if (shop.getUpgradeLevel(0) == 4)
-				meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 4.tga");
-			else if (shop.getUpgradeLevel(0) == 5)
-				meshList[GEO_UI]->textureID = LoadTGA("Assets//max speed 5.tga");
-
-			if (shop.getUpgradeLevel(0) < 5)
-				canUpgrade0 = true;
-		}
-		else if (camera_shop.position.x > 13.5 && camera_shop.position.z > -4 && camera_shop.position.x < 18.85 && camera_shop.position.z < 4)
-		{
-			displayShopUI1 = true;
-
-			if (shop.getUpgradeLevel(1) == 0)
-				meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 0.tga");
-			else if (shop.getUpgradeLevel(1) == 1)
-				meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 1.tga");
-			else if (shop.getUpgradeLevel(1) == 2)
-				meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 2.tga");
-			else if (shop.getUpgradeLevel(1) == 3)
-				meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 3.tga");
-			else if (shop.getUpgradeLevel(1) == 4)
-				meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 4.tga");
-			else if (shop.getUpgradeLevel(1) == 5)
-				meshList[GEO_UI]->textureID = LoadTGA("Assets//max capacity 5.tga");
-
-			if (shop.getUpgradeLevel(1) != 5)
-				canUpgrade1 = true;
-		}
-		else if (camera_shop.position.x > -18.85 && camera_shop.position.z > -8.35 && camera_shop.position.x < -13.5 && camera_shop.position.z < 4)
-		{
-			displayShopUI2 = true;
-
-			if (shop.getUpgradeLevel(2) == 0)
-				meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 0.tga");
-			else if (shop.getUpgradeLevel(2) == 1)
-				meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 1.tga");
-			else if (shop.getUpgradeLevel(2) == 2)
-				meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 2.tga");
-			else if (shop.getUpgradeLevel(2) == 3)
-				meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 3.tga");
-			else if (shop.getUpgradeLevel(2) == 4)
-				meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 4.tga");
-			else if (shop.getUpgradeLevel(2) == 5)
-				meshList[GEO_UI]->textureID = LoadTGA("Assets//item spawn 5.tga");
-
-			if (shop.getUpgradeLevel(2) != 5)
-				canUpgrade2 = true;
-		}
-		else
-		{
-			displayShopUI0 = false;
-			displayShopUI1 = false;
-			displayShopUI2 = false;
-		}
-
-		if (timer_shop > 0)
-			timer_shop -= dt;
-		else
-			displayMessage = false;
-
-		if (spacePressed == false && Application::IsKeyPressed(VK_SPACE))
-		{
-			spacePressed = true;
-
-			if (canUpgrade0 == true && money >= shop.getUpgradeCost(0))
 			{
-				money -= shop.getUpgradeCost(0);
-				shop.upgrade(0);
+				displayShopUI0 = false;
+				displayShopUI1 = false;
+				displayShopUI2 = false;
 			}
-			else if (canUpgrade1 == true && money >= shop.getUpgradeCost(1))
-			{
-				money -= shop.getUpgradeCost(1);
-				shop.upgrade(1);
-			}
-			else if (canUpgrade2 == true && money >= shop.getUpgradeCost(2))
-			{
-				money -= shop.getUpgradeCost(2);
-				shop.upgrade(2);
-			}
+
+			if (timer_shop > 0)
+				timer_shop -= dt;
 			else
+				displayMessage = false;
+
+			if (spacePressed == false && Application::IsKeyPressed(VK_SPACE))
 			{
-				displayMessage = true;
-				timer_shop = 1;
+				spacePressed = true;
+
+				if (canUpgrade0 == true && money >= shop.getUpgradeCost(0))
+				{
+					money -= shop.getUpgradeCost(0);
+					shop.upgrade(0);
+				}
+				else if (canUpgrade1 == true && money >= shop.getUpgradeCost(1))
+				{
+					money -= shop.getUpgradeCost(1);
+					shop.upgrade(1);
+				}
+				else if (canUpgrade2 == true && money >= shop.getUpgradeCost(2))
+				{
+					money -= shop.getUpgradeCost(2);
+					shop.upgrade(2);
+				}
+				else
+				{
+					displayMessage = true;
+					timer_shop = 1;
+				}
 			}
+
+			if (spacePressed == true && !Application::IsKeyPressed(VK_SPACE))
+				spacePressed = false;
 		}
 
-		if (spacePressed == true && !Application::IsKeyPressed(VK_SPACE))
-			spacePressed = false;
-	}
-
-	if (scene_change) //skybox changes when scene changes
-	{
-		if (scene != TRIVIA)
+		if (scene_change) //skybox changes when scene changes
 		{
-			meshList[GEO_FRONT]->textureID = LoadTGA((map.skybox_loc[0]).std::string::c_str());
-			meshList[GEO_BACK]->textureID = LoadTGA((map.skybox_loc[1]).std::string::c_str());
-			meshList[GEO_LEFT]->textureID = LoadTGA((map.skybox_loc[2]).std::string::c_str());
-			meshList[GEO_RIGHT]->textureID = LoadTGA((map.skybox_loc[3]).std::string::c_str());
-			meshList[GEO_TOP]->textureID = LoadTGA((map.skybox_loc[4]).std::string::c_str());
-			meshList[GEO_BOTTOM]->textureID = LoadTGA((map.skybox_loc[5]).std::string::c_str());
-		}
+			if (scene != TRIVIA)
+			{
+				meshList[GEO_FRONT]->textureID = LoadTGA((map.skybox_loc[0]).std::string::c_str());
+				meshList[GEO_BACK]->textureID = LoadTGA((map.skybox_loc[1]).std::string::c_str());
+				meshList[GEO_LEFT]->textureID = LoadTGA((map.skybox_loc[2]).std::string::c_str());
+				meshList[GEO_RIGHT]->textureID = LoadTGA((map.skybox_loc[3]).std::string::c_str());
+				meshList[GEO_TOP]->textureID = LoadTGA((map.skybox_loc[4]).std::string::c_str());
+				meshList[GEO_BOTTOM]->textureID = LoadTGA((map.skybox_loc[5]).std::string::c_str());
+			}
 
-		scene_change = false;
+			scene_change = false;
+		}
 	}
 }
 
