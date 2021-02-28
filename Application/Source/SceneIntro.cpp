@@ -26,6 +26,10 @@ SceneIntro::~SceneIntro()
 
 void SceneIntro::Init()
 {
+	manager.CreateGameObject(&goose);
+	goose.SetPosition(Position (-20, -3, 0));
+	manager.CreateGameObject(&boss);
+
 	camera.Init(Vector3(40, 30, 30), Vector3(0, 0, 0), Vector3(0, 1, 0));
 	map.Set(Maps::SKYBOX_TYPE::SB_INTRO);
 
@@ -84,7 +88,7 @@ void SceneIntro::Init()
 	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left", Color(1, 1, 1), 1.f, 1.f);
 	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", Color(1, 1, 1), 1.f, 1.f);
 
-	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("ground", Color(.39f, .39f, .39f), 1.f, 1.f);
+	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("ground", Color(.73f, 1.f, 1.f), 1.f, 1.f);
 	meshList[GEO_QUAD]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
 	meshList[GEO_QUAD]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
 	meshList[GEO_QUAD]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
@@ -104,7 +108,11 @@ void SceneIntro::Init()
 	meshList[GEO_SPLASH] = MeshBuilder::GenerateQuad("splash", blue, 1, 1);
 	meshList[GEO_SPLASH]->textureID = LoadTGA("Assets//start.tga");
 
-	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("goose", "OBJ//goose.obj", Color(1, 1, 1));
+	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("Goose", "OBJ//goose.obj", Color(.93f, .79f, 0));
+	meshList[GEO_GOOSE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	meshList[GEO_GOOSE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
+	meshList[GEO_GOOSE]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
+	meshList[GEO_GOOSE]->material.kShininess = 1.f;
 
 
 	glEnable(GL_CULL_FACE);
@@ -165,9 +173,9 @@ void SceneIntro::Init()
 
 
 	lights[0].type = Light::LIGHT_POINT;
-	lights[0].position.Set(0, 20, 0);
+	lights[0].position.Set(0, 48, 0);
 	lights[0].color.Set(1, 1, 1);
-	lights[0].power = 1;
+	lights[0].power = 4;
 	lights[0].kC = 1.f;
 	lights[0].kL = 0.01f;
 	lights[0].kQ = 0.001f;
@@ -227,9 +235,9 @@ void SceneIntro::Init()
 void SceneIntro::Update(double dt)
 {
 	
-	
+	goose.GameObjectUpdate(dt);
 	camera.Update(dt);
-
+	
 
 	fps = 1.0f / dt;
 
@@ -493,7 +501,6 @@ void SceneIntro::Render() //My Own Pattern
 
 	RenderMesh(meshList[GEO_AXES], false);
 
-	RenderMeshOnScreen(meshList[GEO_UI], 80, 50, 1, 1);
 
 	modelStack.PushMatrix();
 	modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
@@ -503,7 +510,7 @@ void SceneIntro::Render() //My Own Pattern
 
 	modelStack.PushMatrix();
 	modelStack.Translate(0, -.1f, 0);
-	modelStack.Rotate(90, 1, 0, 0);
+	modelStack.Rotate(-90, 1, 0, 0);
 	modelStack.Scale(200, 200, 200);
 	RenderMesh(meshList[GEO_QUAD], lights[0].isOn);
 	modelStack.PopMatrix();
@@ -514,8 +521,12 @@ void SceneIntro::Render() //My Own Pattern
 	//modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
+	modelStack.Translate(goose.GetPositionX()*2, goose.GetPositionY(), goose.GetPositionZ()*2);
+	modelStack.Rotate(goose.GetRotateX(), 1, 0, 0);
+	modelStack.Rotate(goose.GetRotateY(), 0, 1, 0);
+	modelStack.Rotate(goose.GetRotateZ(), 0, 0, 1);
+	modelStack.Scale(1.5f, 1.5f, 1.5f);
 	RenderMesh(meshList[GEO_GOOSE], true);
-	modelStack.Scale(0.8, 0, 0);
 	modelStack.PopMatrix();
 
 	RenderMeshOnScreen(meshList[GEO_SPLASH], 1, 1, 10, 10);
@@ -580,42 +591,47 @@ void SceneIntro::RenderMesh(Mesh* mesh, bool enableLight)
 void SceneIntro::RenderSkybox()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(49, 50, 0);
-	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Translate(49, 0, 0);
+	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Rotate(-180, 1, 0, 0);
 	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_FRONT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-49, 50, 0);
-	modelStack.Rotate(90, 0, 1, 0);
+	modelStack.Translate(-49, 0, 0);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Rotate(-180, 1, 0, 0);
 	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_BACK], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 50, 49);
-	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Translate(0, 0, 49);
+	modelStack.Rotate(-180, 1, 0, 0);
 	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_LEFT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 50, -49);
+	modelStack.Translate(0, 0, -49);
+	modelStack.Rotate(-180, 1, 0, 0);
+	modelStack.Rotate(-180, 0, 1, 0);
 	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_RIGHT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 0);
+	modelStack.Translate(0, -49, 0);
 	modelStack.Rotate(-90, 1, 0, 0);
 	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_BOTTOM], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 98, 0);
+	modelStack.Translate(0, 49, 0);
 	modelStack.Rotate(90, 1, 0, 0);
+	//modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_TOP], false);
 	modelStack.PopMatrix();
