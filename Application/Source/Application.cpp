@@ -151,6 +151,7 @@ void Application::Run()
 		{
 			if (sceneType == SHOP)
 			{ //Only takes level ups from shop
+				money = scene_ptr->money;
 				speed_level = scene_ptr->speed_level;
 				spawn_level = scene_ptr->spawn_level;
 				capacity_level = scene_ptr->capacity_level;
