@@ -69,6 +69,12 @@ void SceneMaster::Init()
 		meshList[GEO_UI]->textureID = LoadTGA("Assets//start_down.tga");
 	}
 
+	//pause menu meshes
+	{
+		meshList[GEO_OVERLAY] = MeshBuilder::GenerateRevQuad("overlay", Color(1, 1, 1), 1.f, 1.f);
+		meshList[GEO_OVERLAY]->textureID = LoadTGA("Image//overlay.tga");
+	}
+
 	//driving meshes
 	{
 		meshList[GEO_TEST_DRIVING] = MeshBuilder::GenerateOBJ("test", "OBJ//bus.obj", Color(1, 0, 0));
