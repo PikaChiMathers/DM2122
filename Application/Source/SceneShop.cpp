@@ -400,7 +400,8 @@ void SceneShop::Render()
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 87);
+	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 82);
+	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(money), Color(0, 1, 0), 3, 1, 87);
 
 	if (displayShopUI0)
 	{
