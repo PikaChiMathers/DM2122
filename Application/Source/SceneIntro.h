@@ -30,18 +30,6 @@ public:
 	virtual void Render();
 	virtual void Exit();
 
-	float rotateAngle;
-	float translateX, translateY;
-	float scaleAll;
-
-	float fps;
-
-	float x_value, y_value, z_value;
-
-	int translateXDir, translateYDir, rotateDir, scaleDir;
-
-	Color red, blue, green, pink, Lblue, purple, orange, yellow, cyan, magenta, moonshade;
-
 	bool scene_change;
 
 	int UI_height, UI_width;
@@ -61,6 +49,7 @@ public:
 		GEO_QUAD,
 		GEO_CUBE,
 		GEO_GOOSE,
+		GEO_BOSS,
 
 		GEO_LIGHTBALL,
 		GEO_SPHERE,
@@ -77,6 +66,7 @@ public:
 		GEO_TEXT,
 		GEO_UI,
 		GEO_TEST,
+		GEO_PINKLILY,
 
 		NUM_GEOMETRY,
 	};
