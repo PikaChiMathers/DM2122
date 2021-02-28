@@ -772,7 +772,14 @@ void SceneMaster::Update(double dt)
 {
 	if (game_pause == true)
 	{
-		
+		scene = PAUSE_MENU;
+
+		if (!pausePressed && Application::IsKeyPressed('P'))
+			game_pause = false;
+
+		if (pausePressed && !Application::IsKeyPressed('P'))
+			pausePressed = false;
+
 	}
 	else
 	{
@@ -1182,6 +1189,12 @@ void SceneMaster::Update(double dt)
 
 			scene_change = false;
 		}
+
+		if (Application::IsKeyPressed('P') && scene != MAIN_MENU)
+		{
+			game_pause = true;
+			pausePressed == true;
+		}
 	}
 }
 
@@ -1235,7 +1248,8 @@ void SceneMaster::Render()
 	}
 	else if (scene == PAUSE_MENU)
 	{
-
+		RenderMeshOnScreen(meshList[GEO_OVERLAY], 80, 45, 1000, 1000);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Paused", Color(1, 0, 0), 8, 53, 82);
 	}
 	else if (scene == INTRO)
 	{

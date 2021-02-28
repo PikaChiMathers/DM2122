@@ -55,6 +55,8 @@ public:
 
 		GEO_QUAD,
 
+		GEO_OVERLAY,
+
 		GEO_TEMPLATE_DRIVING,
 		GEO_BORDER_DRIVING,
 		GEO_OVERLAY_DRIVING,
@@ -192,6 +194,7 @@ private:
 
 	//pause menu variables
 	bool game_pause;
+	bool pausePressed;
 
 	//driving variables
 	int honk_count;
