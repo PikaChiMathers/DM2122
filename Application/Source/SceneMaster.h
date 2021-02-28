@@ -60,7 +60,6 @@ public:
 		GEO_OVERLAY_DRIVING,
 		GEO_CUBE_DRIVING,
 		GEO_COIN_DRIVING,
-		GEO_GOOSE_DRIVING,
 		GEO_NPC_DRIVING,
 		GEO_BUILDING1_DRIVING,
 		GEO_BUILDING2_DRIVING,
@@ -87,13 +86,9 @@ public:
 		GEO_BUILDING3_SEARCH,
 		GEO_BUILDING4_SEARCH,
 		GEO_BUILDING5_SEARCH,
-		GEO_BUILDING6_SEARCH,
-		GEO_BUILDING7_SEARCH,
-		GEO_BUILDING8_SEARCH,
 		GEO_BUSSTOP_SEARCH,
 		GEO_TREE1_SEARCH,
 		GEO_TREE2_SEARCH,
-		GEO_FLOOR_SEARCH,
 
 		GEO_BUS_SHOP,
 
@@ -189,6 +184,11 @@ private:
 	Sound sound;
 
 	int passengers;
+
+	//main menu variables
+	bool buttonState;
+	double timer_main_menu;
+	bool timerTriggered;
 
 	//driving variables
 	int honk_count;
