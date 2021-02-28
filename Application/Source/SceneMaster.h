@@ -59,6 +59,7 @@ public:
 
 		GEO_TARGET_SEARCH,
 		GEO_PROGRESS_SEARCH,
+		GEO_POPUP_SEARCH,
 		GEO_MALL_SEARCH,
 		GEO_BUILDING1_SEARCH,
 		GEO_BUILDING2_SEARCH,
@@ -149,11 +150,14 @@ private:
 	//scene type
 	unsigned scene;
 
-	//general camera
-	Camera3 camera3;
+	//trivia camera
+	Camera3 camera_trivia;
+
+	//search camera
+	Target* camera_search;
 
 	//shop camera
-	Camera4 camera4;
+	Camera4 camera_shop;
 
 	//general variables
 	Dialogue* dialogue;
@@ -184,8 +188,6 @@ private:
 	//search variables
 	int colCount = 0;
 	bool colEnter = false;
-
-	Target* camera;
 
 	bool game_start;
 

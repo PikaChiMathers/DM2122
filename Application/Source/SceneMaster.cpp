@@ -129,7 +129,7 @@ void SceneMaster::Init()
 
 	glUseProgram(m_programID);
 
-	lights[0].type = Light::LIGHT_DIRECTIONAL;
+	lights[0].type = Light::LIGHT_DIRECTIONAL; //to be changed
 	lights[0].position.Set(0, 10, 0);
 	lights[0].color.Set(1, 1, 1);
 	lights[0].power = 3;
@@ -156,7 +156,7 @@ void SceneMaster::Init()
 
 	//trivia init
 	{
-		camera3.Init(Vector3(0, 9.2f, -23), Vector3(0, 9.15f, -22), Vector3(0, 1, 0.05f));
+		camera_trivia.Init(Vector3(0, 9.2f, -23), Vector3(0, 9.15f, -22), Vector3(0, 1, 0.05f));
 
 		manager.CreateGameObject(&goose);
 
@@ -240,14 +240,14 @@ void SceneMaster::Init()
 		}
 
 		current_target = press_count = passenger_count = press_time_search = spam_time = 0;
-		camera = &targets[0];
+		camera_search = &targets[0];
 	}
 
 	//shop init
 	{
-		camera4.Init(Vector3(9.5f, 3, 6), Vector3(0, 3, 0), Vector3(0, 1, 0));
-		camera4.setShopBound(Vector3(-18.85f, 2, -8.35f), Vector3(18.85f, 4, 8.35f));
-		camera4.setBusBound(Vector3(-13.5f, 2, -4), Vector3(13.5f, 4, 4));
+		camera_shop.Init(Vector3(9.5f, 3, 6), Vector3(0, 3, 0), Vector3(0, 1, 0));
+		camera_shop.setShopBound(Vector3(-18.85f, 2, -8.35f), Vector3(18.85f, 4, 8.35f));
+		camera_shop.setBusBound(Vector3(-13.5f, 2, -4), Vector3(13.5f, 4, 4));
 
 		displayShopUI0 = false;
 		displayShopUI1 = false;
@@ -260,7 +260,10 @@ void SceneMaster::Init()
 
 void SceneMaster::Update(double dt)
 {
-	camera4.Update(dt);
+	if (scene == TRIVIA)
+		camera_trivia.Update(dt);
+	if (scene == SHOP)
+		camera_shop.Update(dt);
 
 	fps = 1.0f / dt;
 
@@ -280,12 +283,15 @@ void SceneMaster::Update(double dt)
 
 	if (scene_change) //skybox changes when scene changes
 	{
-		meshList[GEO_FRONT]->textureID = LoadTGA((map.skybox_loc[0]).std::string::c_str());
-		meshList[GEO_BACK]->textureID = LoadTGA((map.skybox_loc[1]).std::string::c_str());
-		meshList[GEO_LEFT]->textureID = LoadTGA((map.skybox_loc[2]).std::string::c_str());
-		meshList[GEO_RIGHT]->textureID = LoadTGA((map.skybox_loc[3]).std::string::c_str());
-		meshList[GEO_TOP]->textureID = LoadTGA((map.skybox_loc[4]).std::string::c_str());
-		meshList[GEO_BOTTOM]->textureID = LoadTGA((map.skybox_loc[5]).std::string::c_str());
+		if (scene != TRIVIA)
+		{
+			meshList[GEO_FRONT]->textureID = LoadTGA((map.skybox_loc[0]).std::string::c_str());
+			meshList[GEO_BACK]->textureID = LoadTGA((map.skybox_loc[1]).std::string::c_str());
+			meshList[GEO_LEFT]->textureID = LoadTGA((map.skybox_loc[2]).std::string::c_str());
+			meshList[GEO_RIGHT]->textureID = LoadTGA((map.skybox_loc[3]).std::string::c_str());
+			meshList[GEO_TOP]->textureID = LoadTGA((map.skybox_loc[4]).std::string::c_str());
+			meshList[GEO_BOTTOM]->textureID = LoadTGA((map.skybox_loc[5]).std::string::c_str());
+		}
 
 		scene_change = false;
 	}
@@ -384,14 +390,81 @@ void SceneMaster::Update(double dt)
 	}
 	else if (scene == SEARCH)
 	{
+		if (timer_search > 0)
+		{
+			if (game_start)
+			{
+				timer_search--;
+				if (press_count == 0)
+				{
+					if (Application::IsKeyPressed(VK_LEFT) || Application::IsKeyPressed(VK_RIGHT))
+					{ //changes location
+						press_time_search++;
+						if (press_time_search == 1)
+						{
+							if (Application::IsKeyPressed(VK_LEFT))
+								current_target--;
+							if (Application::IsKeyPressed(VK_RIGHT))
+								current_target++;
 
+							if (current_target < 0)
+								current_target = 15;
+							if (current_target >= 16)
+								current_target = 0;
+						}
+					}
+					else
+						press_time_search = 0;
+
+					camera_search = &targets[current_target];
+				}
+
+				//Updates the percentage of the building
+				if (press_count >= 25)
+					camera_search->progress = 25;
+				if (press_count >= 50)
+					camera_search->progress = 50;
+				if (press_count >= 75)
+					camera_search->progress = 75;
+				if (press_count >= 100)
+				{
+					camera_search->progress = 100;
+					press_count = 0;
+					passenger_count += camera_search->num_passengers;
+					camera_search->has_checked = true;
+				}
+			}
+
+			if (Application::IsKeyPressed(VK_SPACE))
+			{
+				spam_time++;
+				if (spam_time == 1)
+				{
+					if (game_start)
+					{
+						if (!camera_search->has_checked && press_count < 100)
+						{
+							//Randomizes Honk sounds
+							std::string sound_file = "media/honk_" + std::to_string(rand() % 5 + 1) + ".wav";
+							sound.Engine()->play2D(sound_file.std::string::c_str());
+
+							press_count++;
+						}
+					}
+					else
+						game_start = true;
+				}
+			}
+			else
+				spam_time = 0;
+		}
 	}
 	else if (scene == SHOP)
 	{
 		bool canUpgrade0 = false;
 		bool canUpgrade1 = false;
 		bool canUpgrade2 = false;
-		if (camera4.position.x > -13.5 && camera4.position.z > -8.35 && camera4.position.x < 13.5 && camera4.position.z < 8.35)
+		if (camera_shop.position.x > -13.5 && camera_shop.position.z > -8.35 && camera_shop.position.x < 13.5 && camera_shop.position.z < 8.35)
 		{
 			displayShopUI0 = true;
 
@@ -411,7 +484,7 @@ void SceneMaster::Update(double dt)
 			if (shop.getUpgradeLevel(0) < 5)
 				canUpgrade0 = true;
 		}
-		else if (camera4.position.x > 13.5 && camera4.position.z > -4 && camera4.position.x < 18.85 && camera4.position.z < 4)
+		else if (camera_shop.position.x > 13.5 && camera_shop.position.z > -4 && camera_shop.position.x < 18.85 && camera_shop.position.z < 4)
 		{
 			displayShopUI1 = true;
 
@@ -431,7 +504,7 @@ void SceneMaster::Update(double dt)
 			if (shop.getUpgradeLevel(1) != 5)
 				canUpgrade1 = true;
 		}
-		else if (camera4.position.x > -18.85 && camera4.position.z > -8.35 && camera4.position.x < -13.5 && camera4.position.z < 4)
+		else if (camera_shop.position.x > -18.85 && camera_shop.position.z > -8.35 && camera_shop.position.x < -13.5 && camera_shop.position.z < 4)
 		{
 			displayShopUI2 = true;
 
@@ -499,7 +572,14 @@ void SceneMaster::Render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	viewStack.LoadIdentity();
-	viewStack.LookAt(camera4.position.x, camera4.position.y, camera4.position.z, camera4.target.x, camera4.target.y, camera4.target.z,camera4.up.x,	camera4.up.y, camera4.up.z);
+
+	if (scene == TRIVIA)
+		viewStack.LookAt(camera_trivia.position.x, camera_trivia.position.y, camera_trivia.position.z, camera_trivia.target.x, camera_trivia.target.y, camera_trivia.target.z, camera_trivia.up.x, camera_trivia.up.y, camera_trivia.up.z);
+	if (scene == SEARCH)
+		viewStack.LookAt(camera_search->position.x, camera_search->position.y, camera_search->position.z, camera_search->target.x, camera_search->target.y, camera_search->target.z, camera_search->up.x, camera_search->up.y, camera_search->up.z);
+	if (scene == SHOP)
+		viewStack.LookAt(camera_shop.position.x, camera_shop.position.y, camera_shop.position.z, camera_shop.target.x, camera_shop.target.y, camera_shop.target.z, camera_shop.up.x, camera_shop.up.y, camera_shop.up.z);
+	
 	modelStack.LoadIdentity();
 
 	if (lights[0].type == Light::LIGHT_DIRECTIONAL)
