@@ -92,25 +92,25 @@ void Bus::GameObjectUpdate(double dt)
 		Vector3 velocity(0, 0, 0);
 		float rotation = 0;
 		GetPhysics()->SetDrag(1);
-		if (Application::IsKeyPressed('T'))
+		if (Application::IsKeyPressed('W'))
 		{
 			velocity += GetFoward() * acceleration * dt;
 		}
-		if (Application::IsKeyPressed('G'))
+		if (Application::IsKeyPressed('S'))
 		{
 			velocity -= GetFoward() * acceleration * dt;
 		}
-		if (Application::IsKeyPressed('F'))
+		if (Application::IsKeyPressed('A'))
 		{
 			if (GetPhysics()->GetVelocity().Dot(GetFoward()) > 8) rotation += 90 * dt;
 			else if (GetPhysics()->GetVelocity().Dot(GetFoward()) < -8) rotation -= 90 * dt;
 		}
-		if (Application::IsKeyPressed('H'))
+		if (Application::IsKeyPressed('D'))
 		{
 			if (GetPhysics()->GetVelocity().Dot(GetFoward()) > 8) rotation -= 90 * dt;
 			else if (GetPhysics()->GetVelocity().Dot(GetFoward()) < -8) rotation += 90 * dt;
 		}
-		if (Application::IsKeyPressed('X'))
+		if (Application::IsKeyPressed(SHIFT_PRESSED))
 		{
 			overSteerPct = 0;
 		}

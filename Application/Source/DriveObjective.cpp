@@ -6,8 +6,8 @@ DriveObjective::DriveObjective()
 	requiredPassengerCount = 10;
 	pause = true;
 	timer = 60;
-	AddCollider();
-	GetCollider()->SetIsTrigger(true);
+	//AddCollider();
+	//GetCollider()->SetIsTrigger(true);
 }
 
 DriveObjective::~DriveObjective()
@@ -53,22 +53,24 @@ double DriveObjective::GetTime()
 void DriveObjective::GameObjectUpdate(double dt)
 {
 	if (!pause) timer -= dt;
+	player->SetStop(pause);
 	if (timer <= 0)
 	{
-		// go to lose screen
+		player->SetStop(true);
+		// end the game
 	}
 }
 
 void DriveObjective::OnTriggerStay(GameObject* gameObject)
 {
-	if (gameObject != nullptr && player != nullptr && gameObject == player)
-	{
-		if (player->GetPassengerCount() >= requiredPassengerCount)
-		{
-			PauseTimer();
-			// go to win screen
-		}
-	}
+	//if (gameObject != nullptr && player != nullptr && gameObject == player)
+	//{
+	//	if (player->GetPassengerCount() >= requiredPassengerCount)
+	//	{
+	//		PauseTimer();
+	//		
+	//	}
+	//}
 }
 
 std::string DriveObjective::Type()

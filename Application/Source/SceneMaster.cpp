@@ -21,13 +21,7 @@ SceneMaster::~SceneMaster()
 
 void SceneMaster::Init()
 {
-	camera3.Init(Vector3(0, 9.2f, -23), Vector3(0, 9.15f, -22), Vector3(0, 1, 0.05f));
-
-	camera4.Init(Vector3(9.5f, 3, 6), Vector3(0, 3, 0), Vector3(0, 1, 0));
-	camera4.setShopBound(Vector3(-18.85f, 2, -8.35f), Vector3(18.85f, 4, 8.35f));
-	camera4.setBusBound(Vector3(-13.5f, 2, -4), Vector3(13.5f, 4, 4));
-
-	map.Set(Maps::SKYBOX_TYPE::SB_SHOP);
+	map.Set(Maps::SKYBOX_TYPE::SB_SHOP); //to be changed
 
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
@@ -135,7 +129,7 @@ void SceneMaster::Init()
 
 	glUseProgram(m_programID);
 
-	lights[0].type = Light::LIGHT_DIRECTIONAL;
+	lights[0].type = Light::LIGHT_DIRECTIONAL; //to be changed
 	lights[0].position.Set(0, 10, 0);
 	lights[0].color.Set(1, 1, 1);
 	lights[0].power = 3;
@@ -162,6 +156,8 @@ void SceneMaster::Init()
 
 	//trivia init
 	{
+		camera_trivia.Init(Vector3(0, 9.2f, -23), Vector3(0, 9.15f, -22), Vector3(0, 1, 0.05f));
+
 		manager.CreateGameObject(&goose);
 
 		//Initializes the Podiums A, B & C
@@ -202,7 +198,7 @@ void SceneMaster::Init()
 		T_B.SetPosition(Position(0, 0, 0));
 		T_C.SetPosition(Position(-5, 0, 0));
 
-		press_time = qn_num = score = passengers = 0;
+		press_time_trivia = qn_num = score = passengers = 0;
 		play_once = false;
 		dialogue = new Dialogue("Dialogue//Trivia.txt", Dialogue::TRIVIA); //Qn is a Dialogue ptr which will read the trivia txt file
 		Qn_str = dialogue->Update(); //Qn_str will first be Updated to Show the Theme of Trivia
@@ -210,8 +206,49 @@ void SceneMaster::Init()
 		answer = ""; //Initializes answer to be blank
 	}
 
+	//search init
+	{
+		srand(time(NULL)); //to initialize random seed
+
+		//keeps trach of the locations of the different buildings
+		targets[0].Init(Vector3(0, 240, -330), Vector3(.73f, 239.7f, -329), Vector3(0.1f, 1, 0.2f));
+		targets[1].Init(Vector3(0, 240, -330), Vector3(.59f, 239.7f, -329), Vector3(0.1f, 1, 0.2f));
+		targets[2].Init(Vector3(0, 240, -330), Vector3(.48f, 239.73f, -329), Vector3(0.1f, 1, 0.2f));
+		targets[3].Init(Vector3(0, 240, -330), Vector3(.4f, 239.6f, -329), Vector3(0.1f, 1, 0.2f));
+		targets[4].Init(Vector3(0, 240, -330), Vector3(.38f, 239.8f, -329), Vector3(0.1f, 1, 0.2f));
+		targets[5].Init(Vector3(0, 240, -330), Vector3(.25f, 239.95f, -329), Vector3(0.1f, 1, 0.2f));
+		targets[6].Init(Vector3(0, 240, -330), Vector3(.11f, 239.7f, -329), Vector3(0.1f, 1, 0.2f));
+		targets[7].Init(Vector3(0, 240, -330), Vector3(.08f, 239.95f, -329), Vector3(0.1f, 1, 0.2f));
+		targets[8].Init(Vector3(0, 240, -330), Vector3(-.22f, 239.8f, -329), Vector3(0.1f, 1, 0.2f));
+		targets[9].Init(Vector3(0, 240, -330), Vector3(-.25f, 239.69f, -329), Vector3(0.1f, 1, 0.2f));
+		targets[10].Init(Vector3(0, 240, -330), Vector3(-.29f, 239.6f, -329), Vector3(0.1f, 1, 0.2f));
+		targets[11].Init(Vector3(0, 240, -330), Vector3(-.41f, 239.8f, -329), Vector3(0.1f, 1, 0.2f));
+		targets[12].Init(Vector3(0, 240, -330), Vector3(-.48f, 239.65f, -329), Vector3(0.1f, 1, 0.2f));
+		targets[13].Init(Vector3(0, 240, -330), Vector3(-.58f, 239.7f, -329), Vector3(0.1f, 1, 0.2f));
+		targets[14].Init(Vector3(0, 240, -330), Vector3(-.73f, 239.75f, -329), Vector3(0.1f, 1, 0.2f));
+		targets[15].Init(Vector3(0, 240, -330), Vector3(-1.f, 239.4f, -329), Vector3(0.1f, 1, 0.2f));
+
+		game_start = false;
+
+		int min = 2; //min is how long this game will last in minutes
+		timer_search = min * 60 * 60;
+
+		for (int cam = 0; cam < 9; cam++) //Uses randomizer to set up to 9 random targets/buildings to have passengers
+		{
+			int target_num = rand() % 16;
+			targets[target_num].num_passengers = rand() % 5 + 1; //each of the randomly selected buildings can have 1 to 5 passengers
+		}
+
+		current_target = press_count = passenger_count = press_time_search = spam_time = 0;
+		camera_search = &targets[0];
+	}
+
 	//shop init
 	{
+		camera_shop.Init(Vector3(9.5f, 3, 6), Vector3(0, 3, 0), Vector3(0, 1, 0));
+		camera_shop.setShopBound(Vector3(-18.85f, 2, -8.35f), Vector3(18.85f, 4, 8.35f));
+		camera_shop.setBusBound(Vector3(-13.5f, 2, -4), Vector3(13.5f, 4, 4));
+
 		displayShopUI0 = false;
 		displayShopUI1 = false;
 		displayShopUI2 = false;
@@ -223,9 +260,12 @@ void SceneMaster::Init()
 
 void SceneMaster::Update(double dt)
 {
-	camera4.Update(dt);
+	if (scene == TRIVIA)
+		camera_trivia.Update(dt);
+	if (scene == SHOP)
+		camera_shop.Update(dt);
 
-	fps = 1.0f / dt;
+	fps = 1.0 / dt;
 
 	rotateAngle += (float)( 50 * dt);
 	translateX += (float)(translateXDir * 10 * dt);
@@ -243,12 +283,15 @@ void SceneMaster::Update(double dt)
 
 	if (scene_change) //skybox changes when scene changes
 	{
-		meshList[GEO_FRONT]->textureID = LoadTGA((map.skybox_loc[0]).std::string::c_str());
-		meshList[GEO_BACK]->textureID = LoadTGA((map.skybox_loc[1]).std::string::c_str());
-		meshList[GEO_LEFT]->textureID = LoadTGA((map.skybox_loc[2]).std::string::c_str());
-		meshList[GEO_RIGHT]->textureID = LoadTGA((map.skybox_loc[3]).std::string::c_str());
-		meshList[GEO_TOP]->textureID = LoadTGA((map.skybox_loc[4]).std::string::c_str());
-		meshList[GEO_BOTTOM]->textureID = LoadTGA((map.skybox_loc[5]).std::string::c_str());
+		if (scene != TRIVIA)
+		{
+			meshList[GEO_FRONT]->textureID = LoadTGA((map.skybox_loc[0]).std::string::c_str());
+			meshList[GEO_BACK]->textureID = LoadTGA((map.skybox_loc[1]).std::string::c_str());
+			meshList[GEO_LEFT]->textureID = LoadTGA((map.skybox_loc[2]).std::string::c_str());
+			meshList[GEO_RIGHT]->textureID = LoadTGA((map.skybox_loc[3]).std::string::c_str());
+			meshList[GEO_TOP]->textureID = LoadTGA((map.skybox_loc[4]).std::string::c_str());
+			meshList[GEO_BOTTOM]->textureID = LoadTGA((map.skybox_loc[5]).std::string::c_str());
+		}
 
 		scene_change = false;
 	}
@@ -300,8 +343,8 @@ void SceneMaster::Update(double dt)
 
 		if (Application::IsKeyPressed(VK_SPACE))
 		{
-			press_time++;
-			if (press_time == 1) // To ensure that the Spacebar is only pressed once
+			press_time_trivia++;
+			if (press_time_trivia == 1) // To ensure that the Spacebar is only pressed once
 			{
 				sound.Engine()->play2D("media/honk_1.wav");
 
@@ -335,7 +378,7 @@ void SceneMaster::Update(double dt)
 				}
 			}
 		}
-		else press_time = 0;
+		else press_time_trivia = 0;
 
 		if (qn_num > 10) // to check if all 10 qns were answered
 		{
@@ -347,14 +390,81 @@ void SceneMaster::Update(double dt)
 	}
 	else if (scene == SEARCH)
 	{
+		if (timer_search > 0)
+		{
+			if (game_start)
+			{
+				timer_search--;
+				if (press_count == 0)
+				{
+					if (Application::IsKeyPressed(VK_LEFT) || Application::IsKeyPressed(VK_RIGHT))
+					{ //changes location
+						press_time_search++;
+						if (press_time_search == 1)
+						{
+							if (Application::IsKeyPressed(VK_LEFT))
+								current_target--;
+							if (Application::IsKeyPressed(VK_RIGHT))
+								current_target++;
 
+							if (current_target < 0)
+								current_target = 15;
+							if (current_target >= 16)
+								current_target = 0;
+						}
+					}
+					else
+						press_time_search = 0;
+
+					camera_search = &targets[current_target];
+				}
+
+				//Updates the percentage of the building
+				if (press_count >= 25)
+					camera_search->progress = 25;
+				if (press_count >= 50)
+					camera_search->progress = 50;
+				if (press_count >= 75)
+					camera_search->progress = 75;
+				if (press_count >= 100)
+				{
+					camera_search->progress = 100;
+					press_count = 0;
+					passenger_count += camera_search->num_passengers;
+					camera_search->has_checked = true;
+				}
+			}
+
+			if (Application::IsKeyPressed(VK_SPACE))
+			{
+				spam_time++;
+				if (spam_time == 1)
+				{
+					if (game_start)
+					{
+						if (!camera_search->has_checked && press_count < 100)
+						{
+							//Randomizes Honk sounds
+							std::string sound_file = "media/honk_" + std::to_string(rand() % 5 + 1) + ".wav";
+							sound.Engine()->play2D(sound_file.std::string::c_str());
+
+							press_count++;
+						}
+					}
+					else
+						game_start = true;
+				}
+			}
+			else
+				spam_time = 0;
+		}
 	}
 	else if (scene == SHOP)
 	{
 		bool canUpgrade0 = false;
 		bool canUpgrade1 = false;
 		bool canUpgrade2 = false;
-		if (camera4.position.x > -13.5 && camera4.position.z > -8.35 && camera4.position.x < 13.5 && camera4.position.z < 8.35)
+		if (camera_shop.position.x > -13.5 && camera_shop.position.z > -8.35 && camera_shop.position.x < 13.5 && camera_shop.position.z < 8.35)
 		{
 			displayShopUI0 = true;
 
@@ -374,7 +484,7 @@ void SceneMaster::Update(double dt)
 			if (shop.getUpgradeLevel(0) < 5)
 				canUpgrade0 = true;
 		}
-		else if (camera4.position.x > 13.5 && camera4.position.z > -4 && camera4.position.x < 18.85 && camera4.position.z < 4)
+		else if (camera_shop.position.x > 13.5 && camera_shop.position.z > -4 && camera_shop.position.x < 18.85 && camera_shop.position.z < 4)
 		{
 			displayShopUI1 = true;
 
@@ -394,7 +504,7 @@ void SceneMaster::Update(double dt)
 			if (shop.getUpgradeLevel(1) != 5)
 				canUpgrade1 = true;
 		}
-		else if (camera4.position.x > -18.85 && camera4.position.z > -8.35 && camera4.position.x < -13.5 && camera4.position.z < 4)
+		else if (camera_shop.position.x > -18.85 && camera_shop.position.z > -8.35 && camera_shop.position.x < -13.5 && camera_shop.position.z < 4)
 		{
 			displayShopUI2 = true;
 
@@ -421,8 +531,8 @@ void SceneMaster::Update(double dt)
 			displayShopUI2 = false;
 		}
 
-		if (timer > 0)
-			timer -= dt;
+		if (timer_shop > 0)
+			timer_shop -= dt;
 		else
 			displayMessage = false;
 
@@ -448,7 +558,7 @@ void SceneMaster::Update(double dt)
 			else
 			{
 				displayMessage = true;
-				timer = 1;
+				timer_shop = 1;
 			}
 		}
 
@@ -462,7 +572,14 @@ void SceneMaster::Render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	viewStack.LoadIdentity();
-	viewStack.LookAt(camera4.position.x, camera4.position.y, camera4.position.z, camera4.target.x, camera4.target.y, camera4.target.z,camera4.up.x,	camera4.up.y, camera4.up.z);
+
+	if (scene == TRIVIA)
+		viewStack.LookAt(camera_trivia.position.x, camera_trivia.position.y, camera_trivia.position.z, camera_trivia.target.x, camera_trivia.target.y, camera_trivia.target.z, camera_trivia.up.x, camera_trivia.up.y, camera_trivia.up.z);
+	if (scene == SEARCH)
+		viewStack.LookAt(camera_search->position.x, camera_search->position.y, camera_search->position.z, camera_search->target.x, camera_search->target.y, camera_search->target.z, camera_search->up.x, camera_search->up.y, camera_search->up.z);
+	if (scene == SHOP)
+		viewStack.LookAt(camera_shop.position.x, camera_shop.position.y, camera_shop.position.z, camera_shop.target.x, camera_shop.target.y, camera_shop.target.z, camera_shop.up.x, camera_shop.up.y, camera_shop.up.z);
+	
 	modelStack.LoadIdentity();
 
 	if (lights[0].type == Light::LIGHT_DIRECTIONAL)
@@ -554,7 +671,37 @@ void SceneMaster::Render()
 	}
 	else if (scene == SEARCH)
 	{
+		RenderCity();
 
+		if (game_start)
+		{
+			RenderMeshOnScreen(meshList[GEO_TARGET_SEARCH], 80, 45, 10, 10);
+
+			//bar_type (sets up the progress bar depending on the player's progress percentage)
+			std::string bar_type = "Assets//progress_" + std::to_string(camera_search->progress) + ".tga";
+			meshList[GEO_PROGRESS_SEARCH]->textureID = LoadTGA(bar_type.std::string::c_str());
+			RenderMeshOnScreen(meshList[GEO_PROGRESS_SEARCH], 80, 35, 20, 5);
+
+			std::ostringstream ss;
+			ss.precision(3);
+			ss << "Time left:" << (timer_search / 3600) << "m " << (timer_search % 3600) / 60 << "s";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 3, 5, 85);
+			RenderTextOnScreen(meshList[GEO_TEXT], "Passengers found:" + std::to_string(passenger_count), Color(0, 0, 0), 3, 5, 80);
+		}
+		else
+		{ //Renders the Intructions
+			RenderMeshOnScreen(meshList[GEO_POPUP_SEARCH], 80, 45, 120, 60);
+		}
+
+		if (timer_search <= 0)
+		{//Renders the final results of the Search Minigame
+			meshList[GEO_POPUP_SEARCH]->textureID = LoadTGA("Assets//search_results.tga");
+			RenderMeshOnScreen(meshList[GEO_POPUP_SEARCH], 80, 45, 120, 60);
+			if (passenger_count > 0)
+				RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(passenger_count) + " passenger(s) joined the rest of the tour!", Color(0, 0, 0), 4, 30, 45);
+			else
+				RenderTextOnScreen(meshList[GEO_TEXT], "You could not find anyone to join the tour.", Color(0, 0, 0), 4, 30, 45);
+		}
 	}
 	else if (scene == SHOP)
 	{
@@ -707,6 +854,275 @@ void SceneMaster::RenderRoom()
 	modelStack.PopMatrix();
 }
 
+void SceneMaster::RenderCity()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 0);
+	modelStack.Rotate(-90, 1, 0, 0);
+	modelStack.Scale(1000, 1000, 1000);
+	RenderMesh(meshList[GEO_FLOOR_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(350, 0, 425);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(4, 4, 4);
+	RenderMesh(meshList[GEO_BUILDING1_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(200, 0, 252);
+	modelStack.Rotate(-270, 0, 1, 0);
+	modelStack.Scale(4, 4, 4);
+	RenderMesh(meshList[GEO_BUILDING2_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(350, 0, 260);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(4, 4, 4);
+	RenderMesh(meshList[GEO_BUILDING2_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(175, 0, 425);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(4, 4, 4);
+	RenderMesh(meshList[GEO_BUILDING3_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(50, 0, 425);
+	modelStack.Rotate(-180, 0, 1, 0);
+	modelStack.Scale(4, 4, 4);
+	RenderMesh(meshList[GEO_BUILDING3_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(350, 0, 150);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(4, 4, 4);
+	RenderMesh(meshList[GEO_BUILDING2_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(200, 0, 150);
+	modelStack.Rotate(-270, 0, 1, 0);
+	modelStack.Scale(4, 4, 4);
+	RenderMesh(meshList[GEO_BUILDING1_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(55, 0, 200);
+	modelStack.Scale(4, 4, 4);
+	RenderMesh(meshList[GEO_BUILDING2_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-160, 0, 410);
+	modelStack.Rotate(-270, 0, 1, 0);
+	modelStack.Scale(4, 4, 4);
+	RenderMesh(meshList[GEO_BUILDING5_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-300, 0, 410);
+	modelStack.Rotate(-270, 0, 1, 0);
+	modelStack.Scale(4, 4, 4);
+	RenderMesh(meshList[GEO_BUILDING5_SEARCH], true);
+	modelStack.PopMatrix();
+
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-440, 0, 410);
+	modelStack.Rotate(-270, 0, 1, 0);
+	modelStack.Scale(4, 4, 4);
+	RenderMesh(meshList[GEO_BUILDING4_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-160, 0, 280);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(4, 4, 4);
+	RenderMesh(meshList[GEO_BUILDING4_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-300, 0, 280);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(4, 4, 4);
+	RenderMesh(meshList[GEO_BUILDING4_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-440, 0, 280);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(4, 4, 4);
+	RenderMesh(meshList[GEO_BUILDING5_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-140, 0, 170);
+	modelStack.Scale(4, 4, 4);
+	RenderMesh(meshList[GEO_BUILDING4_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-30, 0, 400);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[GEO_BUSSTOP_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-390, -44, 5);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(.15, .15, .15);
+	RenderMesh(meshList[GEO_MALL_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-100, 0, 230);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(40, 40, 40);
+	RenderMesh(meshList[GEO_TREE1_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-100, 0, 100);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(40, 40, 40);
+	RenderMesh(meshList[GEO_TREE1_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-100, 0, 50);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(40, 40, 40);
+	RenderMesh(meshList[GEO_TREE1_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-100, 0, 0);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(40, 40, 40);
+	RenderMesh(meshList[GEO_TREE2_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-100, 0, -50);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(40, 40, 40);
+	RenderMesh(meshList[GEO_TREE1_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-100, 0, -100);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(40, 40, 40);
+	RenderMesh(meshList[GEO_TREE1_SEARCH], true);
+	modelStack.PopMatrix();
+
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-100, 0, -150);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(40, 40, 40);
+	RenderMesh(meshList[GEO_TREE1_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-100, 0, 300);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(40, 40, 40);
+	RenderMesh(meshList[GEO_TREE1_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-100, 0, 375);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(40, 40, 40);
+	RenderMesh(meshList[GEO_TREE1_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-220, 0, 375);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(40, 40, 40);
+	RenderMesh(meshList[GEO_TREE1_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-345, 0, 375);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(40, 40, 40);
+	RenderMesh(meshList[GEO_TREE1_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 0, 375);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(40, 40, 40);
+	RenderMesh(meshList[GEO_TREE2_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-50, 0, 375);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(40, 40, 40);
+	RenderMesh(meshList[GEO_TREE2_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(55, 0, 300);
+	modelStack.Rotate(-270, 0, 1, 0);
+	modelStack.Scale(10, 10, 10);
+	RenderMesh(meshList[GEO_BUSSTOP_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(75, 0, 375);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(40, 40, 40);
+	RenderMesh(meshList[GEO_TREE2_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(75, 0, 255);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(40, 40, 40);
+	RenderMesh(meshList[GEO_TREE2_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(100, 0, 170);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(40, 40, 40);
+	RenderMesh(meshList[GEO_TREE1_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(275, 0, 170);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(40, 40, 40);
+	RenderMesh(meshList[GEO_TREE1_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(450, 0, 170);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(40, 40, 40);
+	RenderMesh(meshList[GEO_TREE1_SEARCH], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(20, 0, -175);
+	modelStack.Rotate(-90, 0, 1, 0);
+	modelStack.Scale(65, 10, 10);
+	RenderMesh(meshList[GEO_BUSSTOP_SEARCH], true);
+	modelStack.PopMatrix();
+}
+
 void SceneMaster::RenderMesh(Mesh* mesh, bool enableLight)
 {
 	Mtx44 MVP, modelView, modelView_inverse_transpose;
@@ -794,6 +1210,49 @@ void SceneMaster::RenderSkybox()
 		modelStack.Rotate(90, 1, 0, 0);
 		modelStack.Scale(50, 50, 50);
 		RenderMesh(meshList[GEO_TOP], true);
+		modelStack.PopMatrix();
+	}
+	else if (scene == SEARCH)
+	{
+		modelStack.PushMatrix();
+		modelStack.Translate(499, 0, 0);
+		modelStack.Rotate(-90, 0, 1, 0);
+		modelStack.Scale(1000, 1000, 1000);
+		RenderMesh(meshList[GEO_FRONT], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(-499, 0, 0);
+		modelStack.Rotate(90, 0, 1, 0);
+		modelStack.Scale(1000, 1000, 1000);
+		RenderMesh(meshList[GEO_BACK], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(0, 0, 499);
+		modelStack.Rotate(180, 0, 1, 0);
+		modelStack.Scale(1000, 1000, 1000);
+		RenderMesh(meshList[GEO_LEFT], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(0, 0, -499);
+		modelStack.Scale(1000, 1000, 1000);
+		RenderMesh(meshList[GEO_RIGHT], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(0, -499, 0);
+		modelStack.Rotate(90, 1, 0, 0);
+		modelStack.Scale(1000, 1000, 1000);
+		RenderMesh(meshList[GEO_BOTTOM], false);
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(0, 499, 0);
+		modelStack.Rotate(90, 1, 0, 0);
+		modelStack.Scale(1000, 1000, 1000);
+		RenderMesh(meshList[GEO_TOP], false);
 		modelStack.PopMatrix();
 	}
 	else if (scene == SHOP)
