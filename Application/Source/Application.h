@@ -7,6 +7,16 @@
 class Application
 {
 public:
+	enum ENUM_SCENE
+	{
+		S_MAIN,
+		S_INTRO,
+		S_DRIVE,
+		S_TRIVIA,
+		S_CHASE,
+		S_SHOP
+	};
+
 	Application();
 	~Application();
 	void Init();
@@ -18,9 +28,14 @@ public:
 	static void GetCursorPos(double* xpos, double* ypos);
 	static int GetWindowWidth();
 	static int GetWindowHeight();
+	static void changeScene(ENUM_SCENE scene);
 	static unsigned m_width;
 	static unsigned m_height;
 
+	//static void changeScene(int scene);
+
+
+	static ENUM_SCENE scene;
 
 private:
 

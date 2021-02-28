@@ -54,6 +54,8 @@ Application::~Application()
 unsigned Application::m_width;
 unsigned Application::m_height;
 
+Application::ENUM_SCENE scene;
+
 void resize_callback(GLFWwindow* window, int w, int h)
 {
 	glViewport(0, 0, w, h); //update opengl the new window size
@@ -77,6 +79,11 @@ int Application::GetWindowWidth()
 int Application::GetWindowHeight()
 {
 	return m_height;
+}
+
+void Application::changeScene(ENUM_SCENE scene)
+{
+	Application::scene = S_MAIN;
 }
 
 

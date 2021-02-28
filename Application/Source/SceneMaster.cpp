@@ -1202,7 +1202,7 @@ void SceneMaster::Update(double dt)
 			pausePressed == true;
 		}
 	}
-}
+	}
 
 void SceneMaster::Render()
 {
