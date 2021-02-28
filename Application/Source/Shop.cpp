@@ -2,7 +2,6 @@
 
 Shop::Shop() : upgradeLevel{0, 0, 0}, upgradeCost{300, 300, 300}
 {
-
 }
 
 Shop::~Shop()
