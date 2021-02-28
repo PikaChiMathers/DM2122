@@ -2,6 +2,7 @@
 #define SCENE_MASTER
 
 #include "Scene.h"
+#include "Camera3.h"
 #include "Camera4.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
@@ -10,6 +11,12 @@
 #include "Maps.h"
 #include "GameObject.h"
 #include "Shop.h"
+#include "GameObjectManager.h"
+#include "TriggerCollider.h"
+#include "Objects.h"
+#include "Goose.h"
+#include "Sound.h"
+#include "Dialogue.h"
 #include <sstream>
 
 class SceneMaster : public Scene
@@ -31,15 +38,23 @@ public:
 
 	int translateXDir, translateYDir, rotateDir, scaleDir;
 
-	Color red, blue, green, pink, Lblue, purple, orange, yellow, cyan, magenta, moonshade;
-
 	int UI_height, UI_width;
 
 	enum GEOMETRY_TYPE
 	{
 		GEO_AXES = 0,
 
+		GEO_QUAD,
+
 		GEO_BUS_SHOP,
+
+		GEO_GOOSE_TRIVIA,
+		GEO_CONFETTI_TRIVIA,
+		GEO_TV_TRIVIA,
+		GEO_LOGO_TRIVIA,
+		GEO_PODIUM_A_TRIVIA,
+		GEO_PODIUM_B_TRIVIA,
+		GEO_PODIUM_C_TRIVIA,
 
 		GEO_LIGHTBALL,
 
@@ -76,19 +91,6 @@ public:
 		U_LIGHT0_COSCUTOFF,
 		U_LIGHT0_COSINNER,
 		U_LIGHT0_EXPONENT,
-
-		U_LIGHT1_POSITION,
-		U_LIGHT1_COLOR,
-		U_LIGHT1_POWER,
-		U_LIGHT1_KC,
-		U_LIGHT1_KL,
-		U_LIGHT1_KQ,
-		U_LIGHT1_TYPE,
-		U_LIGHT1_SPOTDIRECTION,
-		U_LIGHT1_COSCUTOFF,
-		U_LIGHT1_COSINNER,
-		U_LIGHT1_EXPONENT,
-
 		U_LIGHTENABLED,
 		U_NUMLIGHTS,
 
@@ -99,13 +101,6 @@ public:
 		U_TEXT_COLOR,
 
 		U_TOTAL,
-	};
-
-	enum LIGHT_TYPES
-	{
-		LIGHT1 = 0,
-		LIGHT2,
-		NUM_LIGHTS,
 	};
 
 	enum SCENE
@@ -126,7 +121,7 @@ private:
 	MS modelStack, viewStack, projectionStack;
 	unsigned m_parameters[U_TOTAL];
 	unsigned m_programID;
-	Light lights[NUM_LIGHTS];
+	Light lights[1];
 
 	//scene change variables
 	Maps map;
@@ -135,15 +130,46 @@ private:
 	//scene type
 	unsigned scene;
 
+	//general camera
+	Camera3 camera3;
+
 	//shop camera
-	Camera4 camera;
+	Camera4 camera4;
+
+	//general variables
+	Dialogue* dialogue;
+
+	Sound sound;
+	bool play_once; //ensures sound is played only once
+
+	int passengers;
+
+	//trivia variables
+	std::string Qn_str;
+	int press_time; //number of times press spacebar is registered (helps to prevent multiple registered keypresses)
+	int qn_num; //current question number
+
+	int score;
+	std::string answer;
+
+	GameObjectManager manager;
+	Goose goose;
+	Objects P_A, P_B, P_C; //Podium A, B & C
+	Objects C_F, C_B, C_L, C_R; //Collider front, back, left & right
+	TriggerCollider T_A, T_B, T_C;//Trigger A, B & C
+
+	void Check_Answer(); //To check player's trivia answer
+
+	void RenderRoom();
 
 	//shop variables
 	Shop shop;
+
 	bool displayShopUI0;
 	bool displayShopUI1;
 	bool displayShopUI2;
 	bool displayMessage;
+
 	int money;
 	double timer;
 	bool spacePressed;
