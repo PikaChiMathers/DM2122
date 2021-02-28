@@ -67,7 +67,8 @@ void SceneTrivia::Init()
 	T_B.SetPosition(Position(0, 0, 0));
 	T_C.SetPosition(Position(-5, 0, 0));
 
-	press_time = qn_num = score = 0;// press_time (ensures that spacebar is only captured once) qn_num (question number)
+	press_time = qn_num = score = passengers = 0;
+	play_once = false;
 	Qn = new Dialogue("Dialogue//Trivia.txt", Dialogue::TRIVIA); //Qn is a Dialogue ptr which will read the trivia txt file
 	Qn_str = Qn->Update(); //Qn_str will first be Updated to Show the Theme of Trivia
 
@@ -105,6 +106,9 @@ void SceneTrivia::Init()
 	meshList[GEO_TV]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
 	meshList[GEO_TV]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
 	meshList[GEO_TV]->material.kShininess = 1.f;
+
+	meshList[GEO_CONFETTI] = MeshBuilder::GenerateRevQuad("confetti", Color(1, 1, 1), 160, 90);
+	meshList[GEO_CONFETTI]->textureID = LoadTGA("Image//confetti.tga");
 
 	meshList[GEO_LOGO] = MeshBuilder::GenerateQuad("logo", Color(1, 1, 1), 1, 1);
 	meshList[GEO_LOGO]->textureID = LoadTGA("Image//trivia_logo.tga");
@@ -211,12 +215,29 @@ void SceneTrivia::Update(double dt)
 {
 	manager.GameObjectManagerUpdate(dt);
 
-	if (qn_num == 10 && score == 9) //To set the lighting to Spotlight for a grand finally to see whether the player can get 10/10 for trivia
+	if (qn_num == 10) //To set the spotlight and drumroll for the final qn
 	{
-		if (dt/13 == 0)
-			sound.Engine()->play2D("media/correctAns.ogg");
+		if (!sound.Engine()->isCurrentlyPlaying(("media/drumroll.ogg"))) //loops drumroll until players answers qn
+			sound.Engine()->play2D("media/drumroll.ogg");
 		lights[0].type = Light::LIGHT_SPOT;
 		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
+	}
+	else if (qn_num > 10)
+	{
+		if (!play_once)
+		{
+			sound.Engine()->stopAllSounds();
+			if (score >= 8)
+			{
+				sound.Engine()->play2D("media/hooray.ogg");
+			}
+			else if (score < 5)
+				sound.Engine()->play2D("media/sad_trumbone.ogg");
+			else
+				sound.Engine()->play2D("media/slow_clap.ogg");
+
+			play_once = true;
+		}
 	}
 	
 	if (Application::IsKeyPressed(VK_SPACE))
@@ -226,33 +247,45 @@ void SceneTrivia::Update(double dt)
 		{
 			sound.Engine()->play2D("media/honk_1.wav");
 
-			if (T_A.IsTriggered())
-				answer = Qn->getChoice1();
-
-			else if (T_B.IsTriggered())
-				answer = Qn->getChoice2();
-
-			else if (T_C.IsTriggered())
-				answer = Qn->getChoice3();
-
-			else
-				answer = "";
-
-			if (answer != "")
+			if (qn_num <= 10)
 			{
-				qn_num++;
-				if (qn_num != 0)
-					Check_Answer();
-			}
+				if (T_A.IsTriggered())
+					answer = Qn->getChoice1();
 
-			if (qn_num == 0)
-			{
-				qn_num++;
-				Qn_str = Qn->Update();
+				else if (T_B.IsTriggered())
+					answer = Qn->getChoice2();
+
+				else if (T_C.IsTriggered())
+					answer = Qn->getChoice3();
+
+				else
+					answer = "";
+
+				if (answer != "")
+				{
+					qn_num++;
+					if (qn_num != 0)
+						Check_Answer();
+				}
+
+				if (qn_num == 0)
+				{
+					qn_num++;
+					Qn_str = Qn->Update();
+				}
 			}
 		}
 	}
 	else press_time = 0;
+
+	if (qn_num > 10) // to check if all 10 qns were answered
+	{
+		if (score < 5)
+			passengers = -(5 - score); //loses passengers if wrong info was given
+		if (score >= 8)
+			passengers = score - 5;
+	}
+
 }
 
 void SceneTrivia::Render() //My Own Pattern
@@ -294,8 +327,57 @@ void SceneTrivia::Render() //My Own Pattern
 	modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
 	RenderMesh(meshList[GEO_LIGHTBALL], false);
 	modelStack.PopMatrix();
+
 	RenderSkybox();
 
+	RenderRoom();
+
+	modelStack.PushMatrix();
+	modelStack.Rotate(180, 0, 1, 0);
+	if (qn_num == 0)
+	{
+		RenderTextOnScreen(meshList[GEO_TEXT], Qn_str + " Trivia", Color(0, 1, 0), 10, 46, 64);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Instructions:", Color(.3f, 1, .3f), 5, 58, 55);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Use WASD to move to Podium A, B or C", Color(.3f, 1, .3f), 2.5f, 51, 50);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Spacebar to select & start", Color(.3f, 1, .3f), 2.5f, 57, 43);
+	}
+	else if (qn_num <= 10)
+	{
+		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(score)) + "/10", Color(0, 1, 0), 6, 110, 76);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("Q" + std::to_string(qn_num) + ":" + Qn_str), Color(0, 1, 0), 2.44f, 37, 65);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("A:" + Qn->getChoice1()), Color(0, 1, 0), 4, 40, 57);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("B:" + Qn->getChoice2()), Color(0, 1, 0), 4, 40, 51);
+		RenderTextOnScreen(meshList[GEO_TEXT], ("C:" + Qn->getChoice3()), Color(0, 1, 0), 4, 40,45);
+	}
+	else
+	{
+		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(score) + "/10"), Color(0, 1, 0), 10, 72, 53);
+		if (score < 5)
+			RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(passengers * -1)+ " passengers were unimpressed and left the tour", Color(.3f, 1, .3f), 2.5f, 40, 50);
+		else if (score >= 8)
+			RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(passengers) + " people were impressed and joined the tour", Color(.3f, 1, .3f), 2.5f, 40, 50);
+		else
+			RenderTextOnScreen(meshList[GEO_TEXT], "Your passengers slow clap your efforts", Color(.3f, 1, .3f), 2.5f, 40, 50);
+
+
+	}
+
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(goose.GetPositionX(), goose.GetPositionY(), goose.GetPositionZ());
+	modelStack.Rotate(goose.GetRotateX(), 1, 0, 0);
+	modelStack.Rotate(goose.GetRotateY(), 0, 1, 0);
+	modelStack.Rotate(goose.GetRotateZ(), 0, 0, 1);
+	RenderMesh(meshList[GEO_GOOSE], true);
+	modelStack.PopMatrix();
+
+	if ((qn_num > 10) && (score >= 8))
+		RenderMeshOnScreen(meshList[GEO_CONFETTI], 80, 45, 1, 1);
+}
+
+void SceneTrivia::RenderRoom()
+{
 	modelStack.PushMatrix();
 	modelStack.Translate(0, -.1f, 0);
 	modelStack.Rotate(-90, 1, 0, 0);
@@ -348,30 +430,6 @@ void SceneTrivia::Render() //My Own Pattern
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Rotate(180, 0, 1, 0);
-	if (qn_num == 0)
-	{
-		RenderTextOnScreen(meshList[GEO_TEXT], Qn_str + " Trivia", Color(0, 1, 0), 10, 46, 64);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Instructions:", Color(.3f, 1, .3f), 5, 58, 55);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Use WASD to move to Podium A, B or C", Color(.3f, 1, .3f), 2.5f, 51, 50);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Spacebar to select & start", Color(.3f, 1, .3f), 2.5f, 57, 43);
-	}
-	else if (qn_num <= 10)
-	{
-		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(score)) + "/10", Color(0, 1, 0), 6, 110, 76);
-		RenderTextOnScreen(meshList[GEO_TEXT], ("Q" + std::to_string(qn_num) + ":" + Qn_str), Color(0, 1, 0), 2.44f, 37, 65);
-		RenderTextOnScreen(meshList[GEO_TEXT], ("A:" + Qn->getChoice1()), Color(0, 1, 0), 4, 40, 57);
-		RenderTextOnScreen(meshList[GEO_TEXT], ("B:" + Qn->getChoice2()), Color(0, 1, 0), 4, 40, 51);
-		RenderTextOnScreen(meshList[GEO_TEXT], ("C:" + Qn->getChoice3()), Color(0, 1, 0), 4, 40,45);
-	}
-	else
-	{
-		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(score) + "/10"), Color(0, 1, 0), 10, 72, 53);
-	}
-
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
 	modelStack.Translate(-19, 13.4f, 23.3f);
 	modelStack.Rotate(180, 1, 0, 0);
 	modelStack.Scale(8, 8, 8);
@@ -383,14 +441,6 @@ void SceneTrivia::Render() //My Own Pattern
 	modelStack.Rotate(180, 1, 0, 0);
 	modelStack.Scale(8, 8, 8);
 	RenderMesh(meshList[GEO_LOGO], true);
-	modelStack.PopMatrix();
-
-	modelStack.PushMatrix();
-	modelStack.Translate(goose.GetPositionX(), goose.GetPositionY(), goose.GetPositionZ());
-	modelStack.Rotate(goose.GetRotateX(), 1, 0, 0);
-	modelStack.Rotate(goose.GetRotateY(), 0, 1, 0);
-	modelStack.Rotate(goose.GetRotateZ(), 0, 0, 1);
-	RenderMesh(meshList[GEO_GOOSE], true);
 	modelStack.PopMatrix();
 }
 
