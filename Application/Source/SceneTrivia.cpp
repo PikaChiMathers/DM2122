@@ -249,6 +249,7 @@ void SceneTrivia::Update(double dt)
 
 			if (qn_num <= 10)
 			{
+				//checks which answer was chosen
 				if (T_A.IsTriggered())
 					answer = Qn->getChoice1();
 
@@ -262,7 +263,7 @@ void SceneTrivia::Update(double dt)
 					answer = "";
 
 				if (answer != "")
-				{
+				{ //changes the qn and checks if the answer is correct
 					qn_num++;
 					if (qn_num != 0)
 						Check_Answer();
@@ -283,7 +284,7 @@ void SceneTrivia::Update(double dt)
 		if (score < 5)
 			passengers = -(5 - score); //loses passengers if wrong info was given
 		if (score >= 8)
-			passengers = score - 5;
+			passengers = score - 5; //gains passengers if tour is interesting
 	}
 
 }
@@ -334,14 +335,14 @@ void SceneTrivia::Render() //My Own Pattern
 
 	modelStack.PushMatrix();
 	modelStack.Rotate(180, 0, 1, 0);
-	if (qn_num == 0)
+	if (qn_num == 0) //Renders the start of trivia mini game menu
 	{
 		RenderTextOnScreen(meshList[GEO_TEXT], Qn_str + " Trivia", Color(0, 1, 0), 10, 46, 64);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Instructions:", Color(.3f, 1, .3f), 5, 58, 55);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Use WASD to move to Podium A, B or C", Color(.3f, 1, .3f), 2.5f, 51, 50);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Spacebar to select & start", Color(.3f, 1, .3f), 2.5f, 57, 43);
 	}
-	else if (qn_num <= 10)
+	else if (qn_num <= 10) //Renders the different questions
 	{
 		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(score)) + "/10", Color(0, 1, 0), 6, 110, 76);
 		RenderTextOnScreen(meshList[GEO_TEXT], ("Q" + std::to_string(qn_num) + ":" + Qn_str), Color(0, 1, 0), 2.44f, 37, 65);
@@ -349,7 +350,7 @@ void SceneTrivia::Render() //My Own Pattern
 		RenderTextOnScreen(meshList[GEO_TEXT], ("B:" + Qn->getChoice2()), Color(0, 1, 0), 4, 40, 51);
 		RenderTextOnScreen(meshList[GEO_TEXT], ("C:" + Qn->getChoice3()), Color(0, 1, 0), 4, 40,45);
 	}
-	else
+	else //Renders the final score and outcome of the trivia minigame
 	{
 		RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(score) + "/10"), Color(0, 1, 0), 10, 72, 53);
 		if (score < 5)
@@ -358,8 +359,6 @@ void SceneTrivia::Render() //My Own Pattern
 			RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(passengers) + " people were impressed and joined the tour", Color(.3f, 1, .3f), 2.5f, 40, 50);
 		else
 			RenderTextOnScreen(meshList[GEO_TEXT], "Your passengers slow clap your efforts", Color(.3f, 1, .3f), 2.5f, 40, 50);
-
-
 	}
 
 	modelStack.PopMatrix();
@@ -455,7 +454,7 @@ void SceneTrivia::Exit()
 
 }
 
-void SceneTrivia::Check_Answer()//Checks the player's answer input and adds points respectfully
+void SceneTrivia::Check_Answer()//Checks the player's answer input and adds a point if correct
 {
 	goose.SetRotateY(180);
 	goose.SetPosition(Position(0, 0, -5));
