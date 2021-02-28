@@ -8,9 +8,11 @@
 #include "Vertex.h"
 #include "Light.h"
 #include "Sound.h"
-
-#include "GameObject.h"
+#include "Goose.h"
+#include "GameObjectManager.h"
+#include "TriggerCollider.h"
 #include "Maps.h"
+#include "Objects.h"
 
 
 #include "Dialogue.h"
@@ -142,8 +144,9 @@ private: //added (Step 2)
 	Dialogue* dialogue;
 
 	//GameObject gameObject;
-	GameObject goose;
-
+	Goose goose;
+	GameObjectManager manager;
+	Objects boss;
 	unsigned m_vertexArrayID;
 	/*unsigned m_vertexBuffer[NUM_GEOMETRY];
 	unsigned m_colorBuffer[NUM_GEOMETRY];
