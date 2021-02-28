@@ -29,7 +29,8 @@ public:
 	void SetTotalMoney(int amount);
 	void SetCurrentMoney(int amount);
 	void AddMoney(int amount);
-	int GetMoney();
+	static void ReduceMoney(int amount);
+	static int GetMoney();
 	int GetMoneyCurrent();
 	// set the number of passengers collected
 	void SetPassengerCount(int count);
