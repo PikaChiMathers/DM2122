@@ -89,6 +89,9 @@ void SceneDrive::Init()
 	meshList[GEO_BORDER] = MeshBuilder::GenerateQuad("border", Color(1, 1, 1), 1.f, 1.f);
 	meshList[GEO_BORDER]->textureID = LoadTGA("Image//border.tga");
 
+	meshList[GEO_OVERLAY] = MeshBuilder::GenerateQuad("overlay", Color(1, 1, 1), 1.f, 1.f);
+	meshList[GEO_OVERLAY]->textureID = LoadTGA("Image//overlay.tga");
+
 	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", blue, 1, 1, 1);
 	meshList[GEO_CUBE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
 	meshList[GEO_CUBE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
@@ -676,6 +679,8 @@ void SceneDrive::Init()
 	//temp.SetTag("Temp");
 	//manager.CreateGameObject(&temp);
 	TestRef = &bus;
+
+	startGame = endGame = false;
 }
 
 void SceneDrive::Update(double dt)
@@ -688,14 +693,31 @@ void SceneDrive::Update(double dt)
 
 	coinRot += coinRot > 360 ? (180 * dt) - 360 : 180 * dt;
 
-	if (Application::IsKeyPressed('1'))
-		glEnable(GL_CULL_FACE);
-	if (Application::IsKeyPressed('2'))
-		glDisable(GL_CULL_FACE);
-	if (Application::IsKeyPressed('3'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //default fill mode
-	if (Application::IsKeyPressed('4'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
+	if (!startGame) // not yet started. show how to play
+	{
+		if (Application::IsKeyPressed(VK_SPACE)) 
+		{// starts the game
+			startGame = true;
+			endpoint.SetTimer(60);
+			endpoint.StartTimer();
+		}
+	}
+
+	if (endGame)
+	{// if game ended
+		if (Application::IsKeyPressed(VK_SPACE))
+		{
+			//go to next scene
+		}
+	}
+	else
+	{// ongoing game
+		endGame = (endpoint.GetTime() <= 0); // end game if timer ends
+		if (Application::IsKeyPressed('Q'))
+		{
+			endpoint.SetTimer(1);
+		}
+	}
 
 	if (Application::IsKeyPressed(VK_SPACE) && honk_count == 1 && !honkerdonker)
 	{
@@ -736,105 +758,13 @@ void SceneDrive::Update(double dt)
 		honkerdonker = false;
 	}
 
-	//for testing purposes
-	/*if (Application::IsKeyPressed('V'))
-	{
-		scene_change = true;
-		map.Set(Maps::SKYBOX_TYPE::SB_DAY);
-	}
-	if (Application::IsKeyPressed('B'))
-	{
-		scene_change = true;
-		map.Set(Maps::SKYBOX_TYPE::SB_NIGHT);
-	}*/
-
-	/*if (Application::IsKeyPressed('T'))
-	{
-		TestRef->SetPositionZ(TestRef->GetPositionZ() - 5 * multiplier * dt);
-	}
-	if (Application::IsKeyPressed('G'))
-	{
-		TestRef->SetPositionZ(TestRef->GetPositionZ() + 5 * multiplier * dt);
-	}
-	if (Application::IsKeyPressed('F'))
-	{
-		TestRef->SetPositionX(TestRef->GetPositionX() - 5 * multiplier * dt);
-	}
-	if (Application::IsKeyPressed('H'))
-	{
-		TestRef->SetPositionX(TestRef->GetPositionX() + 5 * multiplier * dt);
-	}
-	if (Application::IsMousePressed(1))
-	{
-		multiplier = 10;
-	}
-	else if (Application::IsMousePressed(0))
-	{
-		multiplier = 1;
-	}
-	else multiplier = 5;
-
-	if (Application::IsKeyPressed('C'))
-	{
-		TestRef->SetRotateY(TestRef->GetRotateY() + 90 * dt);
-	}
-	if (Application::IsKeyPressed('V'))
-	{
-		TestRef->SetRotateY(TestRef->GetRotateY() - 90 * dt);
-	}
-	if (Application::IsKeyPressed('Z') && toggleTime <= 0)
-	{
-		TestRef->SetRotateY(TestRef->GetRotateY() + 45);
-		toggleTime = .3;
-	}
-	else if (Application::IsKeyPressed('X') && toggleTime <= 0)
-	{
-		TestRef->SetRotateY(TestRef->GetRotateY() - 45);
-		toggleTime = .3;
-	}*/
-	/*else if (Application::IsMousePressed(2) && toggleTime <= 0)
-	{
-		clusterType++;
-		switch (clusterType)
-		{
-		case 1:
-			TestRef->SetTag("Type1");
-			break;
-		case 2:
-			TestRef->SetTag("Type2");
-			break;
-		case 3:
-			TestRef->SetTag("Type3");
-			break;
-		case 4:
-			TestRef->SetTag("Type4");
-			break;
-		case 5:
-			TestRef->SetTag("Type5");
-			break;
-		case 6:
-			TestRef->SetTag("Type6");
-			break;
-		case 7:
-			TestRef->SetTag("Type7");
-			break;
-		case 8:
-			TestRef->SetTag("Type8");
-			break;
-		default:
-			clusterType = 1;
-			TestRef->SetTag("Type1");
-			break;
-		}
-		toggleTime = .3;
-	}*/
-	else if (Application::IsKeyPressed('B') && toggleTime <= 0)
+	
+	/*else if (Application::IsKeyPressed('B') && toggleTime <= 0)
 	{
 		toggleHitBox = !toggleHitBox;
 		toggleTime = .3;
-
-	}
-	else if (toggleTime > 0) toggleTime -= dt;
+	}*/
+	//else if (toggleTime > 0) toggleTime -= dt;
 
 	if (scene_change) //to ensure that the skybox only updates when the scene changes
 	{
@@ -847,48 +777,6 @@ void SceneDrive::Update(double dt)
 
 		scene_change = false;
 	}
-
-	/*if (Application::IsKeyPressed('5'))
-	{
-		lights[0].type = Light::LIGHT_POINT;
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-	}
-	else if (Application::IsKeyPressed('6'))
-	{
-		lights[0].type = Light::LIGHT_DIRECTIONAL;
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-	}
-	else if (Application::IsKeyPressed('7'))
-	{
-		lights[0].type = Light::LIGHT_SPOT;
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-	}
-	else if (Application::IsKeyPressed('8'))
-	{
-		lights[0].type = Light::LIGHT_MULTIPLE;
-		glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
-	}
-
-	if (Application::IsKeyPressed('5'))
-	{
-		lights[1].type = Light::LIGHT_POINT;
-		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
-	}
-	else if (Application::IsKeyPressed('6'))
-	{
-		lights[1].type = Light::LIGHT_DIRECTIONAL;
-		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
-	}
-	else if (Application::IsKeyPressed('7'))
-	{
-		lights[1].type = Light::LIGHT_SPOT;
-		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
-	}
-	else if (Application::IsKeyPressed('8'))
-	{
-		lights[1].type = Light::LIGHT_MULTIPLE;
-		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
-	}*/
 }
 
 void SceneDrive::Render() //My Own Pattern
@@ -1174,17 +1062,28 @@ void SceneDrive::Render() //My Own Pattern
 	std::ostringstream ss;
 	ss.precision(5);
 	ss << "FPS: " << fps;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, Application::GetWindowHeight() * .1f);
-
-	RenderTextOnScreen(meshList[GEO_TEXT], "Passengers:" + std::to_string(bus.GetPassengerCount()) + "/" + std::to_string(endpoint.GetRequiredPassengerCount()), Color(0, 0, 1), 3, 0, 81);
-
-	RenderTextOnScreen(meshList[GEO_TEXT], "Total Money:" + std::to_string(Bus::GetMoney()), Color(1, 1, 0), 3, 0, 87);
-
-	RenderTextOnScreen(meshList[GEO_TEXT], "Money Collected:" + std::to_string(bus.GetMoneyCurrent()), Color(1, 0, 0), 3, 0, 84);
-
-	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(TestRef->GetPositionX()) + ", " + std::to_string(TestRef->GetPositionZ()) + ", " + std::to_string(TestRef->GetRotateY()) + ", " + TestRef->GetTag(), Color(1, 0, 1), 3, 0, 0);
-
-	//RenderMeshOnScreen(meshList[GEO_QUAD], 80, 45, 10, 10);
+	
+	if (endGame)
+	{
+		RenderMeshOnScreen(meshList[GEO_OVERLAY], 80, 45, 1000, 1000);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Times Up", Color(1, 0, 0), 8, 50, 82);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Passengers:" + std::to_string(bus.GetPassengerCount()), Color(0, 0, 1), 4, 50, 50);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Money Collected:" + std::to_string(bus.GetMoneyCurrent()), Color(1, 0, 0), 4, 40, 46);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Total Money:" + std::to_string(Bus::GetMoney()), Color(1, 1, 0), 4, 45, 42);
+	}
+	else if (!startGame)
+	{
+		RenderTextOnScreen(meshList[GEO_TEXT], "Press Space to Begin", Color(1, 0, 0), 8, 0, 0);
+	}
+	else
+	{
+		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 4, 0, Application::GetWindowHeight() * .1f);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Passengers:" + std::to_string(bus.GetPassengerCount()), Color(0, 0, 1), 3, 0, 87);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Money Collected:" + std::to_string(bus.GetMoneyCurrent()), Color(1, 0, 0), 3, 0, 84);
+		RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(static_cast<int>(endpoint.GetTime())), Color(1, 0, 0), 8, 74, 82);
+	}
+		
+	//RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(TestRef->GetPositionX()) + ", " + std::to_string(TestRef->GetPositionZ()) + ", " + std::to_string(TestRef->GetRotateY()) + ", " + TestRef->GetTag(), Color(1, 0, 1), 3, 0, 0);
 }
 
 void SceneDrive::Exit()
@@ -1375,7 +1274,7 @@ void SceneDrive::RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int siz
 	viewStack.LoadIdentity(); //No need camera for ortho mode
 	modelStack.PushMatrix();
 	modelStack.LoadIdentity();
-	modelStack.Translate(x, y, 0); 
+	modelStack.Translate(x, y, 0);
 	modelStack.Rotate(180, 1, 0, 0);
 	modelStack.Scale(sizex, sizey, 1);
 	RenderMesh(mesh, false); //UI should not have light

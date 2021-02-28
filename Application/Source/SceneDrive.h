@@ -55,6 +55,7 @@ public:
 		GEO_QUAD,
 		GEO_TEMPLATE,
 		GEO_BORDER,
+		GEO_OVERLAY,
 
 		GEO_CUBE,
 
@@ -171,7 +172,9 @@ private: //added (Step 2)
 
 	//Score score;
 	float coinRot;
-	
+
+	bool startGame, endGame;
+
 
 	Light lights[NUM_LIGHTS];
 	unsigned m_vertexArrayID;
