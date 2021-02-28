@@ -2,7 +2,7 @@
 #define SCENE_SEARCH
 
 #include "Scene.h"
-#include "Camera5.h"
+#include "Target.h"
 #include "Mesh.h"
 #include "MatrixStack.h"
 #include "Vertex.h"
@@ -12,6 +12,7 @@
 #include "Sound.h"
 
 #include <sstream>
+#include <stdlib.h>
 
 class SceneSearch : public Scene
 {
@@ -40,13 +41,13 @@ public:
 	{
 		GEO_AXES = 0,
 
-		GEO_QUAD,
+		GEO_TARGET,
+		GEO_PROGRESS,
 
 		GEO_CUBE,
 
-		GEO_COIN,
-		GEO_PASSPORT,
-		GEO_GOOSE,
+		GEO_INSTRUCTIONS,
+
 		GEO_MALL,
 		GEO_BUILDING1,
 		GEO_BUILDING2,
@@ -100,20 +101,6 @@ public:
 		U_LIGHT0_COSINNER,
 		U_LIGHT0_EXPONENT,
 
-
-		U_LIGHT1_POSITION,
-		U_LIGHT1_COLOR,
-		U_LIGHT1_POWER,
-		U_LIGHT1_KC,
-		U_LIGHT1_KL,
-		U_LIGHT1_KQ,
-		U_LIGHT1_TYPE,
-		U_LIGHT1_SPOTDIRECTION,
-		U_LIGHT1_COSCUTOFF,
-		U_LIGHT1_COSINNER,
-		U_LIGHT1_EXPONENT,
-
-
 		U_LIGHTENABLED,
 		U_NUMLIGHTS,
 
@@ -129,13 +116,26 @@ public:
 	enum LIGHT_TYPES
 	{
 		LIGHT1 = 0,
-		LIGHT2,
 		NUM_LIGHTS,
 	};
 
 
 private: //added (Step 2)
-	Camera5 camera;
+	Target* camera;
+
+	bool game_start;
+
+	int current_target;
+	// press_time (ensures that A or D key presses are only registered as 1 press each time)
+	// spam_time (ensures that spacebar presses are only registered as 1 press each time)
+	//press_count (counts the number of spacebar presses the player has done)
+	//passenger_count (stores the number of passengers found)
+	int press_time, spam_time, press_count, passenger_count;
+
+	int timer;
+
+	Target targets[16];
+
 	Light lights[NUM_LIGHTS];
 	Maps map;
 

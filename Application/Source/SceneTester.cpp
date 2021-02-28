@@ -403,7 +403,7 @@ void SceneTester::Update(double dt)
 	{
 		coin_collect = true;
 		coin1.SetPosition(Position(5, -100, 0));
-		money.IncreaseMoney(15);
+		//money.IncreaseMoney(15);
 		score.increaseScore(0, 15);
 	}
 
@@ -585,7 +585,7 @@ void SceneTester::Render() //My Own Pattern
 	RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(gameObject.GetPhysics()->GetVelocity().x) + ", " + std::to_string(gameObject.GetPhysics()->GetVelocity().y) + ", " + std::to_string(gameObject.GetPhysics()->GetVelocity().z), Color(0, 1, 0), 2, 0, 14);
 
 	std::ostringstream mn;
-	mn << "Money:" << money.getMoney();
+	//mn << "Money:" << money.getMoney();
 	RenderTextOnScreen(meshList[GEO_TEXT], mn.str(), Color(1, 1, 0), 3, 130, 84);
 
 	std::ostringstream sc;

@@ -22,7 +22,7 @@ public:
 
 	GameObject* chase;
 
-	float gap = 20, height = 10;
+	float gap = 50, height = 100;
 
 	CameraChase();
 	~CameraChase();

@@ -141,8 +141,8 @@ public:
 
 
 private: //added (Step 2)
-	Camera3 camera;
-	//CameraChase camera;
+	//Camera3 camera;
+	CameraChase camera;
 
 	Maps map;
 
@@ -150,6 +150,7 @@ private: //added (Step 2)
 	ColliderObj* cluster[51];
 	ColliderObj* borderCol[4];
 	Border* border[4];
+	Money* coins[50];
 	Bus bus;
 	DriveObjective endpoint;
 
@@ -161,9 +162,8 @@ private: //added (Step 2)
 	float multiplier = 4;
 	int clusterType = 1;
 
-	Money money;
-	Score score;
-
+	//Score score;
+	float coinRot;
 	
 
 	Light lights[NUM_LIGHTS];
