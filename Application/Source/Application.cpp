@@ -13,7 +13,6 @@
 
 
 #include "SceneShop.h"
-#include "SceneMaster.h"
 #include "SceneTrivia.h"
 #include "SceneSearch.h"
 #include "SceneIntro.h"
@@ -168,7 +167,7 @@ void Application::Run()
 			if (sceneType + 1 != NUM_SCENES)
 				sceneType++;
 			else
-				sceneType = INTRO;
+				sceneType = DRIVE;
 
 			if (sceneType == START_MENU) scene_ptr = new MainMenu();
 			if (sceneType == INTRO) scene_ptr = new SceneIntro();
@@ -195,32 +194,6 @@ void Application::Run()
 
 			scene_ptr->Init();
 		}
-		/*if (Application::changeScene)
-		{
-			switch (scene)
-			{
-			case Application::S_MAIN:
-				scene_ptr = new MainMenu;
-				break;
-			case Application::S_INTRO:
-				scene_ptr = new SceneIntro;
-				break;
-			case Application::S_DRIVE:
-				scene_ptr = new SceneDrive;
-				break;
-			case Application::S_TRIVIA:
-				scene_ptr = new SceneTrivia;
-				break;
-			case Application::S_SEARCH:
-				scene_ptr = new SceneSearch;
-				break;
-			case Application::S_SHOP:
-				scene_ptr = new MainMenu;
-				break;
-			default:
-				break;
-			}
-		}*/
 		scene_ptr->Update(m_timer.getElapsedTime());
 		scene_ptr->Render();
 		//Swap buffers

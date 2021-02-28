@@ -45,7 +45,7 @@ void SceneSearch::Init()
 
 	game_start = game_pause = false;
 
-	int min = 2; //min is how long this game will last in minutes
+	int min = 1; //min is how long this game will last in minutes
 	timer = min * 60 * 60;
 
 	for (int cam = 0; cam < 9; cam++) //Uses randomizer to set up to 9 random targets/buildings to have passengers
