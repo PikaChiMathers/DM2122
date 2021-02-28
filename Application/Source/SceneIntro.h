@@ -159,8 +159,7 @@ private: //added (Step 2)
 	void RenderTextOnScreen(Mesh* mesh, std::string text, Color color, float size, float x, float y);
 
 	void RenderMeshOnScreen(Mesh* mesh, int x, int y, int sizex, int sizey);
-	int TextCounter;
-
+	int Space_Pressed;
 	unsigned m_parameters[U_TOTAL];
 	unsigned m_programID;
 };

@@ -36,7 +36,7 @@ void SceneIntro::Init()
 	honk_count = 1;
 	IsSpacePressed = false;
 	displayUI = false;
-	//TextCounter = 0;
+	Space_Pressed = 0;
 
 	camera.Init(Vector3(-0.7, 39, -68), Vector3(-0.67, 38.65, -67), Vector3(0, 1, 0));
 	map.Set(Maps::SKYBOX_TYPE::SB_INTRO);
@@ -317,15 +317,25 @@ void SceneIntro::Update(double dt)
 		glUniform1i(m_parameters[U_LIGHT1_TYPE], lights[1].type);
 	}
 
-	if (IsSpacePressed == true && !Application::IsKeyPressed(VK_SPACE))
+	if (Application::IsKeyPressed(VK_SPACE))
 	{
-		IsSpacePressed = false;
+		Space_Pressed++;
+		if (Space_Pressed == 1)
+		{
+			IsSpacePressed = true;
+		}
+		
  	
+
+	}
+
+	else
+	{
+		Space_Pressed = 0;
 	}
 		
-	if (bosscollider.IsTriggered() && IsSpacePressed == false)
+	if (bosscollider.IsTriggered() && IsSpacePressed)
 	{
-		IsSpacePressed = true;
 		std::cout << "triggerd";
 		displayUI = true;
 
@@ -344,7 +354,7 @@ void SceneIntro::Update(double dt)
 			meshList[GEO_UI]->textureID = LoadTGA("Assets//Boss_Dialogue_Box.tga");
 		}*/
 	};
-	if (displayUI == true && Application::IsKeyPressed(VK_SPACE))
+	if (displayUI == true && IsSpacePressed == true)
 	{
 		nextScene = true;
 	}
@@ -464,18 +474,20 @@ void SceneIntro::Render() //My Own Pattern
 	{
 		RenderTextOnScreen(meshList[GEO_TEXT], "Hey there bucko, ya need money fast? Well... I have just the job for you!", Color(0, 0, 0.9f), 3, 3, 56);
 		RenderTextOnScreen(meshList[GEO_TEXT], "Welcome to Goose Tours! Here at goose tours you will be kidnapping tourists", Color(0, 0, 0.9f), 3, 3, 54);
-		RenderTextOnScreen(meshList[GEO_TEXT], "and bringing them around our city for a nice tour. After that they will need to pay us, then boom. Profit", Color(0, 0, 0.9f), 3, 3, 52);
+		RenderTextOnScreen(meshList[GEO_TEXT], "and bringing them around our city for a nice tour", Color(0, 0, 0.9f), 3, 3, 52);
 		RenderTextOnScreen(meshList[GEO_TEXT], "After that they will need to pay us, then boom. Profit", Color(0, 0, 0.9f), 3, 3, 50);
-		RenderTextOnScreen(meshList[GEO_TEXT], "You know how to drive a bus right? You use WASD to move and spacebar to honk and hold left shift to start drifting", Color(0, 0, 0.9f), 3, 3, 48);
-		RenderTextOnScreen(meshList[GEO_TEXT], "When the day begins, the first thing you need to do is find our victi- ", Color(0, 0, 0.9f), 3, 3, 46);
-		RenderTextOnScreen(meshList[GEO_TEXT], "I mean our customers, and pick them up by driving over them. Try to collect coins along to way too to maximise profits", Color(0, 0, 0.9f), 3, 3, 44);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Collect as many passengers as possible before the timer runs out", Color(0, 0, 0.9f), 3, 3, 42);
-		RenderTextOnScreen(meshList[GEO_TEXT], "At the bird park, there will be a quiz to show off your extensive bird knowledge off. Get a high score to earn more passengers", Color(0, 0, 0.9f), 3, 3, 40);
-		RenderTextOnScreen(meshList[GEO_TEXT], "After that, you may want to evict some humans out of their homes to further increase your passanger count.", Color(0, 0, 0.9f), 3, 3, 38);
-		RenderTextOnScreen(meshList[GEO_TEXT], "You can do so by rapidly honking at them until they go insane", Color(0, 0, 0.9f), 3, 3, 36);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Use your hard earned money from your passenger's wallets to buy upgrades for your bus at the end of the day and repeat the cycle", Color(0, 0, 0.9f), 3, 3, 34);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Simple enough right? Lets get to it!", Color(0, 0, 0.9f), 3, 3, 32);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Press Space to Continue", Color(0, 0, 0.9f), 5, 3, 26);
+		RenderTextOnScreen(meshList[GEO_TEXT], "You know how to drive a bus right? You use WASD to move and spacebar", Color(0, 0, 0.9f), 3, 3, 48);
+		RenderTextOnScreen(meshList[GEO_TEXT], "to honk and hold left shift to start drifting", Color(0, 0, 0.9f), 3, 3, 46);
+		RenderTextOnScreen(meshList[GEO_TEXT], "When the day begins, the first thing you need to do is find our victi- ", Color(0, 0, 0.9f), 3, 3, 44);
+		RenderTextOnScreen(meshList[GEO_TEXT], "I mean our customers, and pick them up by driving over them.", Color(0, 0, 0.9f), 3, 3, 42);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Try to collect coins along to way too to maximise profits", Color(0, 0, 0.9f), 3, 3, 40);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Collect as many passengers as possible before the timer runs out", Color(0, 0, 0.9f), 3, 3, 38);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Then, there will be a quiz. Get a high score to earn more passengers", Color(0, 0, 0.9f), 3, 3, 36);
+		RenderTextOnScreen(meshList[GEO_TEXT], "After that, evict some humans to further increase your passenger count.", Color(0, 0, 0.9f), 3, 3, 34);
+		RenderTextOnScreen(meshList[GEO_TEXT], "You can do so by rapidly honking at their building until they go insane", Color(0, 0, 0.9f), 3, 3, 32);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Use your hard earned money to buy upgrades for your bus", Color(0, 0, 0.9f), 3, 3, 30);
+		RenderTextOnScreen(meshList[GEO_TEXT], "After that, its just rinse repeat. Simple enough right? Lets get to it!", Color(0, 0, 0.9f), 3, 3, 28);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Press Space to Continue", Color(0, 0, 0.9f), 5, 3, 22);
 
 	}
 	
