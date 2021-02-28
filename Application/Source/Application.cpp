@@ -13,7 +13,7 @@
 
 
 #include "SceneShop.h"
-#include "SceneTester.h"
+#include "SceneMaster.h"
 #include "SceneTrivia.h"
 #include "SceneSearch.h"
 #include "SceneIntro.h"
@@ -146,7 +146,7 @@ void Application::Run()
 			scene_ptr->Exit();
 			delete scene_ptr;
 
-			if (IsKeyPressed(VK_F1)) scene_ptr = new SceneTester();
+			if (IsKeyPressed(VK_F1)) scene_ptr = new SceneMaster();
 			if (IsKeyPressed(VK_F2)) scene_ptr = new SceneIntro();
 			if (IsKeyPressed(VK_F3)) scene_ptr = new SceneDrive();
 			if (IsKeyPressed(VK_F4)) scene_ptr = new SceneTrivia();
