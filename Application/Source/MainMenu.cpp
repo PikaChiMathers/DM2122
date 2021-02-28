@@ -271,11 +271,11 @@ void MainMenu::Update(double dt)
 
 	if (buttonPressed == false)
 	{
-		meshList[GEO_UI]->textureID = LoadTGA("Assets//start_down.tga");
+		meshList[GEO_UI]->textureID = LoadTGA("Assets//start.tga");
 	}
 	else
 	{
-		meshList[GEO_UI]->textureID = LoadTGA("Assets//start.tga");
+		meshList[GEO_UI]->textureID = LoadTGA("Assets//start_down.tga");
 	}
 }
 
