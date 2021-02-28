@@ -40,7 +40,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 bool Application::IsKeyPressed(unsigned short key)
 {
-    return ((GetAsyncKeyState(key) & 0x8001) != 0);
+	return ((GetAsyncKeyState(key) & 0x8001) != 0);
 }
 
 Application::Application()
@@ -54,8 +54,6 @@ Application::~Application()
 unsigned Application::m_width;
 unsigned Application::m_height;
 
-Application::ENUM_SCENE scene;
-
 void resize_callback(GLFWwindow* window, int w, int h)
 {
 	glViewport(0, 0, w, h); //update opengl the new window size
@@ -66,7 +64,7 @@ void resize_callback(GLFWwindow* window, int w, int h)
 
 bool Application::IsMousePressed(unsigned short key) //0 - Left, 1- Right, 2 - Middle
 {
-return glfwGetMouseButton(m_window, key) != 0;
+	return glfwGetMouseButton(m_window, key) != 0;
 }
 void Application::GetCursorPos(double* xpos, double* ypos)
 {
@@ -80,15 +78,6 @@ int Application::GetWindowHeight()
 {
 	return m_height;
 }
-
-bool Application::changeScene = false;
-Application::ENUM_SCENE Application::scene;
-void Application::ChangeScene(ENUM_SCENE scene)
-{
-	Application::scene = scene;
-	Application::changeScene = true;
-}
-
 
 void Application::Init()
 {
@@ -118,7 +107,7 @@ void Application::Init()
 	//If the window couldn't be created
 	if (!m_window)
 	{
-		fprintf( stderr, "Failed to open GLFW window.\n" );
+		fprintf(stderr, "Failed to open GLFW window.\n");
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
@@ -136,7 +125,7 @@ void Application::Init()
 	GLenum err = glewInit();
 
 	//If GLEW hasn't initialized
-	if (err != GLEW_OK) 
+	if (err != GLEW_OK)
 	{
 		fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
 		//return -1;
@@ -145,24 +134,63 @@ void Application::Init()
 
 void Application::Run()
 {
+	int sceneType = START_MENU;
+	int passengers = 0;
+	int money = 0;
+	int speed_level = 0;
+	int spawn_level = 0;
+	int capacity_level = 0;
+
 	Scene* scene_ptr = new MainMenu();
 	scene_ptr->Init();
 
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 	while (!glfwWindowShouldClose(m_window) && !(IsKeyPressed(VK_ESCAPE) && IsKeyPressed(VK_SHIFT)))
 	{ // stop removing this feature
-		if (IsKeyPressed(VK_F1) || IsKeyPressed(VK_F2) || IsKeyPressed(VK_F3) || IsKeyPressed(VK_F4) || IsKeyPressed(VK_F5) || IsKeyPressed(VK_F6) || IsKeyPressed(VK_F7))
+		if (scene_ptr->nextScene)
 		{
+			if (sceneType == SHOP)
+			{ //Only takes level ups from shop
+				speed_level = scene_ptr->speed_level;
+				spawn_level = scene_ptr->spawn_level;
+				capacity_level = scene_ptr->capacity_level;
+			}
+			else
+			{ //Only takes increased passengers & money from games
+				passengers += scene_ptr->passengers;
+				money += scene_ptr->money;
+			}
+
 			scene_ptr->Exit();
 			delete scene_ptr;
 
-			if (IsKeyPressed(VK_F1)) scene_ptr = new SceneMaster();
-			if (IsKeyPressed(VK_F2)) scene_ptr = new SceneIntro();
-			if (IsKeyPressed(VK_F3)) scene_ptr = new SceneDrive();
-			if (IsKeyPressed(VK_F4)) scene_ptr = new SceneTrivia();
-			if (IsKeyPressed(VK_F5)) scene_ptr = new SceneSearch();
-			if (IsKeyPressed(VK_F6)) scene_ptr = new SceneShop();
-			if (IsKeyPressed(VK_F7)) scene_ptr = new MainMenu();
+			if (sceneType + 1 != NUM_SCENES)
+				sceneType++;
+			else
+				sceneType = INTRO;
+
+			if (sceneType == START_MENU) scene_ptr = new MainMenu();
+			if (sceneType == INTRO) scene_ptr = new SceneIntro();
+			if (sceneType == DRIVE)
+			{
+				scene_ptr = new SceneDrive();
+				scene_ptr->speed_level = speed_level;
+				scene_ptr->spawn_level = spawn_level;
+				scene_ptr->capacity_level = capacity_level;
+			}
+			if (sceneType == TRIVIA) scene_ptr = new SceneTrivia();
+			if (sceneType == SEARCH) scene_ptr = new SceneSearch();
+			if (sceneType == SHOP)
+			{ //end of day
+				int passenger_ticket = 50; //price of tickets
+				scene_ptr = new SceneShop();
+				money += passengers * passenger_ticket;
+				scene_ptr->money = money;
+				scene_ptr->speed_level = speed_level;
+				scene_ptr->spawn_level = spawn_level;
+				scene_ptr->capacity_level = capacity_level;
+			}
+
 
 			scene_ptr->Init();
 		}
@@ -198,7 +226,7 @@ void Application::Run()
 		glfwSwapBuffers(m_window);
 		//Get and organize events, like keyboard and mouse input, window resizing, etc...
 		glfwPollEvents();
-        m_timer.waitUntil(frameTime);       // Frame rate limiter. Limits each frame to a specified time in ms.   
+		m_timer.waitUntil(frameTime);       // Frame rate limiter. Limits each frame to a specified time in ms.   
 
 	} //Check if the ESC key had been pressed or if the window had been closed
 

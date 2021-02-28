@@ -274,11 +274,14 @@ void SceneSearch::Update(double dt)
 					camera->has_checked = true;
 				}
 			}
+		}
 
-			if (Application::IsKeyPressed(VK_SPACE))
+		if (Application::IsKeyPressed(VK_SPACE))
+		{
+			spam_time++;
+			if (spam_time == 1)
 			{
-				spam_time++;
-				if (spam_time == 1)
+				if (timer > 0)
 				{
 					if (game_start)
 					{
@@ -294,10 +297,15 @@ void SceneSearch::Update(double dt)
 					else
 						game_start = true;
 				}
+				else
+				{
+					passengers = passenger_count;
+					nextScene = true;
+				}
 			}
-			else
-				spam_time = 0;
 		}
+		else
+			spam_time = 0;
 	}
 
 }
@@ -374,6 +382,7 @@ void SceneSearch::Render() //My Own Pattern
 				RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(passenger_count) + " passenger(s) joined the rest of the tour!", Color(0, 0, 0), 4, 30, 45);
 			else
 				RenderTextOnScreen(meshList[GEO_TEXT], "You could not find anyone to join the tour.", Color(0, 0, 0), 4, 30, 45);
+			RenderTextOnScreen(meshList[GEO_TEXT], "Press Spacebar to Continue", Color(0, 0, 0), 4, 35, 40);
 		}
 	}
 	else

@@ -112,11 +112,10 @@ private: //added (Step 2)
 	Dialogue* Qn;
 	std::string Qn_str;
 
-	int press_time, qn_num, score, passengers;
+	int press_time, qn_num, score;
 	//press_time (number of times press spacebar is registered) (helps to prevent multiple registered keypresses)
 	//qn_num (current question number)
 	//score (player's score)
-	//passengers (number of passengers that left or joined in depending on player's score)
 	std::string answer;
 	bool play_once; //ensures hooray/aww sound is played only once
 
