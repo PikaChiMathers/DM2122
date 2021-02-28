@@ -190,6 +190,9 @@ private:
 	double timer_main_menu;
 	bool timerTriggered;
 
+	//pause menu variables
+	bool game_pause;
+
 	//driving variables
 	int honk_count;
 	bool honkerdonker = false;
