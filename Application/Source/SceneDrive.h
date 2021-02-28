@@ -48,9 +48,6 @@ public:
 	bool honkerdonker = false;
 	Sound sound;
 
-	bool finishScene;
-	bool getFinishScene();
-
 	enum GEOMETRY_TYPE //added (Step 1)
 	{
 		GEO_AXES = 0,

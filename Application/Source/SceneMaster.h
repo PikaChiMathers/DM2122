@@ -18,7 +18,6 @@
 #include "Money.h"
 #include "Objects.h"
 #include "Scene.h"
-#include "SceneDrive.h"
 #include "Shop.h"
 #include "Sound.h"
 #include "Target.h"
@@ -57,6 +56,20 @@ public:
 		GEO_QUAD,
 
 		GEO_OVERLAY,
+
+		GEO_TEMPLATE_DRIVING,
+		GEO_BORDER_DRIVING,
+		GEO_OVERLAY_DRIVING,
+		GEO_CUBE_DRIVING,
+		GEO_COIN_DRIVING,
+		GEO_NPC_DRIVING,
+		GEO_BUILDING1_DRIVING,
+		GEO_BUILDING2_DRIVING,
+		GEO_BUILDING3_DRIVING,
+		GEO_BUILDING1B_DRIVING,
+		GEO_BUILDING2B_DRIVING,
+		GEO_BUILDING3B_DRIVING,
+		GEO_TEST_DRIVING,
 
 		GEO_GOOSE_TRIVIA,
 		GEO_CONFETTI_TRIVIA,
@@ -184,7 +197,6 @@ private:
 
 	double timer_minigame; //for swapping scene
 	bool minigameTimerTriggered;
-	bool enterPressed;
 
 	//main menu variables
 	bool buttonState;
@@ -197,7 +209,32 @@ private:
 	unsigned prePausedScene;
 
 	//driving variables
-	SceneDrive* driving;
+	int honk_count;
+	bool honkerdonker = false;
+
+	GameObjectManager manager_driving;
+	ColliderObj* cluster[51];
+	ColliderObj* borderCol[4];
+	Border* border[4];
+	Money* coins[38];
+
+	Person* npc[15];
+	Position npcSpawn[15];
+
+	Bus bus;
+	DriveObjective endpoint;
+
+	ColliderObj temp;
+
+	GameObject* TestRef;
+	double toggleTime = 0;
+	bool toggleHitBox = false;
+	float multiplier = 4;
+	int clusterType = 1;
+
+	float coinRot;
+
+	bool startGame, endGame, paused;
 
 	//trivia variables
 	std::string Qn_str;
@@ -246,6 +283,7 @@ private:
 
 	double timer_shop;
 	bool spacePressed;
+	bool enterPressed;
 
 	//shared
 	void RenderMesh(Mesh* mesh, bool enableLight);

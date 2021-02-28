@@ -681,8 +681,6 @@ void SceneDrive::Init()
 	TestRef = &bus;
 
 	startGame = endGame = paused = false;
-
-	finishScene = false;
 }
 
 void SceneDrive::Update(double dt)
@@ -709,7 +707,7 @@ void SceneDrive::Update(double dt)
 	{// if game ended
 		if (Application::IsKeyPressed(VK_SPACE))
 		{
-			finishScene = true;
+			//go to next scene
 		}
 	}
 	else
@@ -1119,11 +1117,6 @@ void SceneDrive::Exit()
 	//Step 6c
 	glDeleteProgram(m_programID);
 
-}
-
-bool SceneDrive::getFinishScene()
-{
-	return finishScene;
 }
 
 void SceneDrive::RenderMesh(Mesh* mesh, bool enableLight)
