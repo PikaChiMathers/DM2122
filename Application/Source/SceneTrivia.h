@@ -42,6 +42,7 @@ public:
 		GEO_QUAD,
 
 		GEO_GOOSE,
+		GEO_CONFETTI,
 
 		GEO_TV,
 		GEO_LOGO,
@@ -111,8 +112,13 @@ private: //added (Step 2)
 	Dialogue* Qn;
 	std::string Qn_str;
 
-	int press_time, qn_num, score;
+	int press_time, qn_num, score, passengers;
+	//press_time (number of times press spacebar is registered) (helps to prevent multiple registered keypresses)
+	//qn_num (current question number)
+	//score (player's score)
+	//passengers (number of passengers that left or joined in depending on player's score)
 	std::string answer;
+	bool play_once; //ensures hooray/aww sound is played only once
 
 	GameObjectManager manager;
 	Goose goose;
@@ -129,7 +135,9 @@ private: //added (Step 2)
 
 	MS modelStack, viewStack, projectionStack;
 
-	void Check_Answer();
+	void Check_Answer(); //To check player's trivia answer
+
+	void RenderRoom();
 
 	void RenderMesh(Mesh* mesh, bool enableLight);
 

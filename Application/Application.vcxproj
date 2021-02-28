@@ -160,6 +160,7 @@
     <ClCompile Include="Source\DriveObjective.cpp" />
     <ClCompile Include="Source\MainMenu.cpp" />
     <ClCompile Include="Source\SceneDrive.cpp" />
+    <ClCompile Include="Source\SceneMaster.cpp" />
     <ClCompile Include="Source\Test.cpp" />
     <ClCompile Include="Source\TriggerCollider.cpp" />
     <ClCompile Include="Source\Bus.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="Source\DriveObjective.h" />
     <ClInclude Include="Source\MainMenu.h" />
     <ClInclude Include="Source\SceneDrive.h" />
+    <ClInclude Include="Source\SceneMaster.h" />
     <ClInclude Include="Source\Test.h" />
     <ClInclude Include="Source\TriggerCollider.h" />
     <ClInclude Include="Source\Bus.h" />
