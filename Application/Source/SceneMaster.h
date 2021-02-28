@@ -107,11 +107,11 @@ public:
 	{
 		MAIN_MENU = 0,
 		PAUSE_MENU,
-		SCENE_INTRO,
-		SCENE_DRIVE,
-		SCENE_TRIVIA,
-		SCENE_SEARCH,
-		SCENE_SHOP,
+		INTRO,
+		DRIVING,
+		TRIVIA,
+		SEARCH,
+		SHOP,
 	};
 
 private:
