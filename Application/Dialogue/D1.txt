@@ -1,4 +1,9 @@
-2 Welcome to Goose Tours! Here at goose tours you will be kidnapping tourists and bringing them around our city for a nice tour. After that, you need to send them back to where you found them and then make them pay us for the tour.
-2 You know how to drive a bus right? You use WASD to move and spacebar to honk.
-2 When the day begins, the first thing you need to do is find our victi- I mean our customers, and pick them up by driving over them. Try and get as many customers as possible to maximise profits. 
-2 Then, bring the whole lot of them over to the attraction for the day on time. These attraction owners are fussy about the time so do not be late. Keep your audience somewhat entertained with your antics for a while so they do not leave early.
+2 Hey there bucko, ya need money fast? Well... I have just the job for you! 
+2 Welcome to Goose Tours! Here at goose tours you will be kidnapping tourists and bringing them around our city for a nice tour. After that they will need to pay us, then boom. Profit
+2 You know how to drive a bus right? You use WASD to move and spacebar to honk and hold left shift to start drifting
+2 When the day begins, the first thing you need to do is find our victi- I mean our customers, and pick them up by driving over them. Try to collect coins along to way too to maximise profits
+2 Once you have collect enough passangers, bring them to the light green area on the map
+2 At the bird park, there will be a quiz to show off your extensive bird knowledge off. Get a high score to earn more passengers
+2 After that, you may want to evict some humans out of their homes to further increase your passanger count. You can do so by rapidly honking at them until they go insane
+2 Use your hard earned money from your passenger's wallets to buy upgrades for your bus at the end of the day and repeat the cycle
+2 Simple enough right? Lets get to it!
