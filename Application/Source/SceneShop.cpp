@@ -14,7 +14,6 @@
 
 SceneShop::SceneShop()
 {
-	money = 1500;
 }
 
 SceneShop::~SceneShop()

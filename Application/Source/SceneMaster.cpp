@@ -21,7 +21,7 @@ SceneMaster::~SceneMaster()
 
 void SceneMaster::Init()
 {
-	map.Set(Maps::SKYBOX_TYPE::SB_SHOP); //to be changed
+	map.Set(Maps::SKYBOX_TYPE::SB_DAY);
 
 	Mtx44 projection;
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
@@ -31,10 +31,8 @@ void SceneMaster::Init()
 
 	rotateAngle = 0;
 
-	//Set background color to dark blue (Step 3a)
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
-	//Generate a default VAO (Step 4a)
 	glGenVertexArrays(1, &m_vertexArrayID);
 	glBindVertexArray(m_vertexArrayID);
 
@@ -221,10 +219,10 @@ void SceneMaster::Init()
 
 	glUseProgram(m_programID);
 
-	lights[0].type = Light::LIGHT_DIRECTIONAL; //to be changed
-	lights[0].position.Set(0, 10, 0);
+	lights[0].type = Light::LIGHT_POINT;
+	lights[0].position.Set(0, 1000, 0);
 	lights[0].color.Set(1, 1, 1);
-	lights[0].power = 3;
+	lights[0].power = 4500;
 	lights[0].kC = 1.f;
 	lights[0].kL = 0.01f;
 	lights[0].kQ = 0.001f;
@@ -865,6 +863,18 @@ void SceneMaster::Update(double dt)
 				scene_change = true;
 				scene = DRIVING;
 				map.Set(Maps::SKYBOX_TYPE::SB_DAY);
+
+				lights[0].type = Light::LIGHT_POINT;
+				lights[0].position.Set(0, 1000, 0);
+				lights[0].color.Set(1, 1, 1);
+				lights[0].power = 4500;
+				lights[0].kC = 1.f;
+				lights[0].kL = 0.01f;
+				lights[0].kQ = 0.001f;
+				lights[0].cosCutoff = cos(Math::DegreeToRadian(45));
+				lights[0].cosInner = cos(Math::DegreeToRadian(30));
+				lights[0].exponent = 3.f;
+				lights[0].spotDirection.Set(0.f, 1.f, 0.f);
 			}
 		}
 		else if (scene == INTRO)
@@ -896,12 +906,36 @@ void SceneMaster::Update(double dt)
 					if (rand() % 2 == 0)
 					{
 						scene = TRIVIA;
+
+						lights[0].type = Light::LIGHT_POINT;
+						lights[0].position.Set(0, 20, 0);
+						lights[0].color.Set(1, 1, 1);
+						lights[0].power = 5;
+						lights[0].kC = 1.f;
+						lights[0].kL = 0.01f;
+						lights[0].kQ = 0.001f;
+						lights[0].cosCutoff = cos(Math::DegreeToRadian(45));
+						lights[0].cosInner = cos(Math::DegreeToRadian(30));
+						lights[0].exponent = 3.f;
+						lights[0].spotDirection.Set(0.f, 1.f, 0.f);
 					}
 					else
 					{
 						scene_change = true;
 						scene = SEARCH;
 						map.Set(Maps::SKYBOX_TYPE::SB_DAY);
+
+						lights[0].type = Light::LIGHT_POINT;
+						lights[0].position.Set(0, 1000, 0);
+						lights[0].color.Set(1, 1, 1);
+						lights[0].power = 1800;
+						lights[0].kC = 1.f;
+						lights[0].kL = 0.01f;
+						lights[0].kQ = 0.001f;
+						lights[0].cosCutoff = cos(Math::DegreeToRadian(45));
+						lights[0].cosInner = cos(Math::DegreeToRadian(30));
+						lights[0].exponent = 3.f;
+						lights[0].spotDirection.Set(-1.f, 1.f, 0.f);
 					}
 				}
 			}
@@ -1031,6 +1065,18 @@ void SceneMaster::Update(double dt)
 					scene_change = true;
 					scene = SHOP;
 					map.Set(Maps::SKYBOX_TYPE::SB_SHOP);
+
+					lights[0].type = Light::LIGHT_DIRECTIONAL;
+					lights[0].position.Set(0, 10, 0);
+					lights[0].color.Set(1, 1, 1);
+					lights[0].power = 3;
+					lights[0].kC = 1.f;
+					lights[0].kL = 0.01f;
+					lights[0].kQ = 0.001f;
+					lights[0].cosCutoff = cos(Math::DegreeToRadian(45));
+					lights[0].cosInner = cos(Math::DegreeToRadian(30));
+					lights[0].exponent = 3.f;
+					lights[0].spotDirection.Set(0.f, 1.f, 0.f);
 				}
 
 				if (timer_minigame > 0)
@@ -1121,6 +1167,18 @@ void SceneMaster::Update(double dt)
 					scene_change = true;
 					scene = SHOP;
 					map.Set(Maps::SKYBOX_TYPE::SB_SHOP);
+
+					lights[0].type = Light::LIGHT_DIRECTIONAL;
+					lights[0].position.Set(0, 10, 0);
+					lights[0].color.Set(1, 1, 1);
+					lights[0].power = 3;
+					lights[0].kC = 1.f;
+					lights[0].kL = 0.01f;
+					lights[0].kQ = 0.001f;
+					lights[0].cosCutoff = cos(Math::DegreeToRadian(45));
+					lights[0].cosInner = cos(Math::DegreeToRadian(30));
+					lights[0].exponent = 3.f;
+					lights[0].spotDirection.Set(0.f, 1.f, 0.f);
 				}
 
 				if (timer_minigame > 0)
@@ -1246,6 +1304,18 @@ void SceneMaster::Update(double dt)
 				scene_change = true;
 				scene = DRIVING;
 				map.Set(Maps::SKYBOX_TYPE::SB_DAY);
+
+				lights[0].type = Light::LIGHT_POINT;
+				lights[0].position.Set(0, 1000, 0);
+				lights[0].color.Set(1, 1, 1);
+				lights[0].power = 4500;
+				lights[0].kC = 1.f;
+				lights[0].kL = 0.01f;
+				lights[0].kQ = 0.001f;
+				lights[0].cosCutoff = cos(Math::DegreeToRadian(45));
+				lights[0].cosInner = cos(Math::DegreeToRadian(30));
+				lights[0].exponent = 3.f;
+				lights[0].spotDirection.Set(0.f, 1.f, 0.f);
 			}
 
 			if (enterPressed == true && !Application::IsKeyPressed(VK_LSHIFT))
