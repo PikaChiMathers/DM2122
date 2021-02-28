@@ -44,6 +44,8 @@ public:
 	{
 		GEO_AXES = 0,
 
+		GEO_QUAD,
+
 		GEO_BUS_SHOP,
 
 		GEO_GOOSE_TRIVIA,
@@ -134,12 +136,40 @@ private:
 	//shop camera
 	Camera4 camera4;
 
+	//general variables
+	Dialogue* dialogue;
+
+	Sound sound;
+	bool play_once; //ensures sound is played only once
+
+	int passengers;
+
+	//trivia variables
+	std::string Qn_str;
+	int press_time; //number of times press spacebar is registered (helps to prevent multiple registered keypresses)
+	int qn_num; //current question number
+
+	int score;
+	std::string answer;
+
+	GameObjectManager manager;
+	Goose goose;
+	Objects P_A, P_B, P_C; //Podium A, B & C
+	Objects C_F, C_B, C_L, C_R; //Collider front, back, left & right
+	TriggerCollider T_A, T_B, T_C;//Trigger A, B & C
+
+	void Check_Answer(); //To check player's trivia answer
+
+	void RenderRoom();
+
 	//shop variables
 	Shop shop;
+
 	bool displayShopUI0;
 	bool displayShopUI1;
 	bool displayShopUI2;
 	bool displayMessage;
+
 	int money;
 	double timer;
 	bool spacePressed;

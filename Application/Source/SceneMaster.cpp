@@ -21,6 +21,8 @@ SceneMaster::~SceneMaster()
 
 void SceneMaster::Init()
 {
+	camera3.Init(Vector3(0, 9.2f, -23), Vector3(0, 9.15f, -22), Vector3(0, 1, 0.05f));
+
 	camera4.Init(Vector3(9.5f, 3, 6), Vector3(0, 3, 0), Vector3(0, 1, 0));
 	camera4.setShopBound(Vector3(-18.85f, 2, -8.35f), Vector3(18.85f, 4, 8.35f));
 	camera4.setBusBound(Vector3(-13.5f, 2, -4), Vector3(13.5f, 4, 4));
@@ -56,7 +58,40 @@ void SceneMaster::Init()
 	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left", Color(1, 1, 1), 1.f, 1.f);
 	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", Color(1, 1, 1), 1.f, 1.f);
 
-	meshList[GEO_BUS_SHOP] = MeshBuilder::GenerateOBJ("bus", "OBJ//bus.obj", Color(0, 1, 1));
+	//trivia meshes
+	{
+		meshList[GEO_GOOSE_TRIVIA] = MeshBuilder::GenerateOBJ("Goose", "OBJ//goose.obj", Color(.93f, .79f, 0));
+		meshList[GEO_GOOSE_TRIVIA]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+		meshList[GEO_GOOSE_TRIVIA]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
+		meshList[GEO_GOOSE_TRIVIA]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
+		meshList[GEO_GOOSE_TRIVIA]->material.kShininess = 1.f;
+
+		meshList[GEO_PODIUM_A_TRIVIA] = MeshBuilder::GenerateOBJ("A", "OBJ//podium.obj", Color(1, 0, 0));
+		meshList[GEO_PODIUM_B_TRIVIA] = MeshBuilder::GenerateOBJ("B", "OBJ//podium.obj", Color(0, 1, 0));
+		meshList[GEO_PODIUM_C_TRIVIA] = MeshBuilder::GenerateOBJ("C", "OBJ//podium.obj", Color(0, 0, 1));
+
+		meshList[GEO_TV_TRIVIA] = MeshBuilder::GenerateQuad("television", Color(1, 1, 1), 1, 1);
+		meshList[GEO_TV_TRIVIA]->textureID = LoadTGA("Image//television.tga");
+		meshList[GEO_TV_TRIVIA]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+		meshList[GEO_TV_TRIVIA]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
+		meshList[GEO_TV_TRIVIA]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
+		meshList[GEO_TV_TRIVIA]->material.kShininess = 1.f;
+
+		meshList[GEO_CONFETTI_TRIVIA] = MeshBuilder::GenerateRevQuad("confetti", Color(1, 1, 1), 160, 90);
+		meshList[GEO_CONFETTI_TRIVIA]->textureID = LoadTGA("Image//confetti.tga");
+
+		meshList[GEO_LOGO_TRIVIA] = MeshBuilder::GenerateQuad("logo", Color(1, 1, 1), 1, 1);
+		meshList[GEO_LOGO_TRIVIA]->textureID = LoadTGA("Image//trivia_logo.tga");
+		meshList[GEO_LOGO_TRIVIA]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+		meshList[GEO_LOGO_TRIVIA]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
+		meshList[GEO_LOGO_TRIVIA]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
+		meshList[GEO_LOGO_TRIVIA]->material.kShininess = 1.f;
+	}
+
+	//shop meshes
+	{
+		meshList[GEO_BUS_SHOP] = MeshBuilder::GenerateOBJ("bus", "OBJ//bus.obj", Color(0, 1, 1));
+	}
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//trebuchet.tga");
@@ -112,18 +147,6 @@ void SceneMaster::Init()
 	lights[0].exponent = 3.f;
 	lights[0].spotDirection.Set(0.f, 1.f, 0.f);
 
-	lights[1].type = Light::LIGHT_SPOT;
-	lights[1].position.Set(0, 20, 0);
-	lights[1].color.Set(1, 1, 1);
-	lights[1].power = 1;
-	lights[1].kC = 1.f;
-	lights[1].kL = 0.01f;
-	lights[1].kQ = 0.001f;
-	lights[1].cosCutoff = cos(Math::DegreeToRadian(45));
-	lights[1].cosInner = cos(Math::DegreeToRadian(30));
-	lights[1].exponent = 3.f;
-	lights[1].spotDirection.Set(0.f, 0.5f, 0.f);
-
 	glUniform1i(m_parameters[U_NUMLIGHTS], 1);
 	glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
 	glUniform3fv(m_parameters[U_LIGHT0_COLOR], 1, &lights[0].color.r);
@@ -137,11 +160,63 @@ void SceneMaster::Init()
 
 	glEnable(GL_DEPTH_TEST);
 
+	//trivia init
+	{
+		manager.CreateGameObject(&goose);
+
+		//Initializes the Podiums A, B & C
+		manager.CreateGameObject(&P_A);
+		manager.CreateGameObject(&P_B);
+		manager.CreateGameObject(&P_C);
+
+		//Initializes Wall Colliders front, back, left & right
+		manager.CreateGameObject(&C_F);
+		manager.CreateGameObject(&C_B);
+		manager.CreateGameObject(&C_L);
+		manager.CreateGameObject(&C_R);
+
+		//Initializes Trigger (Checks whether the player presses spacebar in a cerrtain area) of each podium
+		manager.CreateGameObject(&T_A);
+		manager.CreateGameObject(&T_B);
+		manager.CreateGameObject(&T_C);
+
+		//Sets the position of each Object
+		goose.SetRotateY(180);
+		goose.SetPosition(Position(0, -.5f, -5));
+
+		P_A.SetPosition(Position(5, 0, 0));
+		P_B.SetPosition(Position(0, 0, 0));
+		P_C.SetPosition(Position(-5, 0, 0));
+
+		C_F.SetScale(Scale(50, 50, 50));
+		C_B.SetScale(Scale(50, 50, 50));
+		C_L.SetScale(Scale(50, 50, 50));
+		C_R.SetScale(Scale(50, 50, 50));
+
+		C_F.SetPosition(Position(0, 0, 46));
+		C_B.SetPosition(Position(0, 0, -33));
+		C_L.SetPosition(Position(-38, 0, 5));
+		C_R.SetPosition(Position(38, 0, 5));
+
+		T_A.SetPosition(Position(5, 0, 0));
+		T_B.SetPosition(Position(0, 0, 0));
+		T_C.SetPosition(Position(-5, 0, 0));
+
+		press_time = qn_num = score = passengers = 0;
+		play_once = false;
+		dialogue = new Dialogue("Dialogue//Trivia.txt", Dialogue::TRIVIA); //Qn is a Dialogue ptr which will read the trivia txt file
+		Qn_str = dialogue->Update(); //Qn_str will first be Updated to Show the Theme of Trivia
+
+		answer = ""; //Initializes answer to be blank
+	}
+
 	//shop init
-	displayShopUI0 = false;
-	displayShopUI1 = false;
-	displayShopUI2 = false;
-	displayMessage = false;
+	{
+		displayShopUI0 = false;
+		displayShopUI1 = false;
+		displayShopUI2 = false;
+		displayMessage = false;
+	}
 
 	scene = MAIN_MENU;
 }
@@ -196,7 +271,79 @@ void SceneMaster::Update(double dt)
 	}
 	else if (scene == SCENE_TRIVIA)
 	{
+		manager.GameObjectManagerUpdate(dt);
 
+		if (qn_num == 10) //To set the spotlight and drumroll for the final qn
+		{
+			if (!sound.Engine()->isCurrentlyPlaying(("media/drumroll.ogg"))) //loops drumroll until players answers qn
+				sound.Engine()->play2D("media/drumroll.ogg");
+			lights[0].type = Light::LIGHT_SPOT;
+			glUniform1i(m_parameters[U_LIGHT0_TYPE], lights[0].type);
+		}
+		else if (qn_num > 10)
+		{
+			if (!play_once)
+			{
+				sound.Engine()->stopAllSounds();
+				if (score >= 8)
+				{
+					sound.Engine()->play2D("media/hooray.ogg");
+				}
+				else if (score < 5)
+					sound.Engine()->play2D("media/sad_trumbone.ogg");
+				else
+					sound.Engine()->play2D("media/slow_clap.ogg");
+
+				play_once = true;
+			}
+		}
+
+		if (Application::IsKeyPressed(VK_SPACE))
+		{
+			press_time++;
+			if (press_time == 1) // To ensure that the Spacebar is only pressed once
+			{
+				sound.Engine()->play2D("media/honk_1.wav");
+
+				if (qn_num <= 10)
+				{
+					//checks which answer was chosen
+					if (T_A.IsTriggered())
+						answer = dialogue->getChoice1();
+
+					else if (T_B.IsTriggered())
+						answer = dialogue->getChoice2();
+
+					else if (T_C.IsTriggered())
+						answer = dialogue->getChoice3();
+
+					else
+						answer = "";
+
+					if (answer != "")
+					{ //changes the qn and checks if the answer is correct
+						qn_num++;
+						if (qn_num != 0)
+							Check_Answer();
+					}
+
+					if (qn_num == 0)
+					{
+						qn_num++;
+						Qn_str = dialogue->Update();
+					}
+				}
+			}
+		}
+		else press_time = 0;
+
+		if (qn_num > 10) // to check if all 10 qns were answered
+		{
+			if (score < 5)
+				passengers = -(5 - score); //loses passengers if wrong info was given
+			if (score >= 8)
+				passengers = score - 5; //gains passengers if tour is interesting
+		}
 	}
 	else if (scene == SCENE_SEARCH)
 	{
@@ -362,7 +509,48 @@ void SceneMaster::Render()
 	}
 	else if (scene == SCENE_TRIVIA)
 	{
+		RenderRoom();
 
+		modelStack.PushMatrix();
+		modelStack.Rotate(180, 0, 1, 0);
+		if (qn_num == 0) //Renders the start of trivia mini game menu
+		{
+			RenderTextOnScreen(meshList[GEO_TEXT], Qn_str + " Trivia", Color(0, 1, 0), 10, 46, 64);
+			RenderTextOnScreen(meshList[GEO_TEXT], "Instructions:", Color(.3f, 1, .3f), 5, 58, 55);
+			RenderTextOnScreen(meshList[GEO_TEXT], "Use WASD to move to Podium A, B or C", Color(.3f, 1, .3f), 2.5f, 51, 50);
+			RenderTextOnScreen(meshList[GEO_TEXT], "Spacebar to select & start", Color(.3f, 1, .3f), 2.5f, 57, 43);
+		}
+		else if (qn_num <= 10) //Renders the different questions
+		{
+			RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(score)) + "/10", Color(0, 1, 0), 6, 110, 76);
+			RenderTextOnScreen(meshList[GEO_TEXT], ("Q" + std::to_string(qn_num) + ":" + Qn_str), Color(0, 1, 0), 2.44f, 37, 65);
+			RenderTextOnScreen(meshList[GEO_TEXT], ("A:" + dialogue->getChoice1()), Color(0, 1, 0), 4, 40, 57);
+			RenderTextOnScreen(meshList[GEO_TEXT], ("B:" + dialogue->getChoice2()), Color(0, 1, 0), 4, 40, 51);
+			RenderTextOnScreen(meshList[GEO_TEXT], ("C:" + dialogue->getChoice3()), Color(0, 1, 0), 4, 40, 45);
+		}
+		else //Renders the final score and outcome of the trivia minigame
+		{
+			RenderTextOnScreen(meshList[GEO_TEXT], (std::to_string(score) + "/10"), Color(0, 1, 0), 10, 72, 53);
+			if (score < 5)
+				RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(passengers * -1) + " passengers were unimpressed and left the tour", Color(.3f, 1, .3f), 2.5f, 40, 50);
+			else if (score >= 8)
+				RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(passengers) + " people were impressed and joined the tour", Color(.3f, 1, .3f), 2.5f, 40, 50);
+			else
+				RenderTextOnScreen(meshList[GEO_TEXT], "Your passengers slow clap your efforts", Color(.3f, 1, .3f), 2.5f, 40, 50);
+		}
+
+		modelStack.PopMatrix();
+
+		modelStack.PushMatrix();
+		modelStack.Translate(goose.GetPositionX(), goose.GetPositionY(), goose.GetPositionZ());
+		modelStack.Rotate(goose.GetRotateX(), 1, 0, 0);
+		modelStack.Rotate(goose.GetRotateY(), 0, 1, 0);
+		modelStack.Rotate(goose.GetRotateZ(), 0, 0, 1);
+		RenderMesh(meshList[GEO_GOOSE_TRIVIA], true);
+		modelStack.PopMatrix();
+
+		if ((qn_num > 10) && (score >= 8))
+			RenderMeshOnScreen(meshList[GEO_CONFETTI_TRIVIA], 80, 45, 1, 1);
 	}
 	else if (scene == SCENE_SEARCH)
 	{
@@ -433,6 +621,90 @@ void SceneMaster::Exit()
 	glDeleteVertexArrays(1, &m_vertexArrayID);
 
 	glDeleteProgram(m_programID);
+}
+
+void SceneMaster::Check_Answer()
+{
+	goose.SetRotateY(180);
+	goose.SetPosition(Position(0, 0, -5));
+
+	if (answer == dialogue->getAnswer())
+	{
+		sound.Engine()->play2D("media/correctAns.ogg");
+		score++;
+	}
+	else
+		sound.Engine()->play2D("media/wrongAns.ogg");
+
+	Qn_str = dialogue->Update();
+}
+
+void SceneMaster::RenderRoom()
+{
+	modelStack.PushMatrix();
+	modelStack.Translate(0, -.1f, 0);
+	modelStack.Rotate(-90, 1, 0, 0);
+	modelStack.Scale(50, 50, 50);
+	RenderMesh(meshList[GEO_QUAD], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(0, 12.6f, 23.8f);
+	modelStack.Rotate(180, 0, 1, 0);
+	modelStack.Rotate(180, 0, 0, 1);
+	modelStack.Scale(50, 25, 25);
+	RenderMesh(meshList[GEO_TV_TRIVIA], false);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(P_A.GetPositionX(), P_A.GetPositionY(), P_A.GetPositionZ());
+	modelStack.Scale(1, 1.5f, 1);
+	RenderMesh(meshList[GEO_PODIUM_A_TRIVIA], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(5.44f, 2.55f, 3.4f);
+	modelStack.Rotate(180, 0, 1, 0);
+	RenderText(meshList[GEO_TEXT], "A", Color(1, 1, 1));
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(P_B.GetPositionX(), P_B.GetPositionY(), P_B.GetPositionZ());
+	modelStack.Scale(1, 1.5f, 1);
+	RenderMesh(meshList[GEO_PODIUM_B_TRIVIA], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-.30f, 2.55f, 3.4f);
+	modelStack.Rotate(180, 0, 1, 0);
+	RenderText(meshList[GEO_TEXT], "B", Color(1, 1, 1));
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(P_C.GetPositionX(), P_C.GetPositionY(), P_C.GetPositionZ());
+	modelStack.Scale(1, 1.5f, 1);
+	RenderMesh(meshList[GEO_PODIUM_C_TRIVIA], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-5.72f, 2.55f, 3.4f);
+	modelStack.Rotate(180, 0, 1, 0);
+	RenderText(meshList[GEO_TEXT], "C", Color(1, 1, 1));
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-19, 13.4f, 23.3f);
+	modelStack.Rotate(180, 1, 0, 0);
+	modelStack.Scale(8, 8, 8);
+	RenderMesh(meshList[GEO_LOGO_TRIVIA], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(19, 13.4f, 23.3f);
+	modelStack.Rotate(180, 1, 0, 0);
+	modelStack.Scale(8, 8, 8);
+	RenderMesh(meshList[GEO_LOGO_TRIVIA], true);
+	modelStack.PopMatrix();
 }
 
 void SceneMaster::RenderMesh(Mesh* mesh, bool enableLight)
