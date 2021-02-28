@@ -347,6 +347,10 @@ void SceneIntro::Update(double dt)
 	{
 		std::cout << "boss triggered" ;
 	}
+
+	//if (dialogue->getPersonTalking() = 2)
+	//{
+	//}
 }
 
 void SceneIntro::Render() //My Own Pattern
