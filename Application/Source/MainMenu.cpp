@@ -247,7 +247,7 @@ void MainMenu::Update(double dt)
 		{
 			std::cout << "Hit!" << std::endl;
 			buttonPressed = true;
-			sceneChange = true;
+			nextScene = true;
 		}
 		else
 		{

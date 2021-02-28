@@ -4,14 +4,14 @@
 class Scene
 {
 public:
-    bool sceneChange;
+    bool nextScene;
     int passengers, money;
     int speed_level;
     int spawn_level;
     int capacity_level;
     Scene()
     {
-        sceneChange = false;
+        nextScene = false;
         passengers = money = speed_level = spawn_level = capacity_level = 0;
     }
     ~Scene() {}

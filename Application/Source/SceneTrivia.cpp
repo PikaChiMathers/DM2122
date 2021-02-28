@@ -275,6 +275,10 @@ void SceneTrivia::Update(double dt)
 					Qn_str = Qn->Update();
 				}
 			}
+			else
+			{
+				nextScene = true;
+			}
 		}
 	}
 	else press_time = 0;
@@ -359,6 +363,7 @@ void SceneTrivia::Render() //My Own Pattern
 			RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(passengers) + " people were impressed and joined the tour", Color(.3f, 1, .3f), 2.5f, 40, 50);
 		else
 			RenderTextOnScreen(meshList[GEO_TEXT], "Your passengers slow clap your efforts", Color(.3f, 1, .3f), 2.5f, 40, 50);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Press Spacebar to continue", Color(.3f, 1, .3f), 2.5f, 45, 45);
 	}
 
 	modelStack.PopMatrix();

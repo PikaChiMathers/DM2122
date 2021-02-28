@@ -14,7 +14,6 @@
 
 SceneShop::SceneShop()
 {
-	money = 1500;
 }
 
 SceneShop::~SceneShop()
@@ -327,6 +326,9 @@ void SceneShop::Update(double dt)
 
 	if (spacePressed == true && !Application::IsKeyPressed(VK_SPACE))
 		spacePressed = false;
+
+	if (Application::IsKeyPressed(VK_SHIFT))
+		nextScene = true;
 }
 
 void SceneShop::Render()

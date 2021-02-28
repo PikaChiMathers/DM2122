@@ -582,7 +582,7 @@ void SceneDrive::Init()
 	{
 		coins[i] = new Money;
 		coins[i]->SetPlayer(&bus);
-		coins[i]->SetValue(50);
+		coins[i]->SetValue(10);
 		coins[i]->SetScale(Scale(3.5f, 3.5f, 3.5f));
 		manager.CreateGameObject(coins[i]);
 	}
@@ -707,7 +707,9 @@ void SceneDrive::Update(double dt)
 	{// if game ended
 		if (Application::IsKeyPressed(VK_SPACE))
 		{
-			//go to next scene
+			money = bus.GetMoney();
+			passengers = bus.GetPassengerCount();
+			nextScene = true;
 		}
 	}
 	else

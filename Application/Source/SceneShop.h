@@ -123,7 +123,6 @@ private: //added (Step 2)
 	bool displayShopUI1;
 	bool displayShopUI2;
 	bool displayMessage;
-	int money;
 	double timer;
 
 	bool spacePressed;

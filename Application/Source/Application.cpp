@@ -54,8 +54,6 @@ Application::~Application()
 unsigned Application::m_width;
 unsigned Application::m_height;
 
-Application::ENUM_SCENE scene;
-
 void resize_callback(GLFWwindow* window, int w, int h)
 {
 	glViewport(0, 0, w, h); //update opengl the new window size
@@ -80,15 +78,6 @@ int Application::GetWindowHeight()
 {
 	return m_height;
 }
-
-bool Application::changeScene = false;
-Application::ENUM_SCENE Application::scene;
-void Application::ChangeScene(ENUM_SCENE scene)
-{
-	Application::scene = scene;
-	Application::changeScene = true;
-}
-
 
 void Application::Init()
 {
@@ -158,13 +147,19 @@ void Application::Run()
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
 	while (!glfwWindowShouldClose(m_window) && !(IsKeyPressed(VK_ESCAPE) && IsKeyPressed(VK_SHIFT)))
 	{ // stop removing this feature
-		if (scene_ptr->sceneChange)
+		if (scene_ptr->nextScene)
 		{
-			passengers += scene_ptr->passengers;
-			money += scene_ptr->money;
-			speed_level = scene_ptr->speed_level;
-			spawn_level = scene_ptr->spawn_level;
-			capacity_level = scene_ptr->capacity_level;
+			if (sceneType == SHOP)
+			{ //Only takes level ups from shop
+				speed_level = scene_ptr->speed_level;
+				spawn_level = scene_ptr->spawn_level;
+				capacity_level = scene_ptr->capacity_level;
+			}
+			else
+			{ //Only takes increased passengers & money from games
+				passengers += scene_ptr->passengers;
+				money += scene_ptr->money;
+			}
 
 			scene_ptr->Exit();
 			delete scene_ptr;
@@ -176,10 +171,26 @@ void Application::Run()
 
 			if (sceneType == START_MENU) scene_ptr = new MainMenu();
 			if (sceneType == INTRO) scene_ptr = new SceneIntro();
-			if (sceneType == DRIVE) scene_ptr = new SceneDrive();
+			if (sceneType == DRIVE)
+			{
+				scene_ptr = new SceneDrive();
+				scene_ptr->speed_level = speed_level;
+				scene_ptr->spawn_level = spawn_level;
+				scene_ptr->capacity_level = capacity_level;
+			}
 			if (sceneType == TRIVIA) scene_ptr = new SceneTrivia();
 			if (sceneType == SEARCH) scene_ptr = new SceneSearch();
-			if (sceneType == SHOP) scene_ptr = new SceneShop();
+			if (sceneType == SHOP)
+			{ //end of day
+				int passenger_ticket = 50; //price of tickets
+				scene_ptr = new SceneShop();
+				money += passengers * passenger_ticket;
+				scene_ptr->money = money;
+				scene_ptr->speed_level = speed_level;
+				scene_ptr->spawn_level = spawn_level;
+				scene_ptr->capacity_level = capacity_level;
+			}
+
 
 			scene_ptr->Init();
 		}

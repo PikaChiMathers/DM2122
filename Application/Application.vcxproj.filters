@@ -97,9 +97,6 @@
     <ClCompile Include="Source\SceneShop.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SceneTester.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Source\SceneTrivia.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -232,9 +229,6 @@
       <Filter>Header FIles</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneShop.h">
-      <Filter>Header FIles</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\SceneTester.h">
       <Filter>Header FIles</Filter>
     </ClInclude>
     <ClInclude Include="Source\SceneTrivia.h">

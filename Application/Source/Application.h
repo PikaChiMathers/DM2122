@@ -9,13 +9,12 @@ public:
     enum SCENE_TYPE
     {
         START_MENU = 0,
-        //INTRO,
+        INTRO,
         DRIVE,
         TRIVIA,
         SEARCH,
         SHOP,
         NUM_SCENES,
-        INTRO, //Set here due to incomplete
     };
 
     Application();

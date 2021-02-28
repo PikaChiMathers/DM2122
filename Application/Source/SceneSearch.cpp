@@ -300,7 +300,7 @@ void SceneSearch::Update(double dt)
 				else
 				{
 					passengers = passenger_count;
-					sceneChange = true;
+					nextScene = true;
 				}
 			}
 		}
