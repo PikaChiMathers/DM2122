@@ -195,8 +195,6 @@ void SceneShop::Update(double dt)
 {
 	camera.Update(dt);
 
-	fps = 1.0f / dt;
-
 	rotateAngle += (float)( 50 * dt);
 	translateX += (float)(translateXDir * 10 * dt);
 	translateY += (float)(translateYDir * 50 * dt);
@@ -400,10 +398,6 @@ void SceneShop::Render()
 	RenderMesh(meshList[GEO_BUS], lights[0].isOn);
 	modelStack.PopMatrix();
 
-	std::ostringstream ss;
-	ss.precision(5);
-	ss << "FPS: " << fps;
-	RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 1, 0), 3, 1, 82);
 	RenderTextOnScreen(meshList[GEO_TEXT], "Money:$"+ std::to_string(money), Color(0, 1, 0), 3, 1, 87);
 
 	if (displayShopUI0)

@@ -37,10 +37,6 @@ public:
 	virtual void Render();
 	virtual void Exit();
 
-	float fps;
-
-	Color red, blue, green, pink, Lblue, purple, orange, yellow, cyan, magenta, moonshade;
-
 	bool scene_change;
 
 	int UI_height, UI_width;
