@@ -328,15 +328,18 @@ void SceneIntro::Update(double dt)
  	
 
 	}
-
 	else
 	{
 		Space_Pressed = 0;
 	}
-		
-	if (bosscollider.IsTriggered() && IsSpacePressed)
+
+	if (displayUI == true && IsSpacePressed && Space_Pressed == 1)
 	{
-		std::cout << "triggerd";
+		nextScene = true;
+	}
+		
+	if (bosscollider.IsTriggered() && IsSpacePressed && Space_Pressed == 1)
+	{
 		displayUI = true;
 
 		/*if (dialogue->getCurrentLine() < dialogue->getTotalLines())
@@ -354,10 +357,6 @@ void SceneIntro::Update(double dt)
 			meshList[GEO_UI]->textureID = LoadTGA("Assets//Boss_Dialogue_Box.tga");
 		}*/
 	};
-	if (displayUI == true && IsSpacePressed == true)
-	{
-		nextScene = true;
-	}
 	
 }
 
