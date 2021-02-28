@@ -27,10 +27,11 @@ SceneIntro::~SceneIntro()
 void SceneIntro::Init()
 {
 	manager.CreateGameObject(&goose);
-	goose.SetPosition(Position (-20, -3, 0));
+	goose.SetPosition(Position (-15, -3, 0));
 	manager.CreateGameObject(&boss);
+	boss.SetPosition(Position(15, -4, 0));
 
-	camera.Init(Vector3(40, 30, 30), Vector3(0, 0, 0), Vector3(0, 1, 0));
+	camera.Init(Vector3(-0.7, 39, -68), Vector3(-0.67, 38.65, -67), Vector3(0, 1, 0));
 	map.Set(Maps::SKYBOX_TYPE::SB_INTRO);
 
 	//map.Set(Maps::MAP_TYPE::M_CITY, Maps::SKYBOX_TYPE::SB_DAY);
@@ -41,7 +42,6 @@ void SceneIntro::Init()
 	projection.SetToPerspective(45.f, 4.f / 3.f, 0.1f, 1000.f);
 	projectionStack.LoadMatrix(projection);
 
-	rotateAngle = 0;
 
 	//Set background color to dark blue (Step 3a)
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
@@ -55,27 +55,7 @@ void SceneIntro::Init()
 	UI_width = 160;
 	UI_height = 90;
 
-	x_value = y_value = z_value = 0;
-	red.Set(1, 0, 0);
-	green.Set(0, 1, 0);
-	blue.Set(0, 0, 1);
-	pink.Set(1.0f, 0.55f, 0.6f);
-	Lblue.Set(0.1f, 0.1f, 1.0f);
-	purple.Set(0.6f, 0.5f, 1.0f);
-	orange.Set(0.89f, 0.66f, 0.41f);
-	yellow.Set(1, 1, 0);
-	cyan.Set(0, 1, 1);
-	magenta.Set(1, 0, 1);
 
-
-	moonshade.Set(0.93f, 0.93f, 0.88f);
-
-
-	meshList[GEO_SPHERE] = MeshBuilder::GenerateSphere("Rsphere", red, 30, 30, 1);
-	meshList[GEO_SPHERE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
-	meshList[GEO_SPHERE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	meshList[GEO_SPHERE]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
-	meshList[GEO_SPHERE]->material.kShininess = 1.f;
 
 	meshList[GEO_AXES] = MeshBuilder::GenerateAxes("axes", 1000, 1000, 1000);
 
@@ -88,25 +68,22 @@ void SceneIntro::Init()
 	meshList[GEO_LEFT] = MeshBuilder::GenerateQuad("left", Color(1, 1, 1), 1.f, 1.f);
 	meshList[GEO_RIGHT] = MeshBuilder::GenerateQuad("right", Color(1, 1, 1), 1.f, 1.f);
 
-	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("ground", Color(.73f, 1.f, 1.f), 1.f, 1.f);
+	meshList[GEO_QUAD] = MeshBuilder::GenerateQuad("ground", Color(.39f, 0.72f, 1.f), 1.f, 1.f);
 	meshList[GEO_QUAD]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
 	meshList[GEO_QUAD]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
 	meshList[GEO_QUAD]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
 	meshList[GEO_QUAD]->material.kShininess = 1.f;
-
-	meshList[GEO_CUBE] = MeshBuilder::GenerateCube("cube", blue, 1, 1, 1);
-	meshList[GEO_CUBE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
-	meshList[GEO_CUBE]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
-	meshList[GEO_CUBE]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
-	meshList[GEO_CUBE]->material.kShininess = 1.f;
 
 	meshList[GEO_TEXT] = MeshBuilder::GenerateText("text", 16, 16);
 	meshList[GEO_TEXT]->textureID = LoadTGA("Image//trebuchet.tga");
 
 	meshList[GEO_UI] = MeshBuilder::GenerateQuad("UI", Color(1, 1, 1), 1.f, 1.f);
 
-	meshList[GEO_SPLASH] = MeshBuilder::GenerateQuad("splash", blue, 1, 1);
-	meshList[GEO_SPLASH]->textureID = LoadTGA("Assets//start.tga");
+	meshList[GEO_BOSS] = MeshBuilder::GenerateOBJ("Boss", "OBJ//goose.obj", Color(.42f, .26f, .15f));
+	meshList[GEO_BOSS]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
+	meshList[GEO_BOSS]->material.kDiffuse.Set(0.6f, 0.6f, 0.6f);
+	meshList[GEO_BOSS]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
+	meshList[GEO_BOSS]->material.kShininess = 1.f;
 
 	meshList[GEO_GOOSE] = MeshBuilder::GenerateOBJ("Goose", "OBJ//goose.obj", Color(.93f, .79f, 0));
 	meshList[GEO_GOOSE]->material.kAmbient.Set(0.1f, 0.1f, 0.1f);
@@ -114,6 +91,7 @@ void SceneIntro::Init()
 	meshList[GEO_GOOSE]->material.kSpecular.Set(0.3f, 0.3f, 0.3f);
 	meshList[GEO_GOOSE]->material.kShininess = 1.f;
 
+	meshList[GEO_PINKLILY] = MeshBuilder::GenerateOBJ("PinkLily", "OBJ//pink_water_lily.obj", Color(0 , .79f, 0));
 
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
@@ -224,27 +202,13 @@ void SceneIntro::Init()
 	// Enable depth test
 	glEnable(GL_DEPTH_TEST);
 
-	//box.AddCollider();
-	//box.GetCollider()->AddPhysics();
-	//box.SetPosition(Position(10, 0, 10));
-	//box.SetScale(Scale(2, 1, 1));
-	//box.GetCollider()->SetIsTrigger(true);
-
 }
 
 void SceneIntro::Update(double dt)
 {
 	
 	manager.GameObjectManagerUpdate(dt);
-	camera.Update(dt);
-	
-
-	fps = 1.0f / dt;
-
-	rotateAngle += (float)(50 * dt);
-	translateX += (float)(translateXDir * 10 * dt);
-	translateY += (float)(translateYDir * 50 * dt);
-	scaleAll += (float)(scaleDir * 2 * dt);
+	//camera.Update(dt);
 
 	if (Application::IsKeyPressed('1'))
 		glEnable(GL_CULL_FACE);
@@ -254,23 +218,6 @@ void SceneIntro::Update(double dt)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //default fill mode
 	if (Application::IsKeyPressed('4'))
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //wireframe mode
-
-	//if (Application::IsKeyPressed('I'))
-	//	lights[0].position.z -= (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('K'))
-	//	lights[0].position.z += (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('J'))
-	//	lights[0].position.x -= (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('L'))
-	//	lights[0].position.x += (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('O'))
-	//	lights[0].position.y -= (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('U'))
-	//	lights[0].position.y += (float)(LSPEED * dt);
-	//if (Application::IsKeyPressed('T'))
-	//	lights[0].isOn = false;
-	//if (Application::IsKeyPressed('Y'))
-	//	lights[0].isOn = true;
 
 	//for testing purposes
 	if (Application::IsKeyPressed('V'))
@@ -295,48 +242,6 @@ void SceneIntro::Update(double dt)
 		meshList[GEO_BOTTOM]->textureID = LoadTGA((map.skybox_loc[5]).std::string::c_str());
 
 		scene_change = false;
-	}
-	//Mouse Inputs
-	static bool bLButtonState = false;
-	if (!bLButtonState && Application::IsMousePressed(0))
-	{
-		bLButtonState = true;
-		std::cout << "LBUTTON DOWN" << std::endl;
-	}
-	else if (bLButtonState && !Application::IsMousePressed(0))
-	{
-		bLButtonState = false;
-		//Converting Viewport space to UI space
-		double x, y;
-		Application::GetCursorPos(&x, &y);
-		int w = Application::GetWindowWidth();
-		int h = Application::GetWindowHeight();
-		float posX = x / 10; //convert (0,800) to (0,80)
-		float posY = 60 - (y / 10); //convert (600,0) to (0,60)
-		std::cout << "posX:" << posX << " , posY:" << posY <<
-			std::endl;
-		if (posX > 20 && posX < 60 && posY >
-			45 && posY < 15)
-		{
-			std::cout << "Hit!" << std::endl;
-			//trigger user action or function
-		}
-		else
-		{
-			std::cout << "Miss!" << std::endl;
-		}
-		std::cout << "LBUTTON UP" << std::endl;
-	}
-	static bool bRButtonState = false;
-	if (!bRButtonState && Application::IsMousePressed(1))
-	{
-		bRButtonState = true;
-		std::cout << "RBUTTON DOWN" << std::endl;
-	}
-	else if (bRButtonState && !Application::IsMousePressed(1))
-	{
-		bRButtonState = false;
-		std::cout << "RBUTTON UP" << std::endl;
 	}
 
 
@@ -499,8 +404,6 @@ void SceneIntro::Render() //My Own Pattern
 	Mtx44 mvp = projectionStack.Top() * viewStack.Top() * modelStack.Top();
 	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &mvp.a[0]); //update the shader with new MVP
 
-	RenderMesh(meshList[GEO_AXES], false);
-
 
 	modelStack.PushMatrix();
 	modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
@@ -515,10 +418,12 @@ void SceneIntro::Render() //My Own Pattern
 	RenderMesh(meshList[GEO_QUAD], lights[0].isOn);
 	modelStack.PopMatrix();
 
-	//modelStack.PushMatrix();
-	////modelStack.Scale(0.5, 0.5, 0.5);
-	//RenderMesh(meshList[GEO_ROOM], true);
-	//modelStack.PopMatrix();
+	modelStack.PushMatrix();
+	modelStack.Translate(boss.GetPositionX(), boss.GetPositionY(), boss.GetPositionZ());
+	modelStack.Scale(2, 2, 2);
+	modelStack.Rotate(90, 0, 1, 0);
+	RenderMesh(meshList[GEO_BOSS], true);
+	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
 	modelStack.Translate(goose.GetPositionX()*2, goose.GetPositionY(), goose.GetPositionZ()*2);
@@ -529,7 +434,29 @@ void SceneIntro::Render() //My Own Pattern
 	RenderMesh(meshList[GEO_GOOSE], true);
 	modelStack.PopMatrix();
 
-	RenderMeshOnScreen(meshList[GEO_SPLASH], 1, 1, 10, 10);
+	modelStack.PushMatrix();
+	modelStack.Translate(36, 0, 23);
+	/*modelStack.Rotate(-90, 0, 0, 0);*/
+	modelStack.Scale(4, 4, 4);
+	RenderMesh(meshList[GEO_PINKLILY], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(12, 0, -18);
+	/*modelStack.Rotate(-90, 0, 0, 0);*/
+	modelStack.Scale(2, 2, 2);
+	RenderMesh(meshList[GEO_PINKLILY], true);
+	modelStack.PopMatrix();
+
+	modelStack.PushMatrix();
+	modelStack.Translate(-22, 0, -10);
+	/*modelStack.Rotate(-90, 0, 0, 0);*/
+	modelStack.Scale(3, 3, 3);
+	RenderMesh(meshList[GEO_PINKLILY], true);
+	modelStack.PopMatrix();
+
+
+	/*RenderMeshOnScreen(meshList[GEO_SPLASH], 1, 1, 10, 10);*/
 }
 
 void SceneIntro::Exit()
@@ -591,7 +518,7 @@ void SceneIntro::RenderMesh(Mesh* mesh, bool enableLight)
 void SceneIntro::RenderSkybox()
 {
 	modelStack.PushMatrix();
-	modelStack.Translate(49, 0, 0);
+	modelStack.Translate(50, 0, 0);
 	modelStack.Rotate(90, 0, 1, 0);
 	modelStack.Rotate(-180, 1, 0, 0);
 	modelStack.Scale(100, 100, 100);
@@ -599,7 +526,7 @@ void SceneIntro::RenderSkybox()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(-49, 0, 0);
+	modelStack.Translate(-50, 0, 0);
 	modelStack.Rotate(-90, 0, 1, 0);
 	modelStack.Rotate(-180, 1, 0, 0);
 	modelStack.Scale(100, 100, 100);
@@ -607,14 +534,14 @@ void SceneIntro::RenderSkybox()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, 49);
+	modelStack.Translate(0, 0, 50);
 	modelStack.Rotate(-180, 1, 0, 0);
 	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_LEFT], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 0, -49);
+	modelStack.Translate(0, 0, -50);
 	modelStack.Rotate(-180, 1, 0, 0);
 	modelStack.Rotate(-180, 0, 1, 0);
 	modelStack.Scale(100, 100, 100);
@@ -622,16 +549,15 @@ void SceneIntro::RenderSkybox()
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, -49, 0);
+	modelStack.Translate(0, -50, 0);
 	modelStack.Rotate(-90, 1, 0, 0);
 	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_BOTTOM], false);
 	modelStack.PopMatrix();
 
 	modelStack.PushMatrix();
-	modelStack.Translate(0, 49, 0);
+	modelStack.Translate(0, 50, 0);
 	modelStack.Rotate(90, 1, 0, 0);
-	//modelStack.Rotate(180, 0, 1, 0);
 	modelStack.Scale(100, 100, 100);
 	RenderMesh(meshList[GEO_TOP], false);
 	modelStack.PopMatrix();
