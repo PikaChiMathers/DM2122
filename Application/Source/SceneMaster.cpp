@@ -265,7 +265,7 @@ void SceneMaster::Update(double dt)
 	if (scene == SHOP)
 		camera_shop.Update(dt);
 
-	fps = 1.0f / dt;
+	fps = 1.0 / dt;
 
 	rotateAngle += (float)( 50 * dt);
 	translateX += (float)(translateXDir * 10 * dt);
@@ -671,7 +671,37 @@ void SceneMaster::Render()
 	}
 	else if (scene == SEARCH)
 	{
+		RenderCity();
 
+		if (game_start)
+		{
+			RenderMeshOnScreen(meshList[GEO_TARGET_SEARCH], 80, 45, 10, 10);
+
+			//bar_type (sets up the progress bar depending on the player's progress percentage)
+			std::string bar_type = "Assets//progress_" + std::to_string(camera_search->progress) + ".tga";
+			meshList[GEO_PROGRESS_SEARCH]->textureID = LoadTGA(bar_type.std::string::c_str());
+			RenderMeshOnScreen(meshList[GEO_PROGRESS_SEARCH], 80, 35, 20, 5);
+
+			std::ostringstream ss;
+			ss.precision(3);
+			ss << "Time left:" << (timer_search / 3600) << "m " << (timer_search % 3600) / 60 << "s";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 3, 5, 85);
+			RenderTextOnScreen(meshList[GEO_TEXT], "Passengers found:" + std::to_string(passenger_count), Color(0, 0, 0), 3, 5, 80);
+		}
+		else
+		{ //Renders the Intructions
+			RenderMeshOnScreen(meshList[GEO_POPUP_SEARCH], 80, 45, 120, 60);
+		}
+
+		if (timer_search <= 0)
+		{//Renders the final results of the Search Minigame
+			meshList[GEO_POPUP_SEARCH]->textureID = LoadTGA("Assets//search_results.tga");
+			RenderMeshOnScreen(meshList[GEO_POPUP_SEARCH], 80, 45, 120, 60);
+			if (passenger_count > 0)
+				RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(passenger_count) + " passenger(s) joined the rest of the tour!", Color(0, 0, 0), 4, 30, 45);
+			else
+				RenderTextOnScreen(meshList[GEO_TEXT], "You could not find anyone to join the tour.", Color(0, 0, 0), 4, 30, 45);
+		}
 	}
 	else if (scene == SHOP)
 	{
