@@ -43,7 +43,7 @@ void SceneSearch::Init()
 	targets[14].Init(Vector3(0, 240, -330), Vector3(-.73f, 239.75f, -329), Vector3(0.1f, 1, 0.2f));
 	targets[15].Init(Vector3(0, 240, -330), Vector3(-1.f, 239.4f, -329), Vector3(0.1f, 1, 0.2f));
 
-	game_start = false;
+	game_start = game_pause = false;
 
 	int min = 2; //min is how long this game will last in minutes
 	timer = min * 60 * 60;
@@ -54,7 +54,7 @@ void SceneSearch::Init()
 		targets[target_num].num_passengers = rand() % 5 + 1; //each of the randomly selected buildings can have 1 to 5 passengers
 	}
 
-	current_target = press_count = passenger_count = press_time = spam_time = 0;
+	current_target = press_count = passenger_count = press_time = spam_time = esc_time = 0;
 	camera = &targets[0];
 
 	map.Set(Maps::SKYBOX_TYPE::SB_DAY);
@@ -202,6 +202,19 @@ void SceneSearch::Init()
 
 void SceneSearch::Update(double dt)
 {
+	if (Application::IsKeyPressed(VK_ESCAPE))
+	{
+		esc_time++;
+		if (esc_time == 1)
+		{
+			if (!game_pause)
+				game_pause = true;
+			else
+				game_pause = false;
+		}
+	}
+	else
+		esc_time = 0;
 	if (scene_change) //to ensure that the skybox only updates when the scene changes
 	{
 		meshList[GEO_FRONT]->textureID = LoadTGA((map.skybox_loc[0]).std::string::c_str());
@@ -214,73 +227,77 @@ void SceneSearch::Update(double dt)
 		scene_change = false;
 	}
 
-	if (timer > 0)
+	if (!game_pause)
 	{
-		if (game_start)
+
+		if (timer > 0)
 		{
-			timer--;
-			if (press_count == 0)
+			if (game_start)
 			{
-				if (Application::IsKeyPressed(VK_LEFT) || Application::IsKeyPressed(VK_RIGHT))
-				{ //changes location
-					press_time++;
-					if (press_time == 1)
-					{
-						if (Application::IsKeyPressed(VK_LEFT))
-							current_target--;
-						if (Application::IsKeyPressed(VK_RIGHT))
-							current_target++;
-
-						if (current_target < 0)
-							current_target = 15;
-						if (current_target >= 16)
-							current_target = 0;
-					}
-				}
-				else
-					press_time = 0;
-
-				camera = &targets[current_target];
-			}
-
-			//Updates the percentage of the building
-			if (press_count >= 25)
-				camera->progress = 25;
-			if (press_count >= 50)
-				camera->progress = 50;
-			if (press_count >= 75)
-				camera->progress = 75;
-			if (press_count >= 100)
-			{
-				camera->progress = 100;
-				press_count = 0;
-				passenger_count += camera->num_passengers;
-				camera->has_checked = true;
-			}
-		}
-
-		if (Application::IsKeyPressed(VK_SPACE))
-		{
-			spam_time++;
-			if (spam_time == 1)
-			{
-				if (game_start)
+				timer--;
+				if (press_count == 0)
 				{
-					if (!camera->has_checked && press_count < 100)
+					if (Application::IsKeyPressed(VK_LEFT) || Application::IsKeyPressed(VK_RIGHT))
+					{ //changes location
+						press_time++;
+						if (press_time == 1)
+						{
+							if (Application::IsKeyPressed(VK_LEFT))
+								current_target--;
+							if (Application::IsKeyPressed(VK_RIGHT))
+								current_target++;
+
+							if (current_target < 0)
+								current_target = 15;
+							if (current_target >= 16)
+								current_target = 0;
+						}
+					}
+					else
+						press_time = 0;
+
+					camera = &targets[current_target];
+				}
+
+				//Updates the percentage of the building
+				if (press_count >= 25)
+					camera->progress = 25;
+				if (press_count >= 50)
+					camera->progress = 50;
+				if (press_count >= 75)
+					camera->progress = 75;
+				if (press_count >= 100)
+				{
+					camera->progress = 100;
+					press_count = 0;
+					passenger_count += camera->num_passengers;
+					camera->has_checked = true;
+				}
+			}
+
+			if (Application::IsKeyPressed(VK_SPACE))
+			{
+				spam_time++;
+				if (spam_time == 1)
+				{
+					if (game_start)
 					{
-						//Randomizes Honk sounds
-						std::string sound_file = "media/honk_" + std::to_string(rand() % 5 + 1) + ".wav";
+						if (!camera->has_checked && press_count < 100)
+						{
+							//Randomizes Honk sounds
+							std::string sound_file = "media/honk_" + std::to_string(rand() % 5 + 1) + ".wav";
 							sound.Engine()->play2D(sound_file.std::string::c_str());
 
-						press_count++;
+							press_count++;
+						}
 					}
+					else
+						game_start = true;
 				}
-				else
-					game_start = true;
 			}
+			else
+				spam_time = 0;
 		}
-		else
-			spam_time = 0;
 	}
 
 }
@@ -320,8 +337,6 @@ void SceneSearch::Render() //My Own Pattern
 	Mtx44 mvp = projectionStack.Top() * viewStack.Top() * modelStack.Top();
 	glUniformMatrix4fv(m_parameters[U_MVP], 1, GL_FALSE, &mvp.a[0]); //update the shader with new MVP
 
-	RenderMesh(meshList[GEO_AXES], false);
-
 	modelStack.PushMatrix();
 	modelStack.Translate(lights[0].position.x, lights[0].position.y, lights[0].position.z);
 	RenderMesh(meshList[GEO_LIGHTBALL], false);
@@ -329,38 +344,47 @@ void SceneSearch::Render() //My Own Pattern
 	RenderSkybox();
 
 	RenderCity();
-
-	if (game_start)
+	if (!game_pause)
 	{
-		RenderMeshOnScreen(meshList[GEO_TARGET], 80, 45, 10, 10);
+		if (game_start)
+		{
+			RenderMeshOnScreen(meshList[GEO_TARGET], 80, 45, 10, 10);
 
-		//bar_type (sets up the progress bar depending on the player's progress percentage)
-		std::string bar_type = "Assets//progress_" + std::to_string(camera->progress) + ".tga";
-		meshList[GEO_PROGRESS]->textureID = LoadTGA(bar_type.std::string::c_str());
-		RenderMeshOnScreen(meshList[GEO_PROGRESS], 80, 35, 20, 5);
+			//bar_type (sets up the progress bar depending on the player's progress percentage)
+			std::string bar_type = "Assets//progress_" + std::to_string(camera->progress) + ".tga";
+			meshList[GEO_PROGRESS]->textureID = LoadTGA(bar_type.std::string::c_str());
+			RenderMeshOnScreen(meshList[GEO_PROGRESS], 80, 35, 20, 5);
 
-		std::ostringstream ss;
-		ss.precision(3);
-		ss << "Time left:" << (timer/3600) <<"m " << (timer%3600)/60 << "s";
-		RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 3, 5, 85);
-		RenderTextOnScreen(meshList[GEO_TEXT], "Passengers found:" + std::to_string(passenger_count), Color(0, 0, 0), 3, 5, 80);
+			std::ostringstream ss;
+			ss.precision(3);
+			ss << "Time left:" << (timer / 3600) << "m " << (timer % 3600) / 60 << "s";
+			RenderTextOnScreen(meshList[GEO_TEXT], ss.str(), Color(0, 0, 0), 3, 5, 85);
+			RenderTextOnScreen(meshList[GEO_TEXT], "Passengers found:" + std::to_string(passenger_count), Color(0, 0, 0), 3, 5, 80);
+		}
+		else
+		{ //Renders the Intructions
+			RenderMeshOnScreen(meshList[GEO_POPUP], 80, 45, 120, 60);
+		}
+
+		if (timer <= 0)
+		{//Renders the final results of the Search Minigame
+			meshList[GEO_POPUP]->textureID = LoadTGA("Assets//search_results.tga");
+			RenderMeshOnScreen(meshList[GEO_POPUP], 80, 45, 120, 60);
+			if (passenger_count > 0)
+				RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(passenger_count) + " passenger(s) joined the rest of the tour!", Color(0, 0, 0), 4, 30, 45);
+			else
+				RenderTextOnScreen(meshList[GEO_TEXT], "You could not find anyone to join the tour.", Color(0, 0, 0), 4, 30, 45);
+		}
 	}
 	else
-	{ //Renders the Intructions
-		RenderMeshOnScreen(meshList[GEO_POPUP], 80, 45, 120, 60);
+	{
+		meshList[GEO_POPUP]->textureID = LoadTGA("Image//overlay.tga");
+		RenderMeshOnScreen(meshList[GEO_POPUP], 80, 45, 1000, 1000);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Paused", Color(1, 0, 0), 8, 60, 40);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Left & Right arrows to change target", Color(0, 1, .5), 3, 55, 30);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Press Spacebar to promote your tour", Color(0, 1, .5), 3, 55, 27);
+		RenderTextOnScreen(meshList[GEO_TEXT], "Press Escape to return to game", Color(0, 1, .5), 3, 55, 24);
 	}
-
-	if (timer <= 0)
-	{//Renders the final results of the Search Minigame
-		meshList[GEO_POPUP]->textureID = LoadTGA("Assets//search_results.tga");
-		RenderMeshOnScreen(meshList[GEO_POPUP], 80, 45, 120, 60);
-		if (passenger_count > 0)
-			RenderTextOnScreen(meshList[GEO_TEXT], std::to_string(passenger_count) + " passenger(s) joined the rest of the tour!", Color(0, 0, 0), 4, 30, 45);
-		else
-			RenderTextOnScreen(meshList[GEO_TEXT], "You could not find anyone to join the tour.", Color(0, 0, 0), 4, 30, 45);
-	}
-
-
 }
 
 void SceneSearch::Exit()

@@ -713,7 +713,7 @@ void SceneDrive::Update(double dt)
 	else
 	{// ongoing game
 		endGame = (endpoint.GetTime() <= 0); // end game if timer ends
-		if (Application::IsKeyPressed('P') && toggleTime <= 0)
+		if (Application::IsKeyPressed(VK_ESCAPE) && toggleTime <= 0)
 		{
 			paused = !paused;
 			if (paused) endpoint.PauseTimer();
